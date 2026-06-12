@@ -11,7 +11,15 @@ config_version=5
 [application]
 
 config/name="Transformers Roguelite"
+config/version="1.0.0"
 config/features=PackedStringArray("4.6", "Mobile")
+
+[autoload]
+
+EventBus="*res://autoloads/event_bus.gd"
+AudioManager="*res://autoloads/audio_manager.gd"
+GameState="*res://autoloads/game_state.gd"
+SaveManager="*res://autoloads/save_manager.gd"
 
 [physics]
 
