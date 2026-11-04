@@ -7,8 +7,22 @@
 class_name Vehicon
 extends BaseEnemy
 
+
 func _on_enemy_ready() -> void:
-	_sprite.play("idle")
+	# Siempre persigue, así que camina por defecto y ataca al golpear.
+	_sprite.play("walk")
+	attacked_player.connect(_on_attacked_player)
+	_sprite.animation_finished.connect(_on_animation_finished)
+
+
+func _on_attacked_player(_damage: float) -> void:
+	if _is_alive:
+		_sprite.play("attack")
+
+
+func _on_animation_finished() -> void:
+	if _is_alive:
+		_sprite.play("walk")
 
 
 func _on_damaged(_amount: float) -> void:
@@ -20,6 +34,7 @@ func _on_damaged(_amount: float) -> void:
 
 
 func _on_died() -> void:
+	_sprite.modulate = Color.WHITE
 	_sprite.play("death")
 	EventBus.play_sfx.emit("vehicon_death")
 	await _sprite.animation_finished

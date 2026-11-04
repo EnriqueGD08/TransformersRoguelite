@@ -27,6 +27,10 @@ extends BaseWeapon
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _on_weapon_ready() -> void:
+	# Ambos hitboxes se solapan en el centro: comparten la lista para no golpear 2 veces.
+	var shared: Array = []
+	_hitbox_left.share_hit_list(shared)
+	_hitbox_right.share_hit_list(shared)
 	_hitbox_left.enemy_hit.connect(_on_enemy_hit)
 	_hitbox_right.enemy_hit.connect(_on_enemy_hit)
 
@@ -41,7 +45,7 @@ func _perform_attack() -> void:
 
 func _play_attack_animation() -> void:
 	if _owner_character:
-		_owner_character._sprite.play("attack")
+		_owner_character.play_animation("attack")
 
 # ── Callbacks ─────────────────────────────────────────────────────────────────
 

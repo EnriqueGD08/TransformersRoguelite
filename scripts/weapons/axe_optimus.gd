@@ -41,7 +41,7 @@ func _perform_attack() -> void:
 
 func _play_swing_animation() -> void:
 	if _owner_character:
-		_owner_character._sprite.play("attack")
+		_owner_character.play_animation("attack")
 
 
 ## Escala temporalmente el CollisionShape del hitbox.

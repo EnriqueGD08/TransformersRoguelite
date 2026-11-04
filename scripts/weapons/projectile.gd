@@ -14,6 +14,17 @@ extends Area2D
 ## [param target] Nodo del enemigo. [param damage] Daño aplicado.
 signal impacted(target: Node, damage: float)
 
+# ── Efecto visual de impacto ──────────────────────────────────────────────────
+
+## Efecto (OneShotEffect) que aparece al impactar. Vacío = sin efecto.
+@export var impact_effect_scene: PackedScene
+
+## Diámetro del efecto cuando el proyectil no tiene explosión de área.
+@export_range(10.0, 200.0, 5.0) var impact_effect_diameter: float = 40.0
+
+## Tinte del efecto de impacto (permite reutilizar un mismo efecto con otro color).
+@export var impact_tint: Color = Color.WHITE
+
 # ── Configuración (asignada por el arma al instanciar) ────────────────────────
 
 var _direction: Vector2 = Vector2.RIGHT
@@ -29,6 +40,15 @@ var _status_duration: float = 0.0
 var _max_range: float = 800.0
 var _distance_traveled: float = 0.0
 
+## Ondas expansivas (ej: Shockwave): radio inicial/final de la colisión.
+var _wave_start: float = 0.0
+var _wave_end: float = 0.0
+var _wave_shape: CircleShape2D = null
+var _wave_visual: Node2D = null
+
+## Radio del arco dibujado en el arte a escala 1 (para escalar el sprite con la onda).
+@export_range(1.0, 100.0, 0.5) var wave_art_radius: float = 21.0
+
 ## Nodos ya impactados (para proyectiles piercing, evitar doble daño).
 var _hit_targets: Array = []
 
@@ -43,6 +63,8 @@ func _physics_process(delta: float) -> void:
 	position += move
 	_distance_traveled += move.length()
 
+	if _wave_shape != null:
+		_update_wave()
 	if _distance_traveled >= _max_range:
 		_destroy()
 
@@ -74,6 +96,29 @@ func setup(
 	# Rota el sprite en la dirección de vuelo.
 	rotation = _direction.angle()
 
+# ── Onda expansiva ────────────────────────────────────────────────────────────
+
+## Convierte el proyectil en una onda cuya colisión y sprite crecen con la distancia.
+## Duplica la forma de colisión para no modificar el recurso compartido de la escena.
+func set_expanding_wave(start_radius: float, end_radius: float, _wave_range: float) -> void:
+	_wave_start = start_radius
+	_wave_end = end_radius
+	for child in get_children():
+		if child is CollisionShape2D and child.shape is CircleShape2D:
+			_wave_shape = child.shape.duplicate()
+			child.shape = _wave_shape
+		elif child is AnimatedSprite2D or child is Sprite2D:
+			_wave_visual = child
+	_update_wave()
+
+
+func _update_wave() -> void:
+	var f: float = clampf(_distance_traveled / maxf(_max_range, 1.0), 0.0, 1.0)
+	var radius: float = lerpf(_wave_start, _wave_end, f)
+	_wave_shape.radius = radius
+	if _wave_visual != null:
+		_wave_visual.scale = Vector2.ONE * (radius / wave_art_radius)
+
 # ── Impacto ───────────────────────────────────────────────────────────────────
 
 func _on_body_entered(body: Node) -> void:
@@ -91,6 +136,7 @@ func _on_body_entered(body: Node) -> void:
 		_apply_direct_damage(body)
 
 	if not _piercing:
+		_spawn_impact_effect()
 		_destroy()
 
 
@@ -128,6 +174,19 @@ func _try_apply_status(target: Node) -> void:
 		return
 	if target.has_method("apply_status"):
 		target.apply_status(_status_effect, _status_duration)
+
+# ── Efecto de impacto ─────────────────────────────────────────────────────────
+
+func _spawn_impact_effect() -> void:
+	if impact_effect_scene == null:
+		return
+	var effect: Node2D = impact_effect_scene.instantiate()
+	ProjectileContainer.add(self, effect)
+	effect.global_position = global_position
+	effect.modulate = impact_tint
+	if effect.has_method("fit_diameter"):
+		# El efecto se dibuja algo más pequeño que el área real para no tapar la pantalla.
+		effect.fit_diameter(_aoe_radius * 1.6 if _aoe_radius > 0.0 else impact_effect_diameter)
 
 # ── Destrucción ───────────────────────────────────────────────────────────────
 

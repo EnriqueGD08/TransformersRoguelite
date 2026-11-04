@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/character_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+character_name = "Megatron"
+character_id = "megatron"
+max_hp = 450.0
+hp_regen_per_second = 0.0
+move_speed = 100.0
+base_damage = 45.0
+attack_cooldown = 1.1
+attack_range = 400.0
+damage_reduction = 0.1
+dodge_chance = 0.0
+transform_duration = 4.0
+transform_cooldown = 20.0
+transform_hp_multiplier = 1.0
+transform_speed_multiplier = 1.0
+transform_damage_multiplier = 1.0
+transform_defense_multiplier = 1.5
+starting_skill_points = 0
+starting_energon = 0
+available_skins = Array[String](["g1", "prime", "bay"])
+default_skin = "g1"

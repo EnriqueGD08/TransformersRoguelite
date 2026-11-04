@@ -1,0 +1,76 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/bumblebee.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/bumblebee_data.tres" id="2"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/bumblebee_g1.tres" id="3"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/bumblebee_prime.tres" id="4"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/bumblebee_bay.tres" id="5"]
+[ext_resource type="Script" path="res://scripts/characters/skin_manager.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/weapons/stingers_bee.gd" id="7"]
+[ext_resource type="Resource" path="res://resources/weapons/stingers_bee_stats.tres" id="8"]
+[ext_resource type="Script" path="res://scripts/weapons/hitbox.gd" id="9"]
+[ext_resource type="Script" path="res://scripts/characters/transform_bumblebee.gd" id="10"]
+
+[sub_resource type="RectangleShape2D" id="body_shape"]
+size = Vector2(24, 50)
+
+[sub_resource type="CircleShape2D" id="hit_shape"]
+radius = 58.0
+
+[node name="Bumblebee" type="CharacterBody2D" groups=["player"]]
+collision_mask = 4
+motion_mode = 1
+script = ExtResource("1")
+stats = ExtResource("2")
+skin_frames_g1 = ExtResource("3")
+skin_frames_prime = ExtResource("4")
+skin_frames_bay = ExtResource("5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 10)
+shape = SubResource("body_shape")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("3")
+animation = &"idle"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="RegenTimer" type="Timer" parent="."]
+
+[node name="SkinManager" type="Node" parent="."]
+script = ExtResource("6")
+
+[node name="StingersBee" type="Node2D" parent="."]
+script = ExtResource("7")
+stats = ExtResource("8")
+
+[node name="FireTimer" type="Timer" parent="StingersBee"]
+one_shot = true
+
+[node name="Hitbox" type="Area2D" parent="StingersBee"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("9")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StingersBee/Hitbox"]
+position = Vector2(0, 9)
+shape = SubResource("hit_shape")
+
+[node name="HitTimer" type="Timer" parent="StingersBee/Hitbox"]
+one_shot = true
+
+[node name="TransformBumblebee" type="Node" parent="."]
+script = ExtResource("10")
+
+[node name="DurationTimer" type="Timer" parent="TransformBumblebee"]
+one_shot = true
+
+[node name="CooldownTimer" type="Timer" parent="TransformBumblebee"]
+one_shot = true
+
+[node name="InvulnTimer" type="Timer" parent="TransformBumblebee"]
+one_shot = true
+
+[node name="TrailTimer" type="Timer" parent="TransformBumblebee"]

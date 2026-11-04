@@ -44,6 +44,7 @@ func _process_movement(_delta: float) -> void:
 	move_and_slide()
 	if direction.x != 0.0:
 		_sprite.flip_h = direction.x < 0.0
+	_update_move_animation(direction)
 
 # ── Ataque ────────────────────────────────────────────────────────────────────
 
@@ -63,17 +64,26 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_transform_activated() -> void:
-	_sprite.play("transform_activate")
+	play_animation(&"transform_activate")
 	EventBus.play_sfx.emit("bumblebee_transform")
 
 
 func _on_transform_deactivated() -> void:
-	_sprite.play("idle")
+	# La animación de transformación al revés: coche -> robot.
+	play_animation(&"transform_activate", true)
 	EventBus.play_sfx.emit("bumblebee_revert")
+
+# ── Daño ──────────────────────────────────────────────────────────────────────
+
+## Durante la transformación Bumblebee es invulnerable (consulta al componente).
+func take_damage(amount: float) -> void:
+	if _transform_comp != null and _transform_comp.is_invulnerable():
+		return
+	super.take_damage(amount)
 
 # ── Muerte ────────────────────────────────────────────────────────────────────
 
 func _on_died() -> void:
-	_sprite.play("death")
+	play_animation(&"death")
 	EventBus.play_sfx.emit("bumblebee_death")
 	set_physics_process(false)

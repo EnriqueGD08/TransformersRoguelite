@@ -1,0 +1,60 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/megatron.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/megatron_data.tres" id="2"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/megatron_g1.tres" id="3"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/megatron_prime.tres" id="4"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/megatron_bay.tres" id="5"]
+[ext_resource type="Script" path="res://scripts/characters/skin_manager.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/weapons/fusion_cannon.gd" id="7"]
+[ext_resource type="Resource" path="res://resources/weapons/fusion_cannon_stats.tres" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/fusion_bolt.tscn" id="9"]
+[ext_resource type="Script" path="res://scripts/characters/transform_megatron.gd" id="10"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/charged_shell.tscn" id="11"]
+
+[sub_resource type="RectangleShape2D" id="body_shape"]
+size = Vector2(32, 56)
+
+[node name="Megatron" type="CharacterBody2D" groups=["player"]]
+collision_mask = 4
+motion_mode = 1
+script = ExtResource("1")
+stats = ExtResource("2")
+skin_frames_g1 = ExtResource("3")
+skin_frames_prime = ExtResource("4")
+skin_frames_bay = ExtResource("5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 10)
+shape = SubResource("body_shape")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("3")
+animation = &"idle"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="RegenTimer" type="Timer" parent="."]
+
+[node name="SkinManager" type="Node" parent="."]
+script = ExtResource("6")
+
+[node name="FusionCannon" type="Node2D" parent="."]
+script = ExtResource("7")
+stats = ExtResource("8")
+projectile_scene = ExtResource("9")
+muzzle_offset = Vector2(48, 6)
+
+[node name="FireTimer" type="Timer" parent="FusionCannon"]
+one_shot = true
+
+[node name="TransformMegatron" type="Node" parent="."]
+script = ExtResource("10")
+charged_projectile_scene = ExtResource("11")
+
+[node name="DurationTimer" type="Timer" parent="TransformMegatron"]
+one_shot = true
+
+[node name="CooldownTimer" type="Timer" parent="TransformMegatron"]
+one_shot = true

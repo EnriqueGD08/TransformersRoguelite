@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="WeaponStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/weapon_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+weapon_name = "Rayo Nulificador"
+weapon_id = "null_ray"
+weapon_type = "ranged"
+damage = 22.0
+crit_multiplier = 1.5
+crit_chance = 0.1
+fire_rate = 0.7
+range_px = 800.0
+aoe_radius = 0.0
+projectile_speed = 900.0
+projectile_count = 2
+spread_angle = 6.0
+piercing = false
+status_effect = "slow"
+status_chance = 0.5
+status_duration = 2.0

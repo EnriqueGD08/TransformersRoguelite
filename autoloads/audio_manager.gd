@@ -150,7 +150,10 @@ func _load_stream(path: String) -> AudioStream:
 		return _stream_cache[path]
 
 	if not ResourceLoader.exists(path):
+		# Se avisa una sola vez por archivo y se cachea null para no repetir
+		# la comprobación (aún no hay audio real: es lo esperado en desarrollo).
 		push_warning("AudioManager: archivo no encontrado — %s" % path)
+		_stream_cache[path] = null
 		return null
 
 	var stream: AudioStream = load(path)

@@ -43,6 +43,7 @@ func _process_movement(_delta: float) -> void:
 	velocity = direction * get_speed()
 	move_and_slide()
 	_aim_towards_mouse()
+	_update_move_animation(direction)
 
 
 func _aim_towards_mouse() -> void:
@@ -67,17 +68,18 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_transform_activated() -> void:
-	_sprite.play("transform_activate")
+	play_animation(&"transform_activate")
 	EventBus.play_sfx.emit("starscream_transform")
 
 
 func _on_transform_deactivated() -> void:
-	_sprite.play("idle")
+	# La animación de transformación al revés: jet -> robot.
+	play_animation(&"transform_activate", true)
 	EventBus.play_sfx.emit("starscream_revert")
 
 # ── Muerte ────────────────────────────────────────────────────────────────────
 
 func _on_died() -> void:
-	_sprite.play("death")
+	play_animation(&"death")
 	EventBus.play_sfx.emit("starscream_death")
 	set_physics_process(false)

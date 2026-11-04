@@ -32,7 +32,7 @@ func _perform_attack() -> void:
 	var direction: Vector2 = _get_aim_direction(origin)
 
 	var projectile: Projectile = projectile_scene.instantiate()
-	get_parent().get_parent().add_child(projectile)
+	ProjectileContainer.add(self, projectile)
 	projectile.global_position = origin
 
 	# Shockwave usa piercing y slow como efecto de estado desde WeaponStats.
@@ -41,16 +41,15 @@ func _perform_attack() -> void:
 		stats.projectile_speed,
 		damage,
 		stats.range_px,
-		initial_wave_radius,  # aoe_radius inicial (crece en el proyectil)
+		0.0,                  # sin explosión: el área es la propia onda que se ensancha
 		true,                 # piercing siempre activo
 		stats.status_effect,  # "slow" configurado en el .tres
 		stats.status_chance,
 		stats.status_duration
 	)
 
-	# Pasa los radios al proyectil para el efecto de expansión progresiva.
-	if projectile.has_method("set_expanding_wave"):
-		projectile.set_expanding_wave(initial_wave_radius, max_wave_radius, stats.range_px)
+	# La onda crece desde initial_wave_radius hasta max_wave_radius a lo largo del recorrido.
+	projectile.set_expanding_wave(initial_wave_radius, max_wave_radius, stats.range_px)
 
 	projectile.impacted.connect(func(target, dmg): hit.emit(target, dmg))
 	_play_fire_animation()
@@ -60,7 +59,7 @@ func _get_muzzle_position() -> Vector2:
 	if _owner_character == null:
 		return global_position
 	var offset: Vector2 = muzzle_offset
-	if _owner_character._sprite.flip_h:
+	if _owner_character.is_facing_left():
 		offset.x *= -1.0
 	return _owner_character.global_position + offset
 
@@ -73,4 +72,4 @@ func _get_aim_direction(from: Vector2) -> Vector2:
 
 func _play_fire_animation() -> void:
 	if _owner_character:
-		_owner_character._sprite.play("attack")
+		_owner_character.play_animation("attack")

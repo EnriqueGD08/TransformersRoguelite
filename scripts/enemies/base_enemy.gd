@@ -75,6 +75,18 @@ func _physics_process(delta: float) -> void:
 	if _ai:
 		_ai.process_ai(delta)
 
+# ── Dificultad ────────────────────────────────────────────────────────────────
+
+## Aplica los multiplicadores de dificultad de la oleada.
+## Duplica los stats (para no tocar el .tres compartido) y recalcula el HP actual.
+## WaveManager lo llama justo tras el spawn.
+func apply_difficulty(hp_mult: float, damage_mult: float, speed_mult: float) -> void:
+	stats = stats.duplicate()
+	stats.max_hp *= hp_mult
+	stats.attack_damage *= damage_mult
+	stats.move_speed *= speed_mult
+	_current_hp = stats.max_hp
+
 # ── Setup ─────────────────────────────────────────────────────────────────────
 
 ## Llamado por enemy_spawner tras instanciar el enemigo.
@@ -108,7 +120,9 @@ func get_current_hp() -> float:
 # ── IMovable ──────────────────────────────────────────────────────────────────
 
 func get_speed() -> float:
-	return stats.move_speed * _speed_modifier
+	# El estado "slow" (ej: rayo nulificador) reduce la velocidad a la mitad.
+	var slow_factor: float = 0.5 if _has_status("slow") else 1.0
+	return stats.move_speed * _speed_modifier * slow_factor
 
 
 func get_direction() -> Vector2:

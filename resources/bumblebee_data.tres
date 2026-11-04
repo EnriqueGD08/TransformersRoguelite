@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/character_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+character_name = "Bumblebee"
+character_id = "bumblebee"
+max_hp = 180.0
+hp_regen_per_second = 0.5
+move_speed = 190.0
+base_damage = 14.0
+attack_cooldown = 0.3
+attack_range = 60.0
+damage_reduction = 0.0
+dodge_chance = 0.15
+transform_duration = 5.0
+transform_cooldown = 15.0
+transform_hp_multiplier = 1.0
+transform_speed_multiplier = 1.5
+transform_damage_multiplier = 1.0
+transform_defense_multiplier = 1.0
+starting_skill_points = 0
+starting_energon = 0
+available_skins = Array[String](["g1", "prime", "bay"])
+default_skin = "g1"

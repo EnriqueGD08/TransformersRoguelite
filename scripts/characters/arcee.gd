@@ -53,8 +53,14 @@ func _process_movement(_delta: float) -> void:
 	).normalized()
 	velocity = direction * get_speed()
 	move_and_slide()
-	if direction.x != 0.0:
-		_sprite.flip_h = direction.x < 0.0
+	if _using_melee or _is_transformed:
+		# Cuerpo a cuerpo y en moto: mira hacia donde se mueve.
+		if direction.x != 0.0:
+			_sprite.flip_h = direction.x < 0.0
+	else:
+		# Con las pistolas apunta al ratón.
+		_sprite.flip_h = get_global_mouse_position().x < global_position.x
+	_update_move_animation(direction)
 
 # ── Ataque ────────────────────────────────────────────────────────────────────
 
@@ -82,20 +88,32 @@ func _swap_weapon() -> void:
 	var label: String = "melee" if _using_melee else "ranged"
 	EventBus.weapon_swapped.emit(label)
 	EventBus.play_sfx.emit("arcee_swap")
+	# Refresca el aspecto (cuchillas <-> pistolas) si está en reposo o caminando.
+	_update_move_animation(velocity)
+
+
+## Cada arma tiene sus propias animaciones ("ranged_idle", "ranged_walk"...).
+func _resolve_animation(base_name: StringName) -> StringName:
+	if not _is_transformed and not _using_melee and _sprite.sprite_frames != null:
+		var ranged: StringName = StringName("ranged_" + base_name)
+		if _sprite.sprite_frames.has_animation(ranged):
+			return ranged
+	return super._resolve_animation(base_name)
 
 
 func _on_transform_activated() -> void:
-	_sprite.play("transform_activate")
+	play_animation(&"transform_activate")
 	EventBus.play_sfx.emit("arcee_transform")
 
 
 func _on_transform_deactivated() -> void:
-	_sprite.play("idle")
+	# La animación de transformación al revés: moto -> robot.
+	play_animation(&"transform_activate", true)
 	EventBus.play_sfx.emit("arcee_revert")
 
 # ── Muerte ────────────────────────────────────────────────────────────────────
 
 func _on_died() -> void:
-	_sprite.play("death")
+	play_animation(&"death")
 	EventBus.play_sfx.emit("arcee_death")
 	set_physics_process(false)

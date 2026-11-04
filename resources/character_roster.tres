@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CharacterRoster" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/character_roster.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/character_info.gd" id="info_script"]
+[ext_resource type="Resource" path="res://resources/characters/optimus_info.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/characters/bumblebee_info.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/characters/megatron_info.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/characters/starscream_info.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/characters/arcee_info.tres" id="6"]
+[ext_resource type="Resource" path="res://resources/characters/shockwave_info.tres" id="7"]
+
+[resource]
+script = ExtResource("1")
+entries = Array[ExtResource("info_script")]([ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7")])

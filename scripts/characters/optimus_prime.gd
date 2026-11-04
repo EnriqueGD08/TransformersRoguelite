@@ -41,6 +41,7 @@ func _process_movement(delta: float) -> void:
 	velocity = direction * get_speed()
 	move_and_slide()
 	_update_facing(direction)
+	_update_move_animation(direction)
 
 
 func _get_input_direction() -> Vector2:
@@ -73,17 +74,18 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Al transformarse, Optimus gana superarmadura y ejecuta una embestida.
 func _on_transform_activated() -> void:
-	_sprite.play("transform_activate")
+	play_animation(&"transform_activate")
 	EventBus.play_sfx.emit("optimus_transform")
 
 
 func _on_transform_deactivated() -> void:
-	_sprite.play("idle")
+	# La animación de transformación al revés: camión -> robot.
+	play_animation(&"transform_activate", true)
 	EventBus.play_sfx.emit("optimus_revert")
 
 # ── Muerte ────────────────────────────────────────────────────────────────────
 
 func _on_died() -> void:
-	_sprite.play("death")
+	play_animation(&"death")
 	EventBus.play_sfx.emit("optimus_death")
 	set_physics_process(false)

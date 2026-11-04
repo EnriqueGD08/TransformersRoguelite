@@ -1,0 +1,26 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/shock_wave/fly_0.png" id="1_53mmh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/shock_wave/fly_1.png" id="2_c8eir"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/shock_wave/fly_2.png" id="3_yfqam"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/shock_wave/fly_3.png" id="4_4t23i"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_53mmh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_c8eir")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_yfqam")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_4t23i")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 14.0
+}]

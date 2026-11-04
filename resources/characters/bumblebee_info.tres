@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CharacterInfo" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/character_info.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player_bumblebee.tscn" id="2"]
+[ext_resource type="Resource" path="res://resources/bumblebee_data.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+id = "bumblebee"
+display_name = "Bumblebee"
+faction = "Autobot"
+role = "Escaramuzador veloz"
+description = "Pequeño, rápido y escurridizo: esquiva a menudo y castiga con combos de puños."
+weapon_name = "Stingers de Energon"
+weapon_description = "Combo rápido de puños; el tercer golpe es un remate que aturde."
+transform_name = "Camaro"
+transform_description = "Invulnerable un instante al transformarse, velocidad extrema y una estela que daña a los enemigos al pasar."
+scene = ExtResource("2")
+stats = ExtResource("3")

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CharacterInfo" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/character_info.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player_starscream.tscn" id="2"]
+[ext_resource type="Resource" path="res://resources/starscream_data.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+id = "starscream"
+display_name = "Starscream"
+faction = "Decepticon"
+role = "Francotirador aéreo"
+description = "Frágil pero letal a larga distancia. Dispara ráfagas que ralentizan."
+weapon_name = "Rayo Nulificador"
+weapon_description = "Ráfaga de dos rayos de largo alcance que ralentizan al impactar."
+transform_name = "Jet F-22"
+transform_description = "Lanza una bomba en picado de área al despegar y vuela a gran velocidad."
+scene = ExtResource("2")
+stats = ExtResource("3")

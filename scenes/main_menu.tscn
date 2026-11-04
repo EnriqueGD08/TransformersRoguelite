@@ -1,0 +1,112 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/character_roster.tres" id="2"]
+
+[sub_resource type="Gradient" id="grad"]
+colors = PackedColorArray(0.08, 0.1, 0.18, 1, 0.02, 0.02, 0.05, 1)
+
+[sub_resource type="GradientTexture2D" id="grad_tex"]
+gradient = SubResource("grad")
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+roster = ExtResource("2")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("grad_tex")
+expand_mode = 1
+
+[node name="LeftSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(270, 470)
+scale = Vector2(3, 3)
+
+[node name="RightSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(1010, 470)
+scale = Vector2(3, 3)
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 60.0
+offset_bottom = 150.0
+grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0.05, 0.07, 0.14, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 72
+text = "TRANSFORMERS"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 150.0
+offset_bottom = 200.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.78, 0.3, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.07, 0.14, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 36
+text = "R O G U E L I T E"
+horizontal_alignment = 1
+
+[node name="ButtonBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = 10.0
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="PlayButton" type="Button" parent="ButtonBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "JUGAR"
+
+[node name="QuitButton" type="Button" parent="ButtonBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "SALIR"
+
+[node name="Footer" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.5, 0.56, 0.68, 1)
+text = "Sobrevive a 20 oleadas · Elige tu personaje · Transfórmate"
+horizontal_alignment = 1
+
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 3.0

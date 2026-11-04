@@ -27,11 +27,14 @@ func _perform_attack() -> void:
 		return
 
 	var damage: float = _calculate_damage()
-	var aim: Vector2 = _get_aim_direction()
 	var half_spread: float = deg_to_rad(spread_degrees / 2.0)
 
-	_spawn_projectile(_get_muzzle(muzzle_offset_left), aim.rotated(-half_spread), damage)
-	_spawn_projectile(_get_muzzle(muzzle_offset_right), aim.rotated(half_spread), damage)
+	# Cada pistola apunta al ratón DESDE su propia boca de cañón; si no, las balas
+	# salen en paralelo y fallan a los enemigos cercanos.
+	var left: Vector2 = _get_muzzle(muzzle_offset_left)
+	var right: Vector2 = _get_muzzle(muzzle_offset_right)
+	_spawn_projectile(left, _get_aim_direction(left).rotated(-half_spread), damage)
+	_spawn_projectile(right, _get_aim_direction(right).rotated(half_spread), damage)
 
 	_play_fire_animation()
 
@@ -40,20 +43,20 @@ func _get_muzzle(offset: Vector2) -> Vector2:
 	if _owner_character == null:
 		return global_position
 	var o: Vector2 = offset
-	if _owner_character._sprite.flip_h:
+	if _owner_character.is_facing_left():
 		o.x *= -1.0
 	return _owner_character.global_position + o
 
 
-func _get_aim_direction() -> Vector2:
+func _get_aim_direction(from: Vector2) -> Vector2:
 	if _owner_character == null:
 		return Vector2.RIGHT
-	return (get_global_mouse_position() - _owner_character.global_position).normalized()
+	return (get_global_mouse_position() - from).normalized()
 
 
 func _spawn_projectile(origin: Vector2, direction: Vector2, damage: float) -> void:
 	var projectile: Projectile = projectile_scene.instantiate()
-	get_parent().get_parent().add_child(projectile)
+	ProjectileContainer.add(self, projectile)
 	projectile.global_position = origin
 	projectile.setup(
 		direction,
@@ -71,4 +74,4 @@ func _spawn_projectile(origin: Vector2, direction: Vector2, damage: float) -> vo
 
 func _play_fire_animation() -> void:
 	if _owner_character:
-		_owner_character._sprite.play("attack")
+		_owner_character.play_animation("attack")

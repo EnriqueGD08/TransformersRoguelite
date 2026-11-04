@@ -1,15 +1,14 @@
 # energon_manager.gd
 # Gestiona el energon (moneda) del jugador durante la run.
-# SRP: única responsabilidad es rastrear el saldo de energon y
-#      gestionar los drops físicos en el mundo.
+# SRP: única responsabilidad es gestionar los drops físicos de energon en el
+#      mundo. El SALDO vive en GameState (única fuente de verdad); este
+#      manager solo lo consulta y delega las operaciones en él.
 # DIP: escucha señales del EventBus; no depende de clases concretas.
 
 class_name EnergonManager
 extends Node
 
 # ── Señales ───────────────────────────────────────────────────────────────────
-
-signal energon_changed(current: int)
 
 # ── Configuración ─────────────────────────────────────────────────────────────
 
@@ -24,40 +23,28 @@ signal energon_changed(current: int)
 
 # ── Estado ────────────────────────────────────────────────────────────────────
 
-var _current_energon: int = 0
 var _player: Node = null
 
 # ── Setup ─────────────────────────────────────────────────────────────────────
 
-func setup(player: Node, starting_energon: int) -> void:
+func setup(player: Node) -> void:
 	_player = player
-	_current_energon = starting_energon
-
 	EventBus.energon_dropped.connect(_on_energon_dropped)
-	EventBus.energon_collected.connect(_on_energon_collected)
-
-	energon_changed.emit(_current_energon)
-	EventBus.player_energon_changed.emit(_current_energon)
 
 # ── API pública ───────────────────────────────────────────────────────────────
 
-## Añade energon al saldo del jugador.
+## Añade energon al saldo del jugador (delegado en GameState).
 func add_energon(amount: int) -> void:
-	_current_energon += amount
-	_notify_change()
+	GameState.add_energon(amount)
 
 
 ## Intenta gastar energon. Devuelve true si había suficiente saldo.
 func spend_energon(amount: int) -> bool:
-	if _current_energon < amount:
-		return false
-	_current_energon -= amount
-	_notify_change()
-	return true
+	return GameState.spend_energon(amount)
 
 
 func get_current_energon() -> int:
-	return _current_energon
+	return GameState.current_energon
 
 # ── Drops en el mundo ─────────────────────────────────────────────────────────
 
@@ -81,14 +68,3 @@ func _on_energon_dropped(position: Vector2, amount: int) -> void:
 
 func _on_pickup_collected(amount: int) -> void:
 	add_energon(amount)
-
-
-func _on_energon_collected(amount: int, _total: int) -> void:
-	# Recolección directa sin pickup físico (bonus de oleada).
-	add_energon(amount)
-
-# ── Privados ──────────────────────────────────────────────────────────────────
-
-func _notify_change() -> void:
-	energon_changed.emit(_current_energon)
-	EventBus.player_energon_changed.emit(_current_energon)

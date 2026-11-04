@@ -47,7 +47,7 @@ func _get_muzzle_position() -> Vector2:
 	if _owner_character == null:
 		return global_position
 	var offset: Vector2 = muzzle_offset
-	if _owner_character._sprite.flip_h:
+	if _owner_character.is_facing_left():
 		offset.x *= -1.0
 	return _owner_character.global_position + offset
 
@@ -60,7 +60,7 @@ func _get_aim_direction(from: Vector2) -> Vector2:
 
 func _spawn_projectile(origin: Vector2, direction: Vector2, damage: float) -> void:
 	var projectile: Projectile = projectile_scene.instantiate()
-	get_parent().get_parent().add_child(projectile)
+	ProjectileContainer.add(self, projectile)
 	projectile.global_position = origin
 	projectile.setup(
 		direction,
@@ -78,4 +78,4 @@ func _spawn_projectile(origin: Vector2, direction: Vector2, damage: float) -> vo
 
 func _play_fire_animation() -> void:
 	if _owner_character:
-		_owner_character._sprite.play("attack")
+		_owner_character.play_animation("attack")

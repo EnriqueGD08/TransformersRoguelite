@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CharacterInfo" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/character_info.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player_optimus.tscn" id="2"]
+[ext_resource type="Resource" path="res://resources/optimus_data.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+id = "optimus_prime"
+display_name = "Optimus Prime"
+faction = "Autobot"
+role = "Tanque cuerpo a cuerpo"
+description = "El líder de los Autobots. Aguanta lo que le echen y golpea fuerte de cerca."
+weapon_name = "Hacha de Energon"
+weapon_description = "Golpe amplio que empuja a los enemigos. Más alcance mientras está transformado."
+transform_name = "Camión"
+transform_description = "Superarmadura (90 % menos daño) y una embestida que daña y empuja a todos los enemigos cercanos."
+scene = ExtResource("2")
+stats = ExtResource("3")

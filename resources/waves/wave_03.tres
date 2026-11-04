@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="WaveData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/wave_data.gd" id="wd"]
+[ext_resource type="Script" path="res://scripts/systems/spawn_group.gd" id="sg"]
+[ext_resource type="PackedScene" path="res://scenes/vehicon.tscn" id="v"]
+
+[sub_resource type="Resource" id="g0"]
+script = ExtResource("sg")
+enemy_scene = ExtResource("v")
+count = 12
+spawn_interval = 1.0
+initial_delay = 1.0
+
+[sub_resource type="Resource" id="g1"]
+script = ExtResource("sg")
+enemy_scene = ExtResource("v")
+count = 12
+spawn_interval = 1.2
+initial_delay = 6.0
+
+[resource]
+script = ExtResource("wd")
+wave_number = 3
+duration = 60.0
+must_kill_all = false
+spawn_groups = Array[ExtResource("sg")]([SubResource("g0"), SubResource("g1")])
+has_boss = false
+enemy_hp_multiplier = 1.5
+enemy_damage_multiplier = 1.2
+enemy_speed_multiplier = 1.0
+bonus_skill_points = 1
+bonus_energon = 20

@@ -41,18 +41,32 @@ func _process_movement(_delta: float) -> void:
 		Input.get_axis("move_left", "move_right"),
 		Input.get_axis("move_up", "move_down")
 	).normalized()
+	# Como cañón láser está inmóvil (pero sigue apuntando).
+	if _movement_locked:
+		direction = Vector2.ZERO
 	velocity = direction * get_speed()
 	move_and_slide()
 	_aim_towards_mouse()
+	_update_move_animation(direction)
 
 
+## Mira hacia el ratón. Como cañón láser, además gira el sprite entero para que
+## el cañón apunte exactamente donde se dispara el rayo.
 func _aim_towards_mouse() -> void:
-	var mouse_pos: Vector2 = get_global_mouse_position()
-	_sprite.flip_h = mouse_pos.x < global_position.x
+	var to_mouse: Vector2 = get_global_mouse_position() - global_position
+	_sprite.flip_h = to_mouse.x < 0.0
+	if _is_transformed and to_mouse.length() > 1.0:
+		# Con el sprite espejado el cañón apunta a la izquierda: se compensa con PI.
+		_sprite.rotation = to_mouse.angle() - (PI if _sprite.flip_h else 0.0)
+	else:
+		_sprite.rotation = 0.0
 
 # ── Ataque ────────────────────────────────────────────────────────────────────
 
 func _process_attack(_delta: float) -> void:
+	# Como cañón láser el rayo sustituye al disparo normal.
+	if _is_transformed:
+		return
 	if Input.is_action_pressed("attack") and _weapon.can_fire():
 		_weapon.fire()
 
@@ -68,17 +82,18 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_transform_activated() -> void:
-	_sprite.play("transform_activate")
+	play_animation(&"transform_activate")
 	EventBus.play_sfx.emit("shockwave_transform")
 
 
 func _on_transform_deactivated() -> void:
-	_sprite.play("idle")
+	# La animación de transformación al revés: cañón -> robot.
+	play_animation(&"transform_activate", true)
 	EventBus.play_sfx.emit("shockwave_revert")
 
 # ── Muerte ────────────────────────────────────────────────────────────────────
 
 func _on_died() -> void:
-	_sprite.play("death")
+	play_animation(&"death")
 	EventBus.play_sfx.emit("shockwave_death")
 	set_physics_process(false)

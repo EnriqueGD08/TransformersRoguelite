@@ -43,6 +43,7 @@ func _process_movement(_delta: float) -> void:
 	velocity = direction * get_speed()
 	move_and_slide()
 	_aim_towards_mouse()
+	_update_move_animation(direction)
 
 
 ## Megatron apunta hacia el ratón en lugar de girar por dirección de movimiento.
@@ -68,17 +69,18 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_transform_activated() -> void:
-	_sprite.play("transform_activate")
+	play_animation(&"transform_activate")
 	EventBus.play_sfx.emit("megatron_transform")
 
 
 func _on_transform_deactivated() -> void:
-	_sprite.play("idle")
+	# Al terminar el modo tanque se libera el disparo cargado; vuelve a robot.
+	play_animation(&"transform_activate", true)
 	EventBus.play_sfx.emit("megatron_revert")
 
 # ── Muerte ────────────────────────────────────────────────────────────────────
 
 func _on_died() -> void:
-	_sprite.play("death")
+	play_animation(&"death")
 	EventBus.play_sfx.emit("megatron_death")
 	set_physics_process(false)

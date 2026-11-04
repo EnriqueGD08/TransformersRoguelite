@@ -31,6 +31,13 @@ func _ready() -> void:
 	monitoring = false
 	body_entered.connect(_on_body_entered)
 
+# ── Golpes compartidos ────────────────────────────────────────────────────────
+
+## Hace que este hitbox use una lista de golpeados común con otros hitboxes
+## del mismo ataque, para que un enemigo no reciba daño dos veces.
+func share_hit_list(shared: Array) -> void:
+	_hit_targets = shared
+
 # ── API pública ───────────────────────────────────────────────────────────────
 
 ## Activa el hitbox durante [param duration] segundos con [param damage] de daño.

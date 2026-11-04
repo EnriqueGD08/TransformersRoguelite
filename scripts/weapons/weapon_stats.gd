@@ -69,7 +69,7 @@ extends Resource
 
 ## Efecto de estado que aplica al impactar.
 ## Valores válidos: "", "slow", "stun", "burn", "knockback".
-@export_enum("", "slow", "stun", "burn", "knockback") var status_effect: String = ""
+@export var status_effect: String = ""
 
 ## Probabilidad de aplicar el efecto de estado (0.0 = nunca, 1.0 = siempre).
 @export_range(0.0, 1.0, 0.05) var status_chance: float = 0.0

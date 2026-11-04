@@ -1,0 +1,26 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/photon/fly_0.png" id="1_ve7gh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/photon/fly_1.png" id="2_mofk1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/photon/fly_2.png" id="3_umd04"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/photon/fly_3.png" id="4_8br2u"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_ve7gh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_mofk1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_umd04")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_8br2u")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 14.0
+}]

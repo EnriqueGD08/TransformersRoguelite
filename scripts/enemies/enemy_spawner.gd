@@ -94,7 +94,7 @@ func get_active_enemies() -> Array[BaseEnemy]:
 ## Genera una posición de spawn aleatoria fuera del viewport del jugador.
 ## [param min_distance] Distancia mínima al jugador en píxeles.
 ## [param max_distance] Distancia máxima al jugador en píxeles.
-func get_random_spawn_position(min_distance: float = 300.0, max_distance: float = 500.0) -> Vector2:
+func get_random_spawn_position(min_distance: float = 440.0, max_distance: float = 520.0) -> Vector2:
 	if _player == null:
 		return Vector2.ZERO
 	var angle: float = randf() * TAU

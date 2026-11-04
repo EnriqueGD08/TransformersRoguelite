@@ -1,0 +1,71 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/optimus_prime.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/optimus_data.tres" id="2"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/optimus_g1.tres" id="3"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/optimus_prime.tres" id="4"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/optimus_bay.tres" id="5"]
+[ext_resource type="Script" path="res://scripts/characters/skin_manager.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/weapons/axe_optimus.gd" id="7"]
+[ext_resource type="Resource" path="res://resources/weapons/axe_optimus_stats.tres" id="8"]
+[ext_resource type="Script" path="res://scripts/weapons/hitbox.gd" id="9"]
+[ext_resource type="Script" path="res://scripts/characters/transform_optimus.gd" id="10"]
+
+[sub_resource type="RectangleShape2D" id="body_shape"]
+size = Vector2(28, 54)
+
+[sub_resource type="CircleShape2D" id="hit_shape"]
+radius = 70.0
+
+[node name="OptimusPrime" type="CharacterBody2D" groups=["player"]]
+collision_mask = 4
+motion_mode = 1
+script = ExtResource("1")
+stats = ExtResource("2")
+skin_frames_g1 = ExtResource("3")
+skin_frames_prime = ExtResource("4")
+skin_frames_bay = ExtResource("5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 10)
+shape = SubResource("body_shape")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("3")
+animation = &"idle"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="RegenTimer" type="Timer" parent="."]
+
+[node name="SkinManager" type="Node" parent="."]
+script = ExtResource("6")
+
+[node name="AxeOptimus" type="Node2D" parent="."]
+script = ExtResource("7")
+stats = ExtResource("8")
+
+[node name="FireTimer" type="Timer" parent="AxeOptimus"]
+one_shot = true
+
+[node name="Hitbox" type="Area2D" parent="AxeOptimus"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("9")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AxeOptimus/Hitbox"]
+position = Vector2(0, 9)
+shape = SubResource("hit_shape")
+
+[node name="HitTimer" type="Timer" parent="AxeOptimus/Hitbox"]
+one_shot = true
+
+[node name="TransformOptimus" type="Node" parent="."]
+script = ExtResource("10")
+
+[node name="DurationTimer" type="Timer" parent="TransformOptimus"]
+one_shot = true
+
+[node name="CooldownTimer" type="Timer" parent="TransformOptimus"]
+one_shot = true

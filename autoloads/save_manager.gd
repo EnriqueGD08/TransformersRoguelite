@@ -67,8 +67,10 @@ func load_game() -> void:
 	GameState.selected_character_id = config.get_value("run", "character_id", "")
 	GameState.selected_skin_id = config.get_value("run", "skin_id", "g1")
 	GameState.current_wave = config.get_value("run", "current_wave", 0)
-	GameState.current_energon = config.get_value("run", "current_energon", 0)
-	GameState.available_skill_points = config.get_value("run", "available_skill_points", 0)
+	GameState.restore_economy(
+		config.get_value("run", "current_energon", 0),
+		config.get_value("run", "available_skill_points", 0)
+	)
 	GameState.unlocked_skill_ids = config.get_value("run", "unlocked_skill_ids", [])
 	GameState.run_active = config.get_value("run", "run_active", false)
 	GameState.enemies_killed = config.get_value("stats", "enemies_killed", 0)

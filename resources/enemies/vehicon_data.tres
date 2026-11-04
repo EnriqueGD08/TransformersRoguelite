@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "Vehicon"
+enemy_id = "vehicon"
+max_hp = 60.0
+move_speed = 70.0
+detection_range = 1000.0
+attack_range = 50.0
+attack_damage = 8.0
+attack_cooldown = 1.0
+energon_reward = 5
+xp_reward = 1
+ai_type = "melee_chaser"
+can_fly = false

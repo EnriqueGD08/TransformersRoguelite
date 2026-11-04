@@ -1,0 +1,105 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/attack_0.png" id="1_gm46t"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/attack_1.png" id="2_i4quk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/attack_2.png" id="3_kh1an"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/attack_3.png" id="4_v1mxa"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/death_0.png" id="5_l0qop"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/death_1.png" id="6_vfhyj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/death_2.png" id="7_wwubv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/death_3.png" id="8_wwk7v"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/death_4.png" id="9_p6kj4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/death_5.png" id="10_8hj78"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/idle_0.png" id="11_8olu4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/idle_1.png" id="12_sriri"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/idle_2.png" id="13_lt00y"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/idle_3.png" id="14_q2vcq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/walk_0.png" id="15_xqud6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/walk_1.png" id="16_a6cce"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/walk_2.png" id="17_5ygty"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/walk_3.png" id="18_355wu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/walk_4.png" id="19_k5y5r"]
+[ext_resource type="Texture2D" path="res://assets/sprites/vehicon/base/walk_5.png" id="20_1rmpa"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_gm46t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_i4quk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_kh1an")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_v1mxa")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_l0qop")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_vfhyj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_wwubv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_wwk7v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_p6kj4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_8hj78")
+}],
+"loop": false,
+"name": &"death",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_8olu4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_sriri")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_lt00y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_q2vcq")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_xqud6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_a6cce")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_5ygty")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_355wu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_k5y5r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_1rmpa")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 10.0
+}]

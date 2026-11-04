@@ -1,0 +1,50 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/game_controller.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player_optimus.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/wave_end.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/game_over.tscn" id="5"]
+[ext_resource type="Script" path="res://scripts/enemies/enemy_spawner.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/systems/wave_manager.gd" id="7"]
+[ext_resource type="Script" path="res://scripts/systems/energon_manager.gd" id="8"]
+[ext_resource type="Script" path="res://scripts/systems/wave_data.gd" id="9"]
+[ext_resource type="Resource" path="res://resources/waves/wave_01.tres" id="10"]
+[ext_resource type="Resource" path="res://resources/waves/wave_02.tres" id="11"]
+[ext_resource type="Resource" path="res://resources/waves/wave_03.tres" id="12"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1")
+default_player_scene = ExtResource("2")
+
+[node name="Hud" parent="." instance=ExtResource("3")]
+
+[node name="WaveEnd" parent="." instance=ExtResource("4")]
+
+[node name="RunEnd" parent="." instance=ExtResource("5")]
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="Floor" type="ColorRect" parent="World"]
+z_index = -10
+offset_left = -3000.0
+offset_top = -3000.0
+offset_right = 3000.0
+offset_bottom = 3000.0
+color = Color(0.13, 0.14, 0.18, 1)
+
+[node name="Enemies" type="Node2D" parent="World"]
+
+[node name="Projectiles" type="Node2D" parent="World" groups=["projectiles"]]
+
+[node name="Systems" type="Node" parent="."]
+
+[node name="EnemySpawner" type="Node" parent="Systems"]
+script = ExtResource("6")
+
+[node name="WaveManager" type="Node" parent="Systems"]
+script = ExtResource("7")
+waves = Array[ExtResource("9")]([ExtResource("10"), ExtResource("11"), ExtResource("12")])
+
+[node name="EnergonManager" type="Node" parent="Systems"]
+script = ExtResource("8")

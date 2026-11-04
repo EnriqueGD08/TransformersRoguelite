@@ -1,0 +1,197 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/attack_0.png" id="1_so7ya"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/attack_1.png" id="2_8p6cx"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/attack_2.png" id="3_836dv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/attack_3.png" id="4_21x54"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/death_0.png" id="5_s2eac"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/death_1.png" id="6_2632v"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/death_2.png" id="7_muoo3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/death_3.png" id="8_pywc0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/death_4.png" id="9_vjhth"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/death_5.png" id="10_2kwa5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/idle_0.png" id="11_25vy0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/idle_1.png" id="12_6yc7r"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/idle_2.png" id="13_cnhxv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/idle_3.png" id="14_iqwxo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_activate_0.png" id="15_xnahd"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_activate_1.png" id="16_yxji3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_activate_2.png" id="17_y7phq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_activate_3.png" id="18_ji03x"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_activate_4.png" id="19_jb0kh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_activate_5.png" id="20_gek20"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_attack_0.png" id="21_ly14n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_attack_1.png" id="22_3x6se"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_attack_2.png" id="23_uxuqi"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_attack_3.png" id="24_phlyj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_idle_0.png" id="25_i8p88"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_idle_1.png" id="26_tbt4e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_idle_2.png" id="27_jk3wk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_idle_3.png" id="28_dcti1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_walk_0.png" id="29_aeesq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_walk_1.png" id="30_5j1x4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_walk_2.png" id="31_5d8fd"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/transform_walk_3.png" id="32_ls07n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/walk_0.png" id="33_r0tgd"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/walk_1.png" id="34_q63vj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/walk_2.png" id="35_g4ree"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/walk_3.png" id="36_1dlm4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/walk_4.png" id="37_i3lv7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/starscream/bay/walk_5.png" id="38_jbq8i"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_so7ya")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_8p6cx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_836dv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_21x54")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_s2eac")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_2632v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_muoo3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_pywc0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_vjhth")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_2kwa5")
+}],
+"loop": false,
+"name": &"death",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_25vy0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_6yc7r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_cnhxv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_iqwxo")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_xnahd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_yxji3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_y7phq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_ji03x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_jb0kh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_gek20")
+}],
+"loop": false,
+"name": &"transform_activate",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_ly14n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_3x6se")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_uxuqi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_phlyj")
+}],
+"loop": false,
+"name": &"transform_attack",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("25_i8p88")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_tbt4e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_jk3wk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_dcti1")
+}],
+"loop": true,
+"name": &"transform_idle",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("29_aeesq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_5j1x4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_5d8fd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_ls07n")
+}],
+"loop": true,
+"name": &"transform_walk",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("33_r0tgd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_q63vj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_g4ree")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_1dlm4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_i3lv7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_jbq8i")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 10.0
+}]

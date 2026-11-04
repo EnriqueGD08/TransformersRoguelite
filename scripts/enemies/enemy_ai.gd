@@ -140,7 +140,7 @@ func _ranged_attack() -> void:
 		return
 
 	var projectile: Projectile = _enemy.stats.projectile_scene.instantiate()
-	_enemy.get_parent().add_child(projectile)
+	ProjectileContainer.add(_enemy, projectile)
 	projectile.global_position = _enemy.global_position
 
 	var direction: Vector2 = _enemy.global_position.direction_to(
@@ -173,5 +173,5 @@ func _set_state(new_state: State) -> void:
 
 # ── Callbacks ─────────────────────────────────────────────────────────────────
 
-func _on_enemy_died(_enemy: BaseEnemy) -> void:
+func _on_enemy_died(_dead_enemy: BaseEnemy) -> void:
 	_set_state(State.DEAD)

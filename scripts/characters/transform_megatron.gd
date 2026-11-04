@@ -19,6 +19,9 @@ var character: BaseCharacter = null
 ## Radio del área de explosión del disparo cargado en píxeles.
 @export_range(80.0, 400.0, 10.0) var explosion_radius: float = 180.0
 
+## Alcance máximo del proyectil cargado en píxeles.
+@export_range(200.0, 2000.0, 50.0) var charged_projectile_range: float = 900.0
+
 ## Velocidad del proyectil cargado en píxeles/segundo.
 @export_range(200.0, 1000.0, 50.0) var charged_projectile_speed: float = 600.0
 
@@ -96,7 +99,7 @@ func _fire_charged_shot() -> void:
 		return
 
 	var projectile: Node = charged_projectile_scene.instantiate()
-	character.get_parent().add_child(projectile)
+	ProjectileContainer.add(character, projectile)
 	projectile.global_position = character.global_position
 
 	var direction: Vector2 = (character.get_global_mouse_position() \
@@ -105,7 +108,7 @@ func _fire_charged_shot() -> void:
 	var damage: float = character.get_damage() * charged_shot_multiplier
 
 	if projectile.has_method("setup"):
-		projectile.setup(direction, charged_projectile_speed, damage, explosion_radius)
+		projectile.setup(direction, charged_projectile_speed, damage, charged_projectile_range, explosion_radius)
 
 	EventBus.play_sfx.emit("megatron_charged_shot")
 

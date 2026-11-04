@@ -37,6 +37,9 @@ var _is_dashing: bool = false
 var _dash_direction: Vector2 = Vector2.ZERO
 var _dash_start: Vector2 = Vector2.ZERO
 
+## Enemigos ya cortados en este dash (cada uno recibe daño una sola vez).
+var _dash_hit: Array = []
+
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _ready() -> void:
@@ -101,9 +104,10 @@ func _execute_dash() -> void:
 	# Dirección del dash: movimiento actual o derecha por defecto.
 	_dash_direction = character.velocity.normalized()
 	if _dash_direction == Vector2.ZERO:
-		_dash_direction = Vector2.RIGHT if not character._sprite.flip_h else Vector2.LEFT
+		_dash_direction = Vector2.RIGHT if not character.is_facing_left() else Vector2.LEFT
 
 	_dash_start = character.global_position
+	_dash_hit.clear()
 	_is_dashing = true
 
 	_dash_timer.wait_time = dash_duration
@@ -137,7 +141,8 @@ func _apply_slash_damage() -> void:
 	var slash_damage: float = character.get_damage() * slash_damage_multiplier
 	for result in space_state.intersect_shape(query):
 		var body: Node = result.collider
-		if body.has_method("take_damage"):
+		if body.has_method("take_damage") and not body in _dash_hit:
+			_dash_hit.append(body)
 			body.take_damage(slash_damage)
 
 # ── Callbacks ─────────────────────────────────────────────────────────────────

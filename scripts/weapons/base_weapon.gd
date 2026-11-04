@@ -38,6 +38,8 @@ var _can_fire: bool = true
 
 func _ready() -> void:
 	assert(stats != null, "BaseWeapon: stats no asignado en " + name)
+	# Copia propia: upgrade_stat no debe modificar el .tres compartido.
+	stats = stats.duplicate()
 
 	_owner_character = _find_owner_character()
 

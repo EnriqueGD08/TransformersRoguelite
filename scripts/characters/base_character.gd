@@ -56,6 +56,10 @@ var _transform_component: Node = null
 ## Referencia al componente de skin (ISkinProvider).
 var _skin_manager: Node = null
 
+## Si es true el personaje no se desplaza (ej: Shockwave como cañón láser),
+## pero sigue vivo, apuntando y recibiendo daño.
+var _movement_locked: bool = false
+
 ## Referencia al AnimatedSprite2D del personaje.
 @onready var _sprite: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -66,10 +70,15 @@ var _skin_manager: Node = null
 
 func _ready() -> void:
 	assert(stats != null, "BaseCharacter: stats no asignado en " + name)
+	# Copia propia: las mejoras del árbol no deben modificar el .tres compartido.
+	stats = stats.duplicate()
 	_current_hp = stats.max_hp
 	_setup_components()
 	_setup_regen_timer()
 	_on_ready()
+	_emit_hp_changed()
+	if _transform_component != null:
+		EventBus.transform_cooldown_updated.emit(0.0, _transform_component.get_cooldown_duration())
 
 
 ## Hook para que las subclases ejecuten lógica adicional en _ready()
@@ -77,6 +86,15 @@ func _ready() -> void:
 ## OCP: la base no se modifica; las subclases extienden mediante este hook.
 func _on_ready() -> void:
 	pass
+
+
+func _process(_delta: float) -> void:
+	# El HUD muestra el cooldown de la transformación mientras se recarga.
+	if _transform_component != null and _transform_component.on_cooldown():
+		EventBus.transform_cooldown_updated.emit(
+			_transform_component.get_cooldown_remaining(),
+			_transform_component.get_cooldown_duration()
+		)
 
 
 func _physics_process(delta: float) -> void:
@@ -95,15 +113,95 @@ func _process_movement(_delta: float) -> void:
 func _process_attack(_delta: float) -> void:
 	pass
 
+# ── API visual pública ────────────────────────────────────────────────────────
+# Las armas y componentes usan estos métodos en lugar de tocar _sprite (privado).
+
+## Cambia la skin visual (g1, prime, bay). No afecta a la lógica de juego.
+func set_skin(skin_id: String) -> void:
+	if _skin_manager != null:
+		_skin_manager.set_skin(skin_id)
+
+
+## Reproduce una animación del sprite si existe en la skin actual.
+## En modo transformado prefiere la variante "transform_<nombre>" (camión, moto...).
+## [param backwards] reproduce la animación al revés (ej: volver a modo robot).
+func play_animation(anim_name: StringName, backwards: bool = false) -> void:
+	var resolved: StringName = _resolve_animation(anim_name)
+	if resolved == &"":
+		return
+	if backwards:
+		_sprite.play_backwards(resolved)
+	else:
+		_sprite.play(resolved)
+
+
+## Devuelve la animación a usar para [param base_name] según el modo actual.
+## Si no existe ni la variante ni la base devuelve "" (no se reproduce nada).
+func _resolve_animation(base_name: StringName) -> StringName:
+	if _sprite.sprite_frames == null:
+		return &""
+	var frames: SpriteFrames = _sprite.sprite_frames
+	if _is_transformed:
+		if frames.has_animation("transform_" + base_name):
+			return StringName("transform_" + base_name)
+		# Variantes (ej: "attack_finisher") caen en la animación general del modo.
+		var family: String = String(base_name).get_slice("_", 0)
+		if frames.has_animation("transform_" + family):
+			return StringName("transform_" + family)
+	if frames.has_animation(base_name):
+		return base_name
+	return &""
+
+
+## Alterna idle/walk (y sus variantes transformadas) según el movimiento.
+## No interrumpe animaciones puntuales (ataque, transformación, muerte).
+func _update_move_animation(direction: Vector2) -> void:
+	if not _is_alive:
+		return
+	var current: String = String(_sprite.animation)
+	# Solo alterna entre variantes de reposo/caminar (idle, ranged_walk, transform_idle...).
+	if not (current.ends_with("idle") or current.ends_with("walk")):
+		return
+	var target: StringName = _resolve_animation(&"walk" if direction != Vector2.ZERO else &"idle")
+	if target != &"" and target != _sprite.animation:
+		_sprite.play(target)
+
+
+## Bloquea o libera el desplazamiento del personaje.
+func set_movement_locked(locked: bool) -> void:
+	_movement_locked = locked
+
+
+func is_movement_locked() -> bool:
+	return _movement_locked
+
+
+## Rotación actual del sprite (radianes). Los componentes que dependen de la
+## orientación visual (ej: la boca del cañón de Shockwave) la consultan aquí.
+func get_visual_rotation() -> float:
+	return _sprite.rotation
+
+
+## True si el personaje mira a la izquierda.
+func is_facing_left() -> bool:
+	return _sprite.flip_h
+
+
+func _on_animation_finished() -> void:
+	if _is_alive:
+		play_animation(&"idle")
+
 # ── Configuración de componentes ──────────────────────────────────────────────
 
 ## Inicializa los componentes del personaje.
 ## Cada subclase debe llamar a _setup_transform_component() y
 ## _setup_skin_manager() con sus implementaciones concretas.
 func _setup_components() -> void:
+	# La skin la aplica cada personaje en _on_ready() (SkinManager.setup + set_skin),
+	# porque necesita los SpriteFrames que solo conoce la subclase.
 	_skin_manager = $SkinManager
-	if _skin_manager:
-		_skin_manager.set_skin(stats.default_skin)
+	# Al terminar una animación puntual (ataque, transformación) vuelve a idle.
+	_sprite.animation_finished.connect(_on_animation_finished)
 
 
 ## Asigna el componente de transformación concreto.
@@ -135,7 +233,7 @@ func take_damage(amount: float) -> void:
 	_current_hp = maxf(_current_hp - reduced, 0.0)
 
 	damaged.emit(reduced, _current_hp)
-	hp_changed.emit(_current_hp, get_max_hp())
+	_emit_hp_changed()
 
 	if _current_hp <= 0.0:
 		_die()
@@ -212,6 +310,7 @@ func notify_transform_deactivated() -> void:
 func notify_transform_ready() -> void:
 	transform_ready.emit()
 	EventBus.transform_cooldown_ready.emit(self)
+	EventBus.transform_cooldown_updated.emit(0.0, _transform_component.get_cooldown_duration())
 
 
 func is_transformed() -> bool:
@@ -257,9 +356,15 @@ func heal(amount: float) -> void:
 	if not _is_alive:
 		return
 	_current_hp = minf(_current_hp + amount, get_max_hp())
-	hp_changed.emit(_current_hp, get_max_hp())
+	_emit_hp_changed()
 
 # ── Privados ──────────────────────────────────────────────────────────────────
+
+## Emite el cambio de HP localmente y por EventBus (lo escucha el HUD).
+func _emit_hp_changed() -> void:
+	hp_changed.emit(_current_hp, get_max_hp())
+	EventBus.player_hp_changed.emit(_current_hp, get_max_hp())
+
 
 func _try_dodge() -> bool:
 	var chance: float = stats.dodge_chance + _get_modifier("dodge_chance")

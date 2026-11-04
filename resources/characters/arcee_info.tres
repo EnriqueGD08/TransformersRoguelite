@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CharacterInfo" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/character_info.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player_arcee.tscn" id="2"]
+[ext_resource type="Resource" path="res://resources/arcee_data.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+id = "arcee"
+display_name = "Arcee"
+faction = "Autobot"
+role = "Híbrida cuerpo a cuerpo / distancia"
+description = "Cambia de arma con la tecla Q según la distancia al enemigo."
+weapon_name = "Cuchillas gemelas / Pistolas fotónicas"
+weapon_description = "Cuchillas con tajo en X y posibilidad de sangrado, o dos pistolas que disparan al ratón."
+transform_name = "Moto"
+transform_description = "Dash instantáneo que deja una estela cortante y daña a todo lo que atraviesa."
+scene = ExtResource("2")
+stats = ExtResource("3")

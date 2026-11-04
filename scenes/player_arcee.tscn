@@ -1,0 +1,99 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/arcee.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/arcee_data.tres" id="2"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/arcee_g1.tres" id="3"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/arcee_prime.tres" id="4"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/arcee_bay.tres" id="5"]
+[ext_resource type="Script" path="res://scripts/characters/skin_manager.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/weapons/twin_blades_arcee.gd" id="7"]
+[ext_resource type="Resource" path="res://resources/weapons/twin_blades_stats.tres" id="8"]
+[ext_resource type="Script" path="res://scripts/weapons/hitbox.gd" id="9"]
+[ext_resource type="Script" path="res://scripts/weapons/photon_pistols_arcee.gd" id="10"]
+[ext_resource type="Resource" path="res://resources/weapons/photon_pistols_stats.tres" id="11"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/photon_bolt.tscn" id="12"]
+[ext_resource type="Script" path="res://scripts/characters/transform_arcee.gd" id="13"]
+
+[sub_resource type="RectangleShape2D" id="body_shape"]
+size = Vector2(24, 52)
+
+[sub_resource type="CircleShape2D" id="hit_shape"]
+radius = 56.0
+
+[node name="Arcee" type="CharacterBody2D" groups=["player"]]
+collision_mask = 4
+motion_mode = 1
+script = ExtResource("1")
+stats = ExtResource("2")
+skin_frames_g1 = ExtResource("3")
+skin_frames_prime = ExtResource("4")
+skin_frames_bay = ExtResource("5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 10)
+shape = SubResource("body_shape")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("3")
+animation = &"idle"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="RegenTimer" type="Timer" parent="."]
+
+[node name="SkinManager" type="Node" parent="."]
+script = ExtResource("6")
+
+[node name="TwinBladesArcee" type="Node2D" parent="."]
+script = ExtResource("7")
+stats = ExtResource("8")
+
+[node name="FireTimer" type="Timer" parent="TwinBladesArcee"]
+one_shot = true
+
+[node name="HitboxLeft" type="Area2D" parent="TwinBladesArcee"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("9")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TwinBladesArcee/HitboxLeft"]
+position = Vector2(-18, 9)
+shape = SubResource("hit_shape")
+
+[node name="HitTimer" type="Timer" parent="TwinBladesArcee/HitboxLeft"]
+one_shot = true
+
+[node name="HitboxRight" type="Area2D" parent="TwinBladesArcee"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("9")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TwinBladesArcee/HitboxRight"]
+position = Vector2(18, 9)
+shape = SubResource("hit_shape")
+
+[node name="HitTimer" type="Timer" parent="TwinBladesArcee/HitboxRight"]
+one_shot = true
+
+[node name="PhotonPistolsArcee" type="Node2D" parent="."]
+script = ExtResource("10")
+stats = ExtResource("11")
+projectile_scene = ExtResource("12")
+muzzle_offset_left = Vector2(32, 11)
+muzzle_offset_right = Vector2(26, 15)
+
+[node name="FireTimer" type="Timer" parent="PhotonPistolsArcee"]
+one_shot = true
+
+[node name="TransformArcee" type="Node" parent="."]
+script = ExtResource("13")
+
+[node name="DurationTimer" type="Timer" parent="TransformArcee"]
+one_shot = true
+
+[node name="CooldownTimer" type="Timer" parent="TransformArcee"]
+one_shot = true
+
+[node name="DashTimer" type="Timer" parent="TransformArcee"]
+one_shot = true

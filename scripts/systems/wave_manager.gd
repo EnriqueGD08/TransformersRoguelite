@@ -15,8 +15,8 @@ extends Node
 ## Se asigna desde el Inspector en game.tscn.
 @export var waves: Array[WaveData] = []
 
-## Referencia al EnemySpawner de la escena.
-@export var spawner: EnemySpawner
+## Referencia al EnemySpawner de la escena. Se inyecta con setup().
+var spawner: EnemySpawner
 
 # ── Estado de la run ──────────────────────────────────────────────────────────
 
@@ -33,9 +33,12 @@ var _spawn_group_states: Array[Dictionary] = []
 
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
-func _ready() -> void:
-	assert(spawner != null, "WaveManager: spawner no asignado")
+## Inyección de dependencias: GameController le pasa el spawner.
+## (Se hace por código y no por NodePath en la escena para que sea explícito.)
+func setup(p_spawner: EnemySpawner) -> void:
+	assert(p_spawner != null, "WaveManager: spawner no puede ser null")
 	assert(waves.size() > 0, "WaveManager: waves está vacío")
+	spawner = p_spawner
 
 	EventBus.all_enemies_dead.connect(_on_all_enemies_dead)
 	EventBus.skill_tree_closed.connect(_on_skill_tree_closed)
@@ -110,7 +113,7 @@ func _complete_wave() -> void:
 
 	# Concede recompensas de fin de oleada.
 	if wave.bonus_skill_points > 0:
-		EventBus.skill_points_changed.emit(wave.bonus_skill_points)
+		GameState.add_skill_points(wave.bonus_skill_points)
 	if wave.bonus_energon > 0:
 		EventBus.energon_collected.emit(wave.bonus_energon, 0)
 
@@ -161,7 +164,7 @@ func _process_spawn_groups(delta: float) -> void:
 
 
 func _spawn_enemy_from_group(state: Dictionary, wave: WaveData) -> void:
-	var group: WaveData.SpawnGroup = state.group
+	var group: SpawnGroup = state.group
 	var position: Vector2
 
 	if group.use_fixed_positions and group.spawn_positions.size() > 0:
@@ -174,10 +177,11 @@ func _spawn_enemy_from_group(state: Dictionary, wave: WaveData) -> void:
 
 	# Aplica multiplicadores de dificultad de la oleada al enemigo.
 	if enemy:
-		enemy.stats = enemy.stats.duplicate()
-		enemy.stats.max_hp *= wave.enemy_hp_multiplier
-		enemy.stats.attack_damage *= wave.enemy_damage_multiplier
-		enemy.stats.move_speed *= wave.enemy_speed_multiplier
+		enemy.apply_difficulty(
+			wave.enemy_hp_multiplier,
+			wave.enemy_damage_multiplier,
+			wave.enemy_speed_multiplier
+		)
 
 
 func _spawn_boss(wave: WaveData) -> void:
@@ -194,7 +198,9 @@ func _all_groups_done() -> bool:
 # ── Callbacks ─────────────────────────────────────────────────────────────────
 
 func _on_all_enemies_dead() -> void:
-	if _wave_active:
+	# Solo termina la oleada si ya aparecieron todos los grupos; si no, el
+	# último enemigo vivo moriría y cortaría la oleada antes de tiempo.
+	if _wave_active and _all_groups_done():
 		_complete_wave()
 
 

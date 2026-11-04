@@ -79,7 +79,7 @@ func _fire_aoe_attack() -> void:
 		return
 
 	var projectile: Projectile = projectile_scene_phase2.instantiate()
-	get_parent().add_child(projectile)
+	ProjectileContainer.add(self, projectile)
 	projectile.global_position = global_position
 
 	var direction: Vector2 = global_position.direction_to(_player.global_position)

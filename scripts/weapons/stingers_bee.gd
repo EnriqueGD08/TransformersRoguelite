@@ -49,7 +49,7 @@ func _perform_attack() -> void:
 
 func _play_attack_animation(is_finisher: bool) -> void:
 	if _owner_character:
-		_owner_character._sprite.play("attack_finisher" if is_finisher else "attack")
+		_owner_character.play_animation("attack_finisher" if is_finisher else "attack")
 
 # ── Callbacks ─────────────────────────────────────────────────────────────────
 

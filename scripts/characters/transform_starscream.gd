@@ -31,6 +31,9 @@ var character: BaseCharacter = null
 var _transformed: bool = false
 var _in_cooldown: bool = false
 
+## Máscara de colisión original del personaje (se restaura al aterrizar).
+var _saved_collision_mask: int = 0
+
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _ready() -> void:
@@ -109,9 +112,11 @@ func _drop_bomb() -> void:
 			body.take_damage(bomb_damage)
 
 	if explosion_effect_scene:
-		var effect: Node = explosion_effect_scene.instantiate()
-		character.get_parent().add_child(effect)
+		var effect: Node2D = explosion_effect_scene.instantiate()
+		ProjectileContainer.add(character, effect)
 		effect.global_position = bomb_position
+		if effect.has_method("fit_diameter"):
+			effect.fit_diameter(bomb_radius * 1.6)
 
 	EventBus.play_sfx.emit("starscream_bomb")
 
@@ -119,12 +124,14 @@ func _drop_bomb() -> void:
 ## En modo jet, Starscream no colisiona con enemigos (los atraviesa).
 ## Cambiamos la máscara de colisión del CharacterBody2D.
 func _enable_flight_collision() -> void:
-	# Quitamos la capa de enemigos (capa 2) de la máscara de colisión.
+	# Guardamos la máscara original y quitamos la capa de enemigos (capa 2).
+	_saved_collision_mask = character.collision_mask
 	character.set_collision_mask_value(2, false)
 
 
 func _disable_flight_collision() -> void:
-	character.set_collision_mask_value(2, true)
+	# Restauramos exactamente la máscara que tenía antes de volar.
+	character.collision_mask = _saved_collision_mask
 
 # ── Callbacks ─────────────────────────────────────────────────────────────────
 

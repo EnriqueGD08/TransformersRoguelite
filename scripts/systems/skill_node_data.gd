@@ -116,11 +116,11 @@ func _apply_stat_bonus(character: Node) -> void:
 
 
 func _apply_transform_upgrade(character: Node) -> void:
-	if target_stat.is_empty() or not character.has_node("stats"):
+	if target_stat.is_empty() or character.get("stats") == null:
 		return
-	# Los upgrades de transformación modifican directamente el CharacterStats.
-	# Se duplica el Resource para no afectar a otras instancias.
-	if character.stats and target_stat in character.stats:
+	# Los upgrades de transformación modifican el CharacterStats del personaje
+	# (BaseCharacter ya lo duplica en _ready, así que es una copia propia).
+	if target_stat in character.stats:
 		character.stats.set(target_stat, character.stats.get(target_stat) + effect_value)
 
 
