@@ -38,9 +38,14 @@ func _on_weapon_ready() -> void:
 
 func _perform_attack() -> void:
 	var damage: float = _calculate_damage()
+	_play_attack_animation()
+
+	# El tajo cuenta cuando las cuchillas bajan, no al pulsar.
+	if not await _wait_windup():
+		return
+
 	_hitbox_left.activate(damage, stats.hit_duration)
 	_hitbox_right.activate(damage, stats.hit_duration)
-	_play_attack_animation()
 
 
 func _play_attack_animation() -> void:

@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/projectile.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/fx_enemy_bolt.tres" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/effects/ray_hit.tscn" id="3"]
+
+[sub_resource type="CircleShape2D" id="s"]
+radius = 5.0
+
+[node name="EnemyBolt" type="Area2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1")
+impact_effect_scene = ExtResource("3")
+impact_effect_diameter = 30.0
+impact_tint = Color(1, 0.35, 0.4, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(7, 0)
+shape = SubResource("s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2")
+animation = &"fly"
+autoplay = "fly"

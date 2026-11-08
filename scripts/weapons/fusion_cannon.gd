@@ -16,6 +16,9 @@ extends BaseWeapon
 ## Offset de spawn del proyectil respecto al centro del personaje.
 @export var muzzle_offset: Vector2 = Vector2(32.0, 0.0)
 
+## Offset de la boca del cañón en modo tanque.
+@export var transformed_muzzle_offset: Vector2 = Vector2(32.0, 0.0)
+
 # ── IWeapon ───────────────────────────────────────────────────────────────────
 
 func _perform_attack() -> void:
@@ -24,17 +27,19 @@ func _perform_attack() -> void:
 		return
 
 	var damage: float = _calculate_damage()
-	var origin: Vector2 = _get_muzzle_position()
-	var direction: Vector2 = _get_aim_direction(origin)
-
-	_spawn_projectile(origin, direction, damage)
 	_play_fire_animation()
+
+	if not await _wait_windup():
+		return
+
+	var origin: Vector2 = _get_muzzle_position()
+	_spawn_projectile(origin, _get_aim_direction(origin), damage)
 
 
 func _get_muzzle_position() -> Vector2:
 	if _owner_character == null:
 		return global_position
-	var offset: Vector2 = muzzle_offset
+	var offset: Vector2 = transformed_muzzle_offset if _owner_character.is_transformed() else muzzle_offset
 	if _owner_character.is_facing_left():
 		offset.x *= -1.0
 	return _owner_character.global_position + offset

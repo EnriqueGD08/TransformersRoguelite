@@ -1,0 +1,160 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/skill_tree_ui.gd" id="1"]
+
+[node name="SkillTree" type="CanvasLayer"]
+process_mode = 3
+layer = 12
+script = ExtResource("1")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78)
+
+[node name="Margin" type="MarginContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 28
+
+[node name="Panel" type="PanelContainer" parent="Root/Margin"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Root/Margin/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="HBoxContainer" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Root/Margin/Panel/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.78, 0.3, 1)
+theme_override_font_sizes/font_size = 28
+text = "Árbol de habilidades"
+
+[node name="PointsLabel" type="Label" parent="Root/Margin/Panel/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.91, 0.63, 1)
+theme_override_font_sizes/font_size = 28
+text = "Puntos: 0"
+
+[node name="Sep1" type="HSeparator" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="TreeArea" type="Control" parent="Root/Margin/Panel/VBox/Body"]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(640, 420)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DetailPanel" type="PanelContainer" parent="Root/Margin/Panel/VBox/Body"]
+custom_minimum_size = Vector2(330, 0)
+layout_mode = 2
+
+[node name="DetailVBox" type="VBoxContainer" parent="Root/Margin/Panel/VBox/Body/DetailPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DetailBranch" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "RAMA"
+
+[node name="DetailName" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Nombre"
+autowrap_mode = 3
+
+[node name="DetailCost" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.91, 0.63, 1)
+text = "Coste"
+
+[node name="Sep" type="HSeparator" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+layout_mode = 2
+
+[node name="DetailDesc" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+text = "Descripción"
+autowrap_mode = 3
+
+[node name="DetailReq" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.77, 0.86, 1)
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="DetailState" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Estado"
+
+[node name="Spacer" type="Control" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="UnlockButton" type="Button" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "DESBLOQUEAR"
+
+[node name="Sep2" type="HSeparator" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+
+[node name="HintLabel" type="Label" parent="Root/Margin/Panel/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.5, 0.56, 0.68, 1)
+theme_override_font_sizes/font_size = 15
+text = "Haz clic en una habilidad para verla. Los puntos que no gastes se conservan para la próxima oleada."
+
+[node name="ContinueButton" type="Button" parent="Root/Margin/Panel/VBox/Footer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "CONTINUAR  ▶"

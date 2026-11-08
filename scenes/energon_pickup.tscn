@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/energon_pickup.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/fx_energon_cube.tres" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/effects/energon_spark.tscn" id="3"]
+
+[node name="EnergonPickup" type="Node2D" groups=["energon_pickups"]]
+script = ExtResource("1")
+collect_effect_scene = ExtResource("3")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2")
+animation = &"idle"
+autoplay = "idle"

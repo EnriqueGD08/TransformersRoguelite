@@ -13,25 +13,11 @@ extends BaseCharacter
 @onready var _weapon: Node = $FusionCannon
 @onready var _transform_comp: Node = $TransformMegatron
 
-# ── Skins ─────────────────────────────────────────────────────────────────────
-
-@export var skin_frames_g1: SpriteFrames
-@export var skin_frames_prime: SpriteFrames
-@export var skin_frames_bay: SpriteFrames
-
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _on_ready() -> void:
 	_setup_transform_component(_transform_comp)
 	_transform_comp.character = self
-
-	var frames: Dictionary = {
-		"g1": skin_frames_g1,
-		"prime": skin_frames_prime,
-		"bay": skin_frames_bay,
-	}
-	_skin_manager.setup(_sprite, frames, stats.available_skins)
-	_skin_manager.set_skin(stats.default_skin)
 
 # ── Movimiento ────────────────────────────────────────────────────────────────
 

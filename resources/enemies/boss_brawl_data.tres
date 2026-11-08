@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "Brawl"
+enemy_id = "boss_brawl"
+max_hp = 900.0
+move_speed = 55.0
+detection_range = 1000.0
+attack_range = 80.0
+attack_damage = 26.0
+attack_cooldown = 1.5
+knockback_resistance = 0.85
+energon_reward = 120
+xp_reward = 10
+ai_type = "tank_charger"
+can_fly = false

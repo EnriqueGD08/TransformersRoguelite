@@ -22,17 +22,12 @@ var _base_damage: float = 0.0
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _on_enemy_ready() -> void:
-	_sprite.play("idle")
 	_base_damage = stats.attack_damage
 
 # ── Daño y furia ──────────────────────────────────────────────────────────────
 
 func _on_damaged(_amount: float) -> void:
-	_sprite.modulate = Color.RED
-	await get_tree().create_timer(0.12).timeout
-	if is_instance_valid(self) and _is_alive:
-		_sprite.modulate = Color.WHITE
-
+	_flash_hit(0.12)
 	_check_fury_trigger()
 
 
@@ -48,7 +43,9 @@ func _activate_fury() -> void:
 	_speed_modifier = fury_speed_multiplier
 	# El daño extra se aplica sobreescribiendo get_damage().
 	EventBus.play_sfx.emit("constructicon_fury")
-	_sprite.modulate = Color(1.5, 0.5, 0.5)  # tono rojizo permanente en furia
+	# Tono rojizo permanente en furia (el destello de daño vuelve a este color).
+	_base_modulate = Color(1.5, 0.6, 0.6)
+	_sprite.modulate = _base_modulate
 
 
 ## Sobreescribe get_damage() para aplicar el multiplicador de furia.
@@ -61,7 +58,6 @@ func get_damage() -> float:
 
 func _on_died() -> void:
 	_fury_active = false
-	_sprite.play("death")
+	_sprite.modulate = Color.WHITE
 	EventBus.play_sfx.emit("constructicon_death")
-	await _sprite.animation_finished
-	queue_free()
+	super._on_died()

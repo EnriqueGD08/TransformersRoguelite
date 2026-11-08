@@ -11,6 +11,12 @@ extends BaseEnemy
 
 # ── Configuración ─────────────────────────────────────────────────────────────
 
+## Segundos entre los disparos sueltos (fases 1 y 2).
+@export_range(0.5, 10.0, 0.5) var shot_cooldown: float = 3.0
+
+## Fracción del daño del jefe que hace cada disparo suelto.
+@export_range(0.1, 2.0, 0.1) var shot_damage_ratio: float = 0.5
+
 ## Escena del proyectil que usa en fase 1.
 @export var projectile_scene_phase1: PackedScene
 
@@ -27,11 +33,11 @@ extends BaseEnemy
 
 var _phase: int = 1
 var _phase2_aoe_timer: float = 0.0
+var _shot_timer: float = 1.5
 
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _on_enemy_ready() -> void:
-	_sprite.play("idle")
 	EventBus.boss_spawned.emit(self)
 
 
@@ -42,6 +48,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	_check_phase_transition()
+	_process_shots(delta)
 
 	if _phase == 2:
 		_process_phase2_aoe(delta)
@@ -62,7 +69,33 @@ func _enter_phase2() -> void:
 	_speed_modifier = 1.4
 	EventBus.boss_phase_changed.emit(self, 2)
 	EventBus.play_sfx.emit("boss_phase2")
+	# Rugido: durante la animación no se alterna idle/walk; después queda teñido de rojo.
+	_anim_locked = true
 	_sprite.play("phase2_intro")
+	_base_modulate = Color(1.2, 0.8, 0.8)
+	_sprite.modulate = _base_modulate
+	shot_cooldown = maxf(shot_cooldown * 0.6, 0.8)
+
+
+## Disparos sueltos hacia el jugador (fase 1: "proyectiles ocasionales"; en fase 2 más rápidos).
+func _process_shots(delta: float) -> void:
+	_shot_timer -= delta
+	if _shot_timer > 0.0:
+		return
+	_shot_timer = shot_cooldown
+	if projectile_scene_phase1 == null or _player == null:
+		return
+	var projectile: Projectile = projectile_scene_phase1.instantiate()
+	ProjectileContainer.add(self, projectile)
+	projectile.global_position = global_position
+	projectile.setup(
+		global_position.direction_to(_player.global_position),
+		260.0,
+		get_damage() * shot_damage_ratio,
+		stats.detection_range
+	)
+	projectile.collision_mask = 1
+	EventBus.play_sfx.emit("boss_shot")
 
 
 func _process_phase2_aoe(delta: float) -> void:
@@ -95,17 +128,13 @@ func _fire_aoe_attack() -> void:
 
 # ── Daño ─────────────────────────────────────────────────────────────────────
 
-func _on_damaged(amount: float) -> void:
+func _on_damaged(_amount: float) -> void:
 	EventBus.boss_hp_changed.emit(self, _current_hp, stats.max_hp)
-	_sprite.modulate = Color.RED
-	await get_tree().create_timer(0.08).timeout
-	if is_instance_valid(self) and _is_alive:
-		_sprite.modulate = Color.WHITE
+	_flash_hit(0.08)
 
 
 func _on_died() -> void:
 	EventBus.boss_defeated.emit(self)
 	EventBus.play_sfx.emit("boss_death")
-	_sprite.play("death")
-	await _sprite.animation_finished
-	queue_free()
+	_sprite.modulate = Color.WHITE
+	super._on_died()

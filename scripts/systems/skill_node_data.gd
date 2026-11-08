@@ -23,6 +23,9 @@ extends Resource
 ## Icono que representa la habilidad en el árbol.
 @export var icon: Texture2D
 
+## Rama del árbol a la que pertenece (determina el color en la UI).
+@export_enum("ataque", "transformación", "defensa") var branch: String = "ataque"
+
 # ── Posición en el árbol (para la UI) ────────────────────────────────────────
 
 ## Posición del nodo en el canvas del árbol de habilidades (en píxeles).
@@ -118,31 +121,36 @@ func _apply_stat_bonus(character: Node) -> void:
 func _apply_transform_upgrade(character: Node) -> void:
 	if target_stat.is_empty() or character.get("stats") == null:
 		return
-	# Los upgrades de transformación modifican el CharacterStats del personaje
-	# (BaseCharacter ya lo duplica en _ready, así que es una copia propia).
+	# 1) Parámetros generales (duración, cooldown...) viven en el CharacterStats del
+	#    personaje (BaseCharacter ya lo duplica en _ready, así que es una copia propia).
 	if target_stat in character.stats:
 		character.stats.set(target_stat, character.stats.get(target_stat) + effect_value)
+		return
+	# 2) Parámetros propios de cada transformación (radio de embestida, DPS del rayo...)
+	#    viven en el componente de transformación.
+	var component: Node = character.get_transform_component() if character.has_method("get_transform_component") else null
+	if component != null and target_stat in component:
+		component.set(target_stat, component.get(target_stat) + effect_value)
+	else:
+		push_warning("SkillNodeData: '%s' no existe en el personaje ni en su transformación (nodo '%s')" % [target_stat, id])
 
 
 func _apply_weapon_upgrade(character: Node) -> void:
-	# Busca el primer arma hija del personaje y aplica la mejora.
+	# Mejora TODAS las armas del personaje (Arcee tiene dos).
 	for child in character.get_children():
 		if child is BaseWeapon:
 			child.upgrade_stat(target_stat, effect_value)
-			break
 
 
 func _revert_weapon_upgrade(character: Node) -> void:
 	for child in character.get_children():
 		if child is BaseWeapon:
 			child.upgrade_stat(target_stat, -effect_value)
-			break
 
 
 func _apply_passive_ability(character: Node) -> void:
 	if passive_id.is_empty():
 		push_error("SkillNodeData: passive_id vacío en nodo '%s'" % id)
 		return
-	# Las habilidades pasivas se activan emitiendo una señal al EventBus.
-	# Cada personaje escucha las señales de sus propias pasivas.
-	EventBus.skill_unlocked.emit(passive_id)
+	# Las pasivas se activan por EventBus; PassiveAbilities las implementa.
+	EventBus.passive_activated.emit(passive_id)

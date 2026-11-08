@@ -2,7 +2,8 @@
 # Enemigo: Seeker (Caza Decepticon).
 # Volador a distancia. Mantiene distancia óptima y dispara proyectiles.
 # HP medio, velocidad alta, daño moderado.
-# OCP: extiende BaseEnemy sobrescribiendo solo los hooks necesarios.
+# OCP: extiende BaseEnemy; la IA "flying_shooter" dispara y este script solo decide
+#      a qué distancia se mantiene.
 
 class_name Seeker
 extends BaseEnemy
@@ -10,20 +11,17 @@ extends BaseEnemy
 ## Distancia óptima que el Seeker intenta mantener con el jugador.
 @export_range(150.0, 400.0, 10.0) var preferred_distance: float = 220.0
 
-func _on_enemy_ready() -> void:
-	_sprite.play("idle")
-	# Los Seekers vuelan: desactivamos colisión con el suelo.
-	if stats.can_fly:
-		set_collision_mask_value(4, false)  # capa de suelo
 
-
-## Sobrescribe el movimiento para mantener distancia óptima en lugar de
-## acercarse indefinidamente. La IA ranged_shooter se encarga del disparo.
+## Sobrescribe el movimiento para mantener la distancia óptima en lugar de
+## acercarse indefinidamente. La IA se encarga del disparo.
 func _physics_process(delta: float) -> void:
 	if not _is_alive or _player == null:
 		return
 	if _has_status("stun"):
 		return
+
+	# Siempre mira al jugador (vuela de lado, no gira para huir).
+	_sprite.flip_h = _player.global_position.x < global_position.x
 
 	var dist: float = global_position.distance_to(_player.global_position)
 
@@ -43,15 +41,7 @@ func _physics_process(delta: float) -> void:
 			_ai.process_ai(delta)
 
 
-func _on_damaged(_amount: float) -> void:
-	_sprite.modulate = Color.RED
-	await get_tree().create_timer(0.1).timeout
-	if is_instance_valid(self) and _is_alive:
-		_sprite.modulate = Color.WHITE
-
-
 func _on_died() -> void:
-	_sprite.play("death")
+	_sprite.modulate = Color.WHITE
 	EventBus.play_sfx.emit("seeker_death")
-	await _sprite.animation_finished
-	queue_free()
+	super._on_died()

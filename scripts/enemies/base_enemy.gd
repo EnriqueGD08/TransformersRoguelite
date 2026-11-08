@@ -43,6 +43,15 @@ var _status_effects: Dictionary = {}
 ## Modificador de velocidad acumulado (por slow, etc.).
 var _speed_modifier: float = 1.0
 
+## Color base del sprite (el destello de daño vuelve a él; la furia/fase 2 lo cambian).
+var _base_modulate: Color = Color.WHITE
+
+## True mientras suena una animación puntual (ataque, rugido): no se alterna idle/walk.
+var _anim_locked: bool = false
+
+## Posición del fotograma anterior, para saber si el enemigo se está moviendo.
+var _last_position: Vector2 = Vector2.ZERO
+
 @onready var _ai: Node = $EnemyAI
 @onready var _sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var _status_timer: Timer = $StatusTimer
@@ -60,11 +69,52 @@ func _ready() -> void:
 	if _ai:
 		_ai.setup(self)
 
+	_last_position = global_position
+	attacked_player.connect(_on_attacked_player_animation)
+	_sprite.animation_finished.connect(_on_sprite_animation_finished)
 	_on_enemy_ready()
 
 
 func _on_enemy_ready() -> void:
 	pass
+
+
+## Animación automática: camina si se está moviendo y reposa si no.
+func _process(_delta: float) -> void:
+	if not _is_alive:
+		return
+	var moved: bool = global_position.distance_to(_last_position) > 0.25
+	_last_position = global_position
+	if _anim_locked:
+		return
+	var target: StringName = &"walk" if moved and _sprite.sprite_frames.has_animation("walk") else &"idle"
+	if _sprite.animation != target:
+		_sprite.play(target)
+
+
+func _on_attacked_player_animation(_damage: float) -> void:
+	# El rugido de la segunda fase no se corta por un golpe: si no, apenas se vería.
+	if _sprite.animation == &"phase2_intro" and _sprite.is_playing():
+		return
+	if _is_alive and _sprite.sprite_frames.has_animation("attack"):
+		_anim_locked = true
+		_sprite.play(&"attack")
+
+
+func _on_sprite_animation_finished() -> void:
+	if not _is_alive:
+		return
+	# Tras una animación puntual (ataque, rugido) se vuelve al ciclo normal.
+	_anim_locked = false
+	_sprite.play(&"idle")
+
+
+## Destello rojo breve al recibir daño; luego vuelve al color base del enemigo.
+func _flash_hit(duration: float = 0.1) -> void:
+	_sprite.modulate = Color.RED
+	await get_tree().create_timer(duration).timeout
+	if is_instance_valid(self) and _is_alive:
+		_sprite.modulate = _base_modulate
 
 
 func _physics_process(delta: float) -> void:
@@ -153,7 +203,7 @@ func get_attack_range() -> float:
 func apply_knockback(force: Vector2) -> void:
 	if not _is_alive:
 		return
-	velocity = force
+	velocity = force * (1.0 - stats.knockback_resistance)
 	move_and_slide()
 
 # ── Efectos de estado ─────────────────────────────────────────────────────────
@@ -210,7 +260,7 @@ func _drop_rewards() -> void:
 # ── Hooks para subclases ──────────────────────────────────────────────────────
 
 func _on_damaged(_amount: float) -> void:
-	pass
+	_flash_hit()
 
 func _on_died() -> void:
 	_sprite.play("death")

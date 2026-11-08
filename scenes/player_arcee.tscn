@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" path="res://scripts/characters/arcee.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/arcee_data.tres" id="2"]
-[ext_resource type="SpriteFrames" path="res://resources/frames/arcee_g1.tres" id="3"]
-[ext_resource type="SpriteFrames" path="res://resources/frames/arcee_prime.tres" id="4"]
-[ext_resource type="SpriteFrames" path="res://resources/frames/arcee_bay.tres" id="5"]
 [ext_resource type="Script" path="res://scripts/characters/skin_manager.gd" id="6"]
 [ext_resource type="Script" path="res://scripts/weapons/twin_blades_arcee.gd" id="7"]
 [ext_resource type="Resource" path="res://resources/weapons/twin_blades_stats.tres" id="8"]
@@ -15,7 +12,7 @@
 [ext_resource type="Script" path="res://scripts/characters/transform_arcee.gd" id="13"]
 
 [sub_resource type="RectangleShape2D" id="body_shape"]
-size = Vector2(24, 52)
+size = Vector2(26, 62)
 
 [sub_resource type="CircleShape2D" id="hit_shape"]
 radius = 56.0
@@ -25,17 +22,18 @@ collision_mask = 4
 motion_mode = 1
 script = ExtResource("1")
 stats = ExtResource("2")
-skin_frames_g1 = ExtResource("3")
-skin_frames_prime = ExtResource("4")
-skin_frames_bay = ExtResource("5")
+skin_frames_g1 = "res://resources/frames/arcee_g1.tres"
+skin_frames_prime = "res://resources/frames/arcee_prime.tres"
+skin_frames_bay = "res://resources/frames/arcee_bay.tres"
+walk_speed_scale = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 10)
+position = Vector2(0, 7)
 shape = SubResource("body_shape")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("3")
-animation = &"idle"
+texture_filter = 2
+scale = Vector2(0.5, 0.5)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
@@ -48,6 +46,7 @@ script = ExtResource("6")
 [node name="TwinBladesArcee" type="Node2D" parent="."]
 script = ExtResource("7")
 stats = ExtResource("8")
+windup_seconds = 0.08
 
 [node name="FireTimer" type="Timer" parent="TwinBladesArcee"]
 one_shot = true
@@ -80,8 +79,9 @@ one_shot = true
 script = ExtResource("10")
 stats = ExtResource("11")
 projectile_scene = ExtResource("12")
-muzzle_offset_left = Vector2(32, 11)
-muzzle_offset_right = Vector2(26, 15)
+windup_seconds = 0.08
+muzzle_offset_left = Vector2(26, -19)
+muzzle_offset_right = Vector2(46, -19)
 
 [node name="FireTimer" type="Timer" parent="PhotonPistolsArcee"]
 one_shot = true

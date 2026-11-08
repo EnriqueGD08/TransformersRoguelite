@@ -28,6 +28,11 @@ func _perform_attack() -> void:
 
 	var damage: float = _calculate_damage()
 	var half_spread: float = deg_to_rad(spread_degrees / 2.0)
+	_play_fire_animation()
+
+	# Los disparos salen con el fogonazo.
+	if not await _wait_windup():
+		return
 
 	# Cada pistola apunta al ratón DESDE su propia boca de cañón; si no, las balas
 	# salen en paralelo y fallan a los enemigos cercanos.
@@ -35,8 +40,6 @@ func _perform_attack() -> void:
 	var right: Vector2 = _get_muzzle(muzzle_offset_right)
 	_spawn_projectile(left, _get_aim_direction(left).rotated(-half_spread), damage)
 	_spawn_projectile(right, _get_aim_direction(right).rotated(half_spread), damage)
-
-	_play_fire_animation()
 
 
 func _get_muzzle(offset: Vector2) -> Vector2:

@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="CharacterInfo" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="CharacterInfo" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/character_info.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/player_starscream.tscn" id="2"]
 [ext_resource type="Resource" path="res://resources/starscream_data.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/skill_tree_starscream.tres" id="4"]
 
 [resource]
 script = ExtResource("1")
@@ -17,3 +18,4 @@ transform_name = "Jet F-22"
 transform_description = "Lanza una bomba en picado de área al despegar y vuela a gran velocidad."
 scene = ExtResource("2")
 stats = ExtResource("3")
+skill_tree = ExtResource("4")

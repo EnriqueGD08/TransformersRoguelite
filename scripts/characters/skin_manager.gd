@@ -23,9 +23,9 @@ var _available_skins: Array[String] = []
 ## Se asigna desde base_character.gd mediante setup().
 var _sprite: AnimatedSprite2D = null
 
-## Diccionario de SpriteFrames por skin_id.
+## Rutas de los SpriteFrames por skin_id. Se cargan al usarlas y la skin anterior se libera.
 ## Clave: "g1" | "prime" | "bay"
-## Valor: SpriteFrames (asignado desde la escena del personaje).
+## Valor: ruta del .tres (asignada desde la escena del personaje).
 var _skin_frames: Dictionary = {}
 
 # ── Setup ─────────────────────────────────────────────────────────────────────
@@ -33,7 +33,7 @@ var _skin_frames: Dictionary = {}
 ## Inicializa el SkinManager con el sprite y los frames disponibles.
 ## Llamar desde la escena concreta del personaje antes de set_skin().
 ## [param sprite] AnimatedSprite2D del personaje.
-## [param frames] Dictionary { skin_id: SpriteFrames }.
+## [param frames] Dictionary { skin_id: ruta del SpriteFrames }.
 ## [param skins] Array con los IDs disponibles (viene de CharacterStats).
 func setup(sprite: AnimatedSprite2D, frames: Dictionary, skins: Array[String]) -> void:
 	assert(sprite != null, "SkinManager: sprite no puede ser null")
@@ -60,7 +60,7 @@ func set_skin(skin_id: String) -> void:
 		return
 
 	_current_skin = skin_id
-	_sprite.sprite_frames = _skin_frames[skin_id]
+	_sprite.sprite_frames = load(_skin_frames[skin_id])
 	_sprite.play("idle")
 	skin_changed.emit(_current_skin)
 

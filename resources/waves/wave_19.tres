@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="WaveData" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/wave_data.gd" id="wd"]
+[ext_resource type="Script" path="res://scripts/systems/spawn_group.gd" id="sg"]
+[ext_resource type="PackedScene" path="res://scenes/constructicon.tscn" id="e_constructicon"]
+[ext_resource type="PackedScene" path="res://scenes/seeker.tscn" id="e_seeker"]
+[ext_resource type="PackedScene" path="res://scenes/vehicon.tscn" id="e_vehicon"]
+
+[sub_resource type="Resource" id="g0"]
+script = ExtResource("sg")
+enemy_scene = ExtResource("e_vehicon")
+count = 20
+spawn_interval = 0.8
+initial_delay = 1.0
+
+[sub_resource type="Resource" id="g1"]
+script = ExtResource("sg")
+enemy_scene = ExtResource("e_seeker")
+count = 14
+spawn_interval = 1.6
+initial_delay = 4.0
+
+[sub_resource type="Resource" id="g2"]
+script = ExtResource("sg")
+enemy_scene = ExtResource("e_constructicon")
+count = 6
+spawn_interval = 5.0
+initial_delay = 8.0
+
+[resource]
+script = ExtResource("wd")
+wave_number = 19
+duration = 80.0
+must_kill_all = false
+spawn_groups = Array[ExtResource("sg")]([SubResource("g0"), SubResource("g1"), SubResource("g2")])
+has_boss = false
+enemy_hp_multiplier = 2.3
+enemy_damage_multiplier = 1.6
+enemy_speed_multiplier = 1.1
+bonus_skill_points = 1
+bonus_energon = 105

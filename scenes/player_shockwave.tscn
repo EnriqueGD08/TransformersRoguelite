@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" path="res://scripts/characters/shockwave.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/shockwave_data.tres" id="2"]
-[ext_resource type="SpriteFrames" path="res://resources/frames/shockwave_g1.tres" id="3"]
-[ext_resource type="SpriteFrames" path="res://resources/frames/shockwave_prime.tres" id="4"]
-[ext_resource type="SpriteFrames" path="res://resources/frames/shockwave_bay.tres" id="5"]
 [ext_resource type="Script" path="res://scripts/characters/skin_manager.gd" id="6"]
 [ext_resource type="Script" path="res://scripts/weapons/shockwave_cannon.gd" id="7"]
 [ext_resource type="Resource" path="res://resources/weapons/shockwave_cannon_stats.tres" id="8"]
@@ -13,24 +10,25 @@
 [ext_resource type="PackedScene" path="res://scenes/effects/laser_beam.tscn" id="11"]
 
 [sub_resource type="RectangleShape2D" id="body_shape"]
-size = Vector2(34, 56)
+size = Vector2(38, 68)
 
 [node name="Shockwave" type="CharacterBody2D" groups=["player"]]
 collision_mask = 4
 motion_mode = 1
 script = ExtResource("1")
 stats = ExtResource("2")
-skin_frames_g1 = ExtResource("3")
-skin_frames_prime = ExtResource("4")
-skin_frames_bay = ExtResource("5")
+skin_frames_g1 = "res://resources/frames/shockwave_g1.tres"
+skin_frames_prime = "res://resources/frames/shockwave_prime.tres"
+skin_frames_bay = "res://resources/frames/shockwave_bay.tres"
+walk_speed_scale = 1.4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 10)
+position = Vector2(0, 6)
 shape = SubResource("body_shape")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("3")
-animation = &"idle"
+texture_filter = 2
+scale = Vector2(0.5, 0.5)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
@@ -44,7 +42,8 @@ script = ExtResource("6")
 script = ExtResource("7")
 stats = ExtResource("8")
 projectile_scene = ExtResource("9")
-muzzle_offset = Vector2(48, 6)
+windup_seconds = 0.25
+muzzle_offset = Vector2(57, -21)
 
 [node name="FireTimer" type="Timer" parent="ShockwaveCannon"]
 one_shot = true
@@ -52,6 +51,7 @@ one_shot = true
 [node name="TransformShockwave" type="Node" parent="."]
 script = ExtResource("10")
 beam_scene = ExtResource("11")
+muzzle_offset = Vector2(52, 0)
 
 [node name="DurationTimer" type="Timer" parent="TransformShockwave"]
 one_shot = true

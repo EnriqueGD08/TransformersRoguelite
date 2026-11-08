@@ -25,6 +25,9 @@ var character: BaseCharacter = null
 ## Velocidad del proyectil cargado en píxeles/segundo.
 @export_range(200.0, 1000.0, 50.0) var charged_projectile_speed: float = 600.0
 
+## Posición de la boca del cañón respecto al personaje (mirando a la derecha).
+@export var muzzle_offset: Vector2 = Vector2(32.0, 0.0)
+
 ## Escena del proyectil cargado (se instancia al disparar).
 @export var charged_projectile_scene: PackedScene
 
@@ -86,6 +89,12 @@ func get_cooldown_remaining() -> float:
 	return _cooldown_timer.time_left
 
 
+## Acorta el cooldown en curso (pasiva "kill_cdr").
+func reduce_cooldown(seconds: float) -> void:
+	if _in_cooldown:
+		_cooldown_timer.start(maxf(_cooldown_timer.time_left - seconds, 0.05))
+
+
 func get_cooldown_duration() -> float:
 	return character.stats.transform_cooldown if character else 0.0
 
@@ -100,10 +109,13 @@ func _fire_charged_shot() -> void:
 
 	var projectile: Node = charged_projectile_scene.instantiate()
 	ProjectileContainer.add(character, projectile)
-	projectile.global_position = character.global_position
+	var offset: Vector2 = muzzle_offset
+	if character.is_facing_left():
+		offset.x *= -1.0
+	projectile.global_position = character.global_position + offset
 
 	var direction: Vector2 = (character.get_global_mouse_position() \
-		- character.global_position).normalized()
+		- projectile.global_position).normalized()
 
 	var damage: float = character.get_damage() * charged_shot_multiplier
 

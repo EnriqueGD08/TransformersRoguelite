@@ -1,201 +1,706 @@
 [gd_resource type="SpriteFrames" format=3]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_0.png" id="1_nki73"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_1.png" id="2_53rjm"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_2.png" id="3_t7ko0"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_3.png" id="4_jsq0g"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_4.png" id="5_382n1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_0.png" id="6_qcclc"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_1.png" id="7_3dnsr"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_2.png" id="8_pm4u1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_3.png" id="9_de6ug"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_4.png" id="10_sq42a"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_5.png" id="11_x0h8i"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_0.png" id="12_m5s8m"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_1.png" id="13_0egot"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_2.png" id="14_s5i8u"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_3.png" id="15_5kqbs"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_0.png" id="16_yqd1f"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_1.png" id="17_kda0m"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_2.png" id="18_hhkyf"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_3.png" id="19_70bdf"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_4.png" id="20_g2h2p"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_5.png" id="21_1vgb4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_0.png" id="22_gkhph"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_1.png" id="23_5qqfd"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_2.png" id="24_cw6to"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_3.png" id="25_3wx88"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_0.png" id="26_jwr3o"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_1.png" id="27_dsiss"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_2.png" id="28_rjo2g"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_3.png" id="29_ngroo"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_0.png" id="30_puhj2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_1.png" id="31_cciiq"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_2.png" id="32_j0rm8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_3.png" id="33_vcuej"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_0.png" id="34_dshvh"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_1.png" id="35_vyfqt"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_2.png" id="36_7doeb"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_3.png" id="37_e5nqq"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_4.png" id="38_e2p81"]
-[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_5.png" id="39_xmb1b"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_0.png" id="1_gcm0e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_1.png" id="2_oktb4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_2.png" id="3_kogk4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_3.png" id="4_hc0hk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_4.png" id="5_dyuj8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_5.png" id="6_7w0qm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_6.png" id="7_g5jpq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_7.png" id="8_g488p"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_8.png" id="9_le3gv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_9.png" id="10_63688"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_10.png" id="11_8gdra"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_11.png" id="12_nccjt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_12.png" id="13_ll8ai"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/attack_13.png" id="14_qj4xe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_0.png" id="15_f4k6m"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_1.png" id="16_1pvy6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_2.png" id="17_6x07a"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_3.png" id="18_q35s0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_4.png" id="19_8jq1b"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_5.png" id="20_nhskl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_6.png" id="21_kjlfy"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_7.png" id="22_82wsv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_8.png" id="23_o7kta"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_9.png" id="24_3f3fu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_10.png" id="25_l8g7u"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_11.png" id="26_egtsj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_12.png" id="27_fkpp4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_13.png" id="28_kkcqp"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_14.png" id="29_7dy6s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_15.png" id="30_xhqql"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_16.png" id="31_4fw7r"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_17.png" id="32_cyqa4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_18.png" id="33_10v0g"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_19.png" id="34_asapf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_20.png" id="35_qs1lf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_21.png" id="36_140x8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_22.png" id="37_15esc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/death_23.png" id="38_or2xk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_0.png" id="39_n3c0u"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_1.png" id="40_nqo1o"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_2.png" id="41_vm1o8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_3.png" id="42_c3csl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_4.png" id="43_prqsh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_5.png" id="44_p6gs6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_6.png" id="45_7511v"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_7.png" id="46_1xhqo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_8.png" id="47_kove2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_9.png" id="48_bnldm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_10.png" id="49_drufr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_11.png" id="50_h4qqf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_12.png" id="51_4slce"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_13.png" id="52_f024d"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_14.png" id="53_s8oim"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_15.png" id="54_31loe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_16.png" id="55_mhojb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_17.png" id="56_41vg4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_18.png" id="57_u2xmx"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_19.png" id="58_48hec"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_20.png" id="59_11gqb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_21.png" id="60_bc0gp"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_22.png" id="61_5bul2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_23.png" id="62_j2mqf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_24.png" id="63_njkbt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_25.png" id="64_v6b60"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_26.png" id="65_numml"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_27.png" id="66_afnt0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_28.png" id="67_w3r5g"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_29.png" id="68_ddshm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_30.png" id="69_kkrab"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/idle_31.png" id="70_kwo2m"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_0.png" id="71_66a5a"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_1.png" id="72_nju47"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_2.png" id="73_vl6tj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_3.png" id="74_0wefu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_4.png" id="75_fnllu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_5.png" id="76_axnj5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_6.png" id="77_tnt8y"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_7.png" id="78_8o2db"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_8.png" id="79_7f6c8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_9.png" id="80_y04in"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_10.png" id="81_of4l6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_11.png" id="82_bf637"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_12.png" id="83_8alb6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_13.png" id="84_vfynq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_14.png" id="85_pgcr8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_15.png" id="86_blu6j"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_16.png" id="87_ka7ix"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_17.png" id="88_cfrym"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_18.png" id="89_t6fx7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_activate_19.png" id="90_yt6gu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_0.png" id="91_shj0y"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_1.png" id="92_6ap0o"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_2.png" id="93_1y0v6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_3.png" id="94_h7p31"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_4.png" id="95_n8nk7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_5.png" id="96_nnbwk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_6.png" id="97_uhq8b"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_7.png" id="98_qwime"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_8.png" id="99_8fp13"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_9.png" id="100_tp1ce"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_10.png" id="101_h8pb2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_11.png" id="102_lpvd8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_12.png" id="103_1bj5j"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_13.png" id="104_1f3q6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_14.png" id="105_vjww0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_attack_15.png" id="106_vl00r"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_0.png" id="107_djxo5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_1.png" id="108_8e6ye"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_2.png" id="109_gsqm5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_3.png" id="110_hic3b"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_4.png" id="111_03eot"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_5.png" id="112_6wlqn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_6.png" id="113_rkmr1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_7.png" id="114_6w4q3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_8.png" id="115_5sx0r"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_9.png" id="116_8agog"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_10.png" id="117_bpdin"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_11.png" id="118_g42rh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_12.png" id="119_qwox3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_13.png" id="120_t4mpu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_14.png" id="121_4pftc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_idle_15.png" id="122_qkcoc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_0.png" id="123_1gxqy"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_1.png" id="124_c8a5s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_2.png" id="125_ffwrq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_3.png" id="126_srca3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_4.png" id="127_qm5vr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_5.png" id="128_uqsu1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_6.png" id="129_80xep"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_7.png" id="130_gkk4a"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_8.png" id="131_2n5do"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_9.png" id="132_qekdi"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_10.png" id="133_pysrl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/transform_walk_11.png" id="134_3cgcr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_0.png" id="135_2ldhu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_1.png" id="136_i47is"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_2.png" id="137_hx5nw"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_3.png" id="138_tpqt1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_4.png" id="139_3esjd"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_5.png" id="140_log63"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_6.png" id="141_d2o7u"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_7.png" id="142_ux5jx"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_8.png" id="143_shfob"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_9.png" id="144_ts1gc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_10.png" id="145_cl1v5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_11.png" id="146_m36vk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_12.png" id="147_pjc4v"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_13.png" id="148_rovus"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_14.png" id="149_rprfq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_15.png" id="150_vt3vj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_0.png" id="151_s0jc0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_1.png" id="152_6xnyd"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_2.png" id="153_x3hed"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_3.png" id="154_n2n3p"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_4.png" id="155_fm48t"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_5.png" id="156_5rrwm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_6.png" id="157_iskfx"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_7.png" id="158_53mxc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_8.png" id="159_omrd4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_9.png" id="160_jvbqo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_10.png" id="161_w3ajf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_11.png" id="162_ihxwt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_12.png" id="163_stane"]
+[ext_resource type="Texture2D" path="res://assets/sprites/optimus/prime/walk_attack_13.png" id="164_ibygr"]
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_nki73")
+"texture": ExtResource("1_gcm0e")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_53rjm")
+"texture": ExtResource("2_oktb4")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_t7ko0")
+"texture": ExtResource("3_kogk4")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_jsq0g")
+"texture": ExtResource("4_hc0hk")
 }, {
 "duration": 1.0,
-"texture": ExtResource("5_382n1")
+"texture": ExtResource("5_dyuj8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_7w0qm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_g5jpq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_g488p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_le3gv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_63688")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_8gdra")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_nccjt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_ll8ai")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_qj4xe")
 }],
 "loop": false,
 "name": &"attack",
-"speed": 16.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_qcclc")
+"texture": ExtResource("15_f4k6m")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_3dnsr")
+"texture": ExtResource("16_1pvy6")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_pm4u1")
+"texture": ExtResource("17_6x07a")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_de6ug")
+"texture": ExtResource("18_q35s0")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_sq42a")
+"texture": ExtResource("19_8jq1b")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_x0h8i")
+"texture": ExtResource("20_nhskl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_kjlfy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_82wsv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_o7kta")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_3f3fu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_l8g7u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_egtsj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_fkpp4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_kkcqp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_7dy6s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_xhqql")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_4fw7r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_cyqa4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_10v0g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_asapf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_qs1lf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_140x8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_15esc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_or2xk")
 }],
 "loop": false,
 "name": &"death",
-"speed": 8.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("12_m5s8m")
+"texture": ExtResource("39_n3c0u")
 }, {
 "duration": 1.0,
-"texture": ExtResource("13_0egot")
+"texture": ExtResource("40_nqo1o")
 }, {
 "duration": 1.0,
-"texture": ExtResource("14_s5i8u")
+"texture": ExtResource("41_vm1o8")
 }, {
 "duration": 1.0,
-"texture": ExtResource("15_5kqbs")
+"texture": ExtResource("42_c3csl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_prqsh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_p6gs6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_7511v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_1xhqo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_kove2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_bnldm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_drufr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_h4qqf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_4slce")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_f024d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_s8oim")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_31loe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_mhojb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_41vg4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_u2xmx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_48hec")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59_11gqb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("60_bc0gp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_5bul2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("62_j2mqf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("63_njkbt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("64_v6b60")
+}, {
+"duration": 1.0,
+"texture": ExtResource("65_numml")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_afnt0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_w3r5g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("68_ddshm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_kkrab")
+}, {
+"duration": 1.0,
+"texture": ExtResource("70_kwo2m")
 }],
 "loop": true,
 "name": &"idle",
-"speed": 5.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("16_yqd1f")
+"texture": ExtResource("71_66a5a")
 }, {
 "duration": 1.0,
-"texture": ExtResource("17_kda0m")
+"texture": ExtResource("72_nju47")
 }, {
 "duration": 1.0,
-"texture": ExtResource("18_hhkyf")
+"texture": ExtResource("73_vl6tj")
 }, {
 "duration": 1.0,
-"texture": ExtResource("19_70bdf")
+"texture": ExtResource("74_0wefu")
 }, {
 "duration": 1.0,
-"texture": ExtResource("20_g2h2p")
+"texture": ExtResource("75_fnllu")
 }, {
 "duration": 1.0,
-"texture": ExtResource("21_1vgb4")
+"texture": ExtResource("76_axnj5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("77_tnt8y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("78_8o2db")
+}, {
+"duration": 1.0,
+"texture": ExtResource("79_7f6c8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("80_y04in")
+}, {
+"duration": 1.0,
+"texture": ExtResource("81_of4l6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("82_bf637")
+}, {
+"duration": 1.0,
+"texture": ExtResource("83_8alb6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("84_vfynq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("85_pgcr8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("86_blu6j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("87_ka7ix")
+}, {
+"duration": 1.0,
+"texture": ExtResource("88_cfrym")
+}, {
+"duration": 1.0,
+"texture": ExtResource("89_t6fx7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("90_yt6gu")
 }],
 "loop": false,
 "name": &"transform_activate",
-"speed": 10.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("22_gkhph")
+"texture": ExtResource("91_shj0y")
 }, {
 "duration": 1.0,
-"texture": ExtResource("23_5qqfd")
+"texture": ExtResource("92_6ap0o")
 }, {
 "duration": 1.0,
-"texture": ExtResource("24_cw6to")
+"texture": ExtResource("93_1y0v6")
 }, {
 "duration": 1.0,
-"texture": ExtResource("25_3wx88")
+"texture": ExtResource("94_h7p31")
+}, {
+"duration": 1.0,
+"texture": ExtResource("95_n8nk7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("96_nnbwk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("97_uhq8b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("98_qwime")
+}, {
+"duration": 1.0,
+"texture": ExtResource("99_8fp13")
+}, {
+"duration": 1.0,
+"texture": ExtResource("100_tp1ce")
+}, {
+"duration": 1.0,
+"texture": ExtResource("101_h8pb2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("102_lpvd8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("103_1bj5j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("104_1f3q6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("105_vjww0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("106_vl00r")
 }],
 "loop": false,
 "name": &"transform_attack",
-"speed": 14.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("26_jwr3o")
+"texture": ExtResource("107_djxo5")
 }, {
 "duration": 1.0,
-"texture": ExtResource("27_dsiss")
+"texture": ExtResource("108_8e6ye")
 }, {
 "duration": 1.0,
-"texture": ExtResource("28_rjo2g")
+"texture": ExtResource("109_gsqm5")
 }, {
 "duration": 1.0,
-"texture": ExtResource("29_ngroo")
+"texture": ExtResource("110_hic3b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("111_03eot")
+}, {
+"duration": 1.0,
+"texture": ExtResource("112_6wlqn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("113_rkmr1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("114_6w4q3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("115_5sx0r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("116_8agog")
+}, {
+"duration": 1.0,
+"texture": ExtResource("117_bpdin")
+}, {
+"duration": 1.0,
+"texture": ExtResource("118_g42rh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("119_qwox3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("120_t4mpu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("121_4pftc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("122_qkcoc")
 }],
 "loop": true,
 "name": &"transform_idle",
-"speed": 8.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("30_puhj2")
+"texture": ExtResource("123_1gxqy")
 }, {
 "duration": 1.0,
-"texture": ExtResource("31_cciiq")
+"texture": ExtResource("124_c8a5s")
 }, {
 "duration": 1.0,
-"texture": ExtResource("32_j0rm8")
+"texture": ExtResource("125_ffwrq")
 }, {
 "duration": 1.0,
-"texture": ExtResource("33_vcuej")
+"texture": ExtResource("126_srca3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("127_qm5vr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("128_uqsu1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("129_80xep")
+}, {
+"duration": 1.0,
+"texture": ExtResource("130_gkk4a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("131_2n5do")
+}, {
+"duration": 1.0,
+"texture": ExtResource("132_qekdi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("133_pysrl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("134_3cgcr")
 }],
 "loop": true,
 "name": &"transform_walk",
-"speed": 14.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("34_dshvh")
+"texture": ExtResource("135_2ldhu")
 }, {
 "duration": 1.0,
-"texture": ExtResource("35_vyfqt")
+"texture": ExtResource("136_i47is")
 }, {
 "duration": 1.0,
-"texture": ExtResource("36_7doeb")
+"texture": ExtResource("137_hx5nw")
 }, {
 "duration": 1.0,
-"texture": ExtResource("37_e5nqq")
+"texture": ExtResource("138_tpqt1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("38_e2p81")
+"texture": ExtResource("139_3esjd")
 }, {
 "duration": 1.0,
-"texture": ExtResource("39_xmb1b")
+"texture": ExtResource("140_log63")
+}, {
+"duration": 1.0,
+"texture": ExtResource("141_d2o7u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("142_ux5jx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("143_shfob")
+}, {
+"duration": 1.0,
+"texture": ExtResource("144_ts1gc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("145_cl1v5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("146_m36vk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("147_pjc4v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("148_rovus")
+}, {
+"duration": 1.0,
+"texture": ExtResource("149_rprfq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("150_vt3vj")
 }],
 "loop": true,
 "name": &"walk",
-"speed": 10.0
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("151_s0jc0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("152_6xnyd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("153_x3hed")
+}, {
+"duration": 1.0,
+"texture": ExtResource("154_n2n3p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("155_fm48t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("156_5rrwm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("157_iskfx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("158_53mxc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("159_omrd4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("160_jvbqo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("161_w3ajf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("162_ihxwt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("163_stane")
+}, {
+"duration": 1.0,
+"texture": ExtResource("164_ibygr")
+}],
+"loop": false,
+"name": &"walk_attack",
+"speed": 24.0
 }]

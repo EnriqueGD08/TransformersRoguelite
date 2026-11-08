@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/one_shot_effect.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/fx_energon_spark.tres" id="2"]
+
+[node name="EnergonSpark" type="AnimatedSprite2D"]
+z_index = 5
+sprite_frames = ExtResource("2")
+animation = &"explode"
+script = ExtResource("1")
+base_diameter = 32.0

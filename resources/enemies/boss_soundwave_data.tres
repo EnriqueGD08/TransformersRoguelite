@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "Soundwave"
+enemy_id = "boss_soundwave"
+max_hp = 2200.0
+move_speed = 70.0
+detection_range = 1000.0
+attack_range = 90.0
+attack_damage = 24.0
+attack_cooldown = 1.2
+knockback_resistance = 0.85
+energon_reward = 200
+xp_reward = 15
+ai_type = "tank_charger"
+can_fly = false

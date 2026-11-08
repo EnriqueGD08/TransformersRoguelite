@@ -74,6 +74,9 @@ extends Resource
 
 # ── Progresión ────────────────────────────────────────────────────────────────
 
+## Radio en píxeles dentro del cual el energon vuela hacia el personaje.
+@export_range(20.0, 400.0, 5.0) var pickup_radius: float = 90.0
+
 ## Puntos de habilidad iniciales al comenzar una run.
 @export_range(0, 10, 1) var starting_skill_points: int = 0
 

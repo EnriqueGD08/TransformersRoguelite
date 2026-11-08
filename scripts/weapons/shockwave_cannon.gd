@@ -28,6 +28,12 @@ func _perform_attack() -> void:
 		return
 
 	var damage: float = _calculate_damage()
+	_play_fire_animation()
+
+	# La onda sale con el fogonazo de la animación.
+	if not await _wait_windup():
+		return
+
 	var origin: Vector2 = _get_muzzle_position()
 	var direction: Vector2 = _get_aim_direction(origin)
 
@@ -52,7 +58,6 @@ func _perform_attack() -> void:
 	projectile.set_expanding_wave(initial_wave_radius, max_wave_radius, stats.range_px)
 
 	projectile.impacted.connect(func(target, dmg): hit.emit(target, dmg))
-	_play_fire_animation()
 
 
 func _get_muzzle_position() -> Vector2:

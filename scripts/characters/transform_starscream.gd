@@ -87,6 +87,12 @@ func get_cooldown_remaining() -> float:
 	return _cooldown_timer.time_left
 
 
+## Acorta el cooldown en curso (pasiva "kill_cdr").
+func reduce_cooldown(seconds: float) -> void:
+	if _in_cooldown:
+		_cooldown_timer.start(maxf(_cooldown_timer.time_left - seconds, 0.05))
+
+
 func get_cooldown_duration() -> float:
 	return character.stats.transform_cooldown if character else 0.0
 

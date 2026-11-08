@@ -137,6 +137,37 @@ static func photon(frame: int) -> Image:
 	return p.img
 
 
+## Disparo enemigo: bola rojiza con estela corta. 32x12.
+static func enemy_bolt(frame: int) -> Image:
+	var p = P.new(32, 12)
+	var pulse: float = [0.0, 0.5, 1.0, 0.5][frame % 4]
+	var red := Color("ff2d4a")
+	for i in 9:
+		p.ellipse_px(20 - i * 1.9, 6, 3.2 - i * 0.3, 2.6 - i * 0.24, Color(red.r, red.g, red.b, 0.55 - i * 0.055))
+	p.ellipse_px(23, 6, 4.6 + pulse * 0.6, 3.8 + pulse * 0.5, Color(red.r, red.g, red.b, 0.4))
+	p.ellipse_px(23, 6, 3.2, 2.8, Color(1.0, 0.55, 0.45, 0.95))
+	p.ellipse_px(24, 6, 1.8, 1.6, Color.WHITE)
+	return p.img
+
+
+## Orbe de energía de los jefes (ataque de área de fase 2). 56x56.
+static func boss_orb(frame: int) -> Image:
+	var p = P.new(56, 56)
+	var pulse: float = [0.0, 0.6, 1.0, 0.6][frame % 4]
+	var outer := Color("c01a4e")
+	var mid := Color("ff5a7a")
+	p.ellipse_px(28, 28, 23 + pulse * 1.5, 23 + pulse * 1.5, Color(outer.r, outer.g, outer.b, 0.22))
+	p.ellipse_px(28, 28, 16 + pulse, 16 + pulse, Color(outer.r, outer.g, outer.b, 0.85))
+	p.ellipse_px(28, 28, 12, 12, mid)
+	p.ellipse_px(28, 28, 7, 7, Color(1, 0.85, 0.85))
+	p.ellipse_px(28, 28, 3.4, 3.4, Color.WHITE)
+	for i in 8:
+		var a: float = float(i) / 8.0 * TAU + frame * 0.8
+		var r1: float = 17.0 + pulse
+		p.line_px(Vector2(28 + cos(a) * r1, 28 + sin(a) * r1), Vector2(28 + cos(a + 0.5) * (r1 + 6), 28 + sin(a + 0.5) * (r1 + 6)), Color(1, 0.7, 0.8, 0.8))
+	return p.img
+
+
 ## Impacto helado del rayo (6 fotogramas). 64x64.
 static func ray_hit(frame: int) -> Image:
 	var p = P.new(64, 64)

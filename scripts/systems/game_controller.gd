@@ -11,11 +11,17 @@ extends Node2D
 ## Personaje por defecto si no se pasó por la selección de personaje.
 @export var default_player_scene: PackedScene
 
+## Árbol de habilidades del personaje por defecto.
+@export var default_skill_tree: SkillTreeData
+
 @onready var _world: Node2D = $World
 @onready var _enemies: Node2D = $World/Enemies
 @onready var _spawner: EnemySpawner = $Systems/EnemySpawner
 @onready var _wave_manager: WaveManager = $Systems/WaveManager
 @onready var _energon_manager: EnergonManager = $Systems/EnergonManager
+@onready var _skill_tree_manager: SkillTreeManager = $Systems/SkillTreeManager
+@onready var _passives: PassiveAbilities = $Systems/PassiveAbilities
+@onready var _skill_tree_ui: SkillTreeUI = $SkillTree
 
 
 func _ready() -> void:
@@ -24,12 +30,20 @@ func _ready() -> void:
 	var scene: PackedScene = GameState.selected_character_scene \
 		if GameState.selected_character_scene != null else default_player_scene
 	var player: Node2D = scene.instantiate()
+	# Skin elegida en la selección: se indica antes de añadirlo para no cargar otra de más.
+	player.set("initial_skin", GameState.selected_skin_id)
 	_world.add_child(player)
-	# Skin elegida en la selección (si no hay ninguna, la del personaje).
-	if GameState.selected_skin_id != "" and player.has_method("set_skin"):
-		player.set_skin(GameState.selected_skin_id)
 
 	_spawner.setup(player, _enemies)
 	_energon_manager.setup(player)
+
+	# Árbol de habilidades del personaje elegido (o el de por defecto).
+	var tree_nodes: Array[SkillNodeData] = []
+	tree_nodes.assign(GameState.selected_skill_tree)
+	if tree_nodes.is_empty() and default_skill_tree != null:
+		tree_nodes.assign(default_skill_tree.nodes)
+	_skill_tree_manager.setup(tree_nodes, player)
+	_skill_tree_ui.setup(_skill_tree_manager)
+	_passives.setup(player)
 	_wave_manager.setup(_spawner)
 	_wave_manager.start_run()

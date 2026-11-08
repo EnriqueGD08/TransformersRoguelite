@@ -14,6 +14,10 @@ extends Node2D
 ## Resource con los datos del arma. Asignado desde el Inspector.
 @export var stats: WeaponStats
 
+## Segundos entre pulsar y que salga el disparo, para que el proyectil aparezca
+## con el fogonazo de la animación. Solo en modo robot: transformado es inmediato.
+@export_range(0.0, 1.0, 0.01) var windup_seconds: float = 0.0
+
 ## Referencia al personaje propietario.
 ## Se asigna automáticamente en _ready() buscando el padre BaseCharacter.
 var _owner_character: BaseCharacter = null
@@ -97,7 +101,14 @@ func upgrade_stat(stat_name: String, value: float) -> void:
 	if not stat_name in stats:
 		push_error("BaseWeapon: stat '%s' no existe en WeaponStats" % stat_name)
 		return
-	stats.set(stat_name, stats.get(stat_name) + value)
+	var new_value: float = stats.get(stat_name) + value
+	# Límites razonables para que las mejoras no rompan el juego.
+	match stat_name:
+		"fire_rate":
+			new_value = maxf(new_value, 0.08)
+		"crit_chance":
+			new_value = minf(new_value, 1.0)
+	stats.set(stat_name, new_value)
 
 # ── Cálculo de daño ───────────────────────────────────────────────────────────
 
@@ -119,6 +130,15 @@ func _calculate_damage() -> float:
 ## Melee: activa el hitbox. Ranged: instancia un proyectil.
 func _perform_attack() -> void:
 	push_error("_perform_attack() no implementado en: " + get_script().resource_path)
+
+
+## Espera el tiempo de preparación del disparo.
+## Devuelve false si el personaje ha muerto entretanto (el disparo se cancela).
+func _wait_windup() -> bool:
+	if windup_seconds <= 0.0 or _owner_character == null or _owner_character.is_transformed():
+		return true
+	await get_tree().create_timer(windup_seconds, false).timeout
+	return is_instance_valid(_owner_character) and _owner_character.is_alive()
 
 # ── Callbacks ─────────────────────────────────────────────────────────────────
 

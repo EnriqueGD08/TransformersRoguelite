@@ -8,28 +8,30 @@
 class_name EnergonManager
 extends Node
 
-# ── Señales ───────────────────────────────────────────────────────────────────
+## Grupo del nodo donde se cuelgan los cubos (World/Pickups en game.tscn).
+const PARENT_GROUP := &"pickups"
 
 # ── Configuración ─────────────────────────────────────────────────────────────
 
-## Escena del pickup de energon que se instancia en el mundo al morir un enemigo.
+## Escena del cubo de energon que aparece al morir un enemigo.
 @export var energon_pickup_scene: PackedScene
 
-## Nodo padre donde se instancian los pickups (normalmente el nivel).
-@export var pickup_parent: Node
+## Cantidad máxima por cubo: los drops grandes (jefes) se reparten en varios.
+@export_range(1, 200, 1) var max_amount_per_pickup: int = 25
 
-## Radio de recolección automática del jugador en píxeles.
-@export_range(20.0, 200.0, 5.0) var collect_radius: float = 60.0
+## Número máximo de cubos por drop.
+@export_range(1, 50, 1) var max_pickups_per_drop: int = 12
 
 # ── Estado ────────────────────────────────────────────────────────────────────
 
-var _player: Node = null
+var _player: Node2D = null
 
 # ── Setup ─────────────────────────────────────────────────────────────────────
 
-func setup(player: Node) -> void:
+func setup(player: Node2D) -> void:
 	_player = player
 	EventBus.energon_dropped.connect(_on_energon_dropped)
+	EventBus.wave_completed.connect(_on_wave_completed)
 
 # ── API pública ───────────────────────────────────────────────────────────────
 
@@ -49,22 +51,38 @@ func get_current_energon() -> int:
 # ── Drops en el mundo ─────────────────────────────────────────────────────────
 
 func _on_energon_dropped(position: Vector2, amount: int) -> void:
+	if amount <= 0:
+		return
 	if energon_pickup_scene == null:
 		# Sin escena de pickup: recolección inmediata.
 		add_energon(amount)
 		return
+	for piece in _split(amount):
+		_spawn_pickup(position, piece)
 
-	var pickup: Node = energon_pickup_scene.instantiate()
-	var parent: Node = pickup_parent if pickup_parent else get_tree().current_scene
+
+## Reparte [param amount] en trozos sin perder ni un punto de energon.
+func _split(amount: int) -> Array[int]:
+	var pieces: int = clampi(ceili(float(amount) / max_amount_per_pickup), 1, max_pickups_per_drop)
+	var result: Array[int] = []
+	for i in pieces:
+		result.append(amount / pieces + (1 if i < amount % pieces else 0))
+	return result
+
+
+func _spawn_pickup(position: Vector2, amount: int) -> void:
+	var pickup: Node2D = energon_pickup_scene.instantiate()
+	var parent: Node = get_tree().get_first_node_in_group(PARENT_GROUP)
+	if parent == null:
+		parent = get_parent()
 	parent.add_child(pickup)
 	pickup.global_position = position
-
-	if pickup.has_method("setup"):
-		pickup.setup(amount, _player, collect_radius)
-
-	if pickup.has_signal("collected"):
-		pickup.collected.connect(_on_pickup_collected)
+	pickup.setup(amount, _player)
+	pickup.collected.connect(add_energon)
 
 
-func _on_pickup_collected(amount: int) -> void:
-	add_energon(amount)
+## Al terminar la oleada los cubos que queden vuelan hacia el personaje: el energon
+## ganado no se pierde por no haber pasado por encima.
+func _on_wave_completed(_wave_number: int) -> void:
+	for pickup in get_tree().get_nodes_in_group(EnergonPickup.GROUP):
+		pickup.attract()

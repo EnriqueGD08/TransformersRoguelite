@@ -14,6 +14,12 @@ extends Node
 signal node_unlocked(node_id: String)
 signal points_changed(available: int, total_spent: int)
 
+# ── Configuración ─────────────────────────────────────────────────────────────
+
+## XP necesaria para ganar 1 punto de habilidad (los puntos deben ser escasos
+## para que cada elección del árbol importe). Cada enemigo suele dar 1 de XP.
+@export_range(1, 100, 1) var xp_per_point: int = 12
+
 # ── Estado ────────────────────────────────────────────────────────────────────
 
 ## Nodos disponibles en el árbol del personaje actual.
@@ -22,6 +28,9 @@ var _tree_nodes: Array[SkillNodeData] = []
 
 ## IDs de los nodos ya desbloqueados en esta run.
 var _unlocked_ids: Array[String] = []
+
+## XP acumulada que aún no ha completado un punto.
+var _xp_accumulated: int = 0
 
 ## Total de puntos gastados en esta run.
 var _spent_points: int = 0
@@ -123,10 +132,13 @@ func _find_node(node_id: String) -> SkillNodeData:
 
 # ── Callbacks ─────────────────────────────────────────────────────────────────
 
-## Por cada unidad de XP ganada se convierte en un punto de habilidad.
-## Ajusta la tasa según el balance deseado.
+## La XP se acumula y cada [member xp_per_point] da un punto de habilidad.
 func _on_xp_earned(amount: int) -> void:
-	GameState.add_skill_points(amount)
+	_xp_accumulated += amount
+	var points: int = _xp_accumulated / xp_per_point
+	if points > 0:
+		_xp_accumulated -= points * xp_per_point
+		GameState.add_skill_points(points)
 
 
 ## Reenvía a la UI local los cambios de puntos que anuncia GameState.

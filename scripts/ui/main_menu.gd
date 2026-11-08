@@ -32,10 +32,11 @@ func _ready() -> void:
 func _setup_sprite(sprite: AnimatedSprite2D, entry_index: int, flipped: bool) -> void:
 	if roster == null or entry_index >= roster.entries.size():
 		return
-	var frames: Dictionary = roster.entries[entry_index].get_skin_frames()
-	if frames.is_empty():
+	var frames: SpriteFrames = roster.entries[entry_index].load_skin("g1")
+	if frames == null:
 		return
-	sprite.sprite_frames = frames.get("g1", frames.values()[0])
+	sprite.sprite_frames = frames
+	CharacterInfo.fit_preview(sprite, sprite.sprite_frames, 3.0)
 	sprite.flip_h = flipped
 	sprite.play("idle")
 	sprite.animation_finished.connect(func(): sprite.play("idle"))

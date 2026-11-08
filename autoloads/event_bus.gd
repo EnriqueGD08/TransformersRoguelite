@@ -85,6 +85,9 @@ signal skill_unlocked(skill_id: String)
 ## Emitida por SkillTreeManager cuando cambian los puntos disponibles.
 signal skill_points_changed(available: int)
 
+## Se activa una habilidad pasiva (ej: "lifesteal"). La escucha PassiveAbilities.
+signal passive_activated(passive_id: String)
+
 # ── Jefe y árbol de habilidades ───────────────────────────────────────────────
 
 ## Emitida por WaveManager al terminar una oleada para abrir el árbol.

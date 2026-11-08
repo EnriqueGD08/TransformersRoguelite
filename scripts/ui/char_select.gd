@@ -158,6 +158,7 @@ func _build_roster_buttons() -> void:
 		button.add_theme_color_override("font_color", FACTION_COLORS[info.faction].lightened(0.2))
 		button.add_theme_color_override("font_pressed_color", Color.WHITE)
 		button.icon = _make_icon(info)
+		button.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR if button.icon != null and button.icon.get_height() > 96 else CanvasItem.TEXTURE_FILTER_NEAREST
 		button.pressed.connect(_select_character.bind(i))
 		_roster_row.add_child(button)
 		_roster_buttons.append(button)
@@ -165,13 +166,14 @@ func _build_roster_buttons() -> void:
 
 ## Recorte del primer fotograma de reposo para el icono del botón.
 func _make_icon(info: CharacterInfo) -> Texture2D:
-	var frames: Dictionary = info.get_skin_frames()
-	if frames.is_empty():
+	var texture: Texture2D = info.get_icon_texture()
+	if texture == null:
 		return null
-	var sf: SpriteFrames = frames.get("g1", frames.values()[0])
 	var atlas := AtlasTexture.new()
-	atlas.atlas = sf.get_frame_texture("idle", 0)
-	atlas.region = Rect2(24, 4, 96, 90)
+	atlas.atlas = texture
+	# Mismo encuadre sea cual sea la resolución del arte.
+	var size: Vector2 = atlas.atlas.get_size()
+	atlas.region = Rect2(size.x * 24.0 / 144.0, size.y * 4.0 / 96.0, size.x * 96.0 / 144.0, size.y * 90.0 / 96.0)
 	return atlas
 
 
@@ -217,7 +219,7 @@ func _select_character(index: int) -> void:
 		_stat_bars[i].add_theme_stylebox_override("fill", _fill_style(color))
 
 	# Si la skin elegida no existe para este personaje se usa la primera disponible.
-	var frames: Dictionary = info.get_skin_frames()
+	var frames: Dictionary = info.get_skin_paths()
 	if not frames.has(_skin_id) and not frames.is_empty():
 		_skin_id = frames.keys()[0]
 	for skin_id in _skin_buttons:
@@ -235,7 +237,7 @@ func _select_skin(skin_id: String) -> void:
 
 
 func _cycle_skin(step: int) -> void:
-	var frames: Dictionary = roster.entries[_index].get_skin_frames()
+	var frames: Dictionary = roster.entries[_index].get_skin_paths()
 	var i: int = SKIN_ORDER.find(_skin_id)
 	for _n in SKIN_ORDER.size():
 		i = posmod(i + step, SKIN_ORDER.size())
@@ -253,13 +255,14 @@ func _fill_style(color: Color) -> StyleBoxFlat:
 # ── Vista previa ──────────────────────────────────────────────────────────────
 
 func _refresh_preview() -> void:
-	var frames: Dictionary = roster.entries[_index].get_skin_frames()
-	if not frames.has(_skin_id):
+	var skin_frames: SpriteFrames = roster.entries[_index].load_skin(_skin_id)
+	if skin_frames == null:
 		return
 	for skin_id in _skin_buttons:
 		_skin_buttons[skin_id].set_pressed_no_signal(skin_id == _skin_id)
-	_preview.sprite_frames = frames[_skin_id]
-	_preview.play(&"transform_idle" if _show_transform and frames[_skin_id].has_animation("transform_idle") else &"idle")
+	_preview.sprite_frames = skin_frames
+	CharacterInfo.fit_preview(_preview, skin_frames, 3.0)
+	_preview.play(&"transform_idle" if _show_transform and skin_frames.has_animation("transform_idle") else &"idle")
 
 
 func _center_preview() -> void:
@@ -316,6 +319,7 @@ func _start_game() -> void:
 	GameState.selected_character_id = info.id
 	GameState.selected_character_scene = info.scene
 	GameState.selected_character_stats = info.stats
+	GameState.selected_skill_tree = info.skill_tree.nodes if info.skill_tree != null else []
 	GameState.selected_skin_id = _skin_id
 	get_tree().change_scene_to_file(GAME_SCENE)
 

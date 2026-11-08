@@ -36,6 +36,11 @@ extends Resource
 ## Tiempo en segundos entre ataques del enemigo.
 @export_range(0.2, 5.0, 0.1) var attack_cooldown: float = 1.2
 
+# ── Resistencia ───────────────────────────────────────────────────────────────
+
+## Fracción del empuje (knockback) que el enemigo ignora (0 = lo sufre entero, 1 = inmune).
+@export_range(0.0, 1.0, 0.05) var knockback_resistance: float = 0.0
+
 # ── Recompensa ────────────────────────────────────────────────────────────────
 
 ## Energon que suelta al morir.

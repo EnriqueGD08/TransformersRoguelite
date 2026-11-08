@@ -1,7 +1,7 @@
 # stingers_bee.gd
 # Arma melee de Bumblebee: Puños Stinger de Energon.
 # Ataques rápidos y encadenados. Alta cadencia, daño moderado.
-# Cada tercer golpe es un remate con stun breve.
+# Combo de tres: directo, cruzado con la otra mano y remate con stun breve.
 # SRP: solo lógica de ataque con stingers.
 # OCP: extiende BaseWeapon sin modificarla.
 
@@ -25,6 +25,9 @@ extends BaseWeapon
 var _combo_count: int = 0
 const FINISHER_STEP: int = 3
 
+## Animación de cada golpe del combo.
+const COMBO_ANIMATIONS: Array[StringName] = [&"attack", &"attack_cross", &"attack_finisher"]
+
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _on_weapon_ready() -> void:
@@ -43,13 +46,18 @@ func _perform_attack() -> void:
 	if is_finisher:
 		damage *= finisher_damage_multiplier
 
+	_play_attack_animation()
+
+	# El golpe cuenta cuando el puño llega, no al pulsar.
+	if not await _wait_windup():
+		return
+
 	_hitbox.activate(damage, stats.hit_duration)
-	_play_attack_animation(is_finisher)
 
 
-func _play_attack_animation(is_finisher: bool) -> void:
+func _play_attack_animation() -> void:
 	if _owner_character:
-		_owner_character.play_animation("attack_finisher" if is_finisher else "attack")
+		_owner_character.play_animation(COMBO_ANIMATIONS[_combo_count - 1])
 
 # ── Callbacks ─────────────────────────────────────────────────────────────────
 

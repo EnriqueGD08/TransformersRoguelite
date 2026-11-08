@@ -29,6 +29,11 @@ func _on_weapon_ready() -> void:
 
 func _perform_attack() -> void:
 	var damage: float = _calculate_damage()
+	_play_swing_animation()
+
+	# El golpe cuenta cuando el hacha baja, no al pulsar.
+	if not await _wait_windup():
+		return
 
 	# Si el propietario está transformado, aumenta el radio del hitbox.
 	if _owner_character and _owner_character.is_transformed():
@@ -36,7 +41,6 @@ func _perform_attack() -> void:
 		damage *= _owner_character.stats.transform_damage_multiplier
 
 	_hitbox.activate(damage, stats.hit_duration)
-	_play_swing_animation()
 
 
 func _play_swing_animation() -> void:

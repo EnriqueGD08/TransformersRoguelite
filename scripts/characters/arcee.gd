@@ -16,12 +16,6 @@ extends BaseCharacter
 @onready var _ranged_weapon: Node = $PhotonPistolsArcee
 @onready var _transform_comp: Node = $TransformArcee
 
-# ── Skins ─────────────────────────────────────────────────────────────────────
-
-@export var skin_frames_g1: SpriteFrames
-@export var skin_frames_prime: SpriteFrames
-@export var skin_frames_bay: SpriteFrames
-
 # ── Estado de arma activa ─────────────────────────────────────────────────────
 
 var _active_weapon: Node = null
@@ -32,14 +26,6 @@ var _using_melee: bool = true
 func _on_ready() -> void:
 	_setup_transform_component(_transform_comp)
 	_transform_comp.character = self
-
-	var frames: Dictionary = {
-		"g1": skin_frames_g1,
-		"prime": skin_frames_prime,
-		"bay": skin_frames_bay,
-	}
-	_skin_manager.setup(_sprite, frames, stats.available_skins)
-	_skin_manager.set_skin(stats.default_skin)
 
 	_active_weapon = _melee_weapon
 	EventBus.weapon_swapped.emit("melee")
@@ -95,8 +81,13 @@ func _swap_weapon() -> void:
 ## Cada arma tiene sus propias animaciones ("ranged_idle", "ranged_walk"...).
 func _resolve_animation(base_name: StringName) -> StringName:
 	if not _is_transformed and not _using_melee and _sprite.sprite_frames != null:
+		var frames: SpriteFrames = _sprite.sprite_frames
+		# Disparar en movimiento: las piernas siguen caminando.
+		var moving_attack: StringName = StringName("ranged_walk_" + base_name)
+		if velocity.length() > 1.0 and frames.has_animation(moving_attack):
+			return moving_attack
 		var ranged: StringName = StringName("ranged_" + base_name)
-		if _sprite.sprite_frames.has_animation(ranged):
+		if frames.has_animation(ranged):
 			return ranged
 	return super._resolve_animation(base_name)
 

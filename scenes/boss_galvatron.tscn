@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_enemy.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/enemies/boss_galvatron_data.tres" id="2"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/boss_galvatron_base.tres" id="3"]
+[ext_resource type="Script" path="res://scripts/enemies/enemy_ai.gd" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/enemy_bolt.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/boss_orb.tscn" id="6"]
+
+[sub_resource type="CircleShape2D" id="s"]
+radius = 25.5
+
+[node name="BossGalvatron" type="CharacterBody2D" groups=["enemies"]]
+collision_layer = 2
+collision_mask = 2
+motion_mode = 1
+script = ExtResource("1")
+stats = ExtResource("2")
+projectile_scene_phase1 = ExtResource("5")
+projectile_scene_phase2 = ExtResource("6")
+phase2_aoe_radius = 170.0
+phase2_aoe_cooldown = 2.0
+shot_cooldown = 2.0
+shot_damage_ratio = 0.6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 12.0)
+shape = SubResource("s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 2
+scale = Vector2(1.0, 1.0)
+sprite_frames = ExtResource("3")
+animation = &"idle"
+
+[node name="EnemyAI" type="Node" parent="."]
+script = ExtResource("4")
+
+[node name="StatusTimer" type="Timer" parent="."]

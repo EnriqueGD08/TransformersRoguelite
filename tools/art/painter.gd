@@ -1,7 +1,7 @@
 # painter.gd
 # Herramienta de desarrollo: pintor de pixel art procedural.
 # SRP: solo dibuja (formas, sombreado por partes, contorno y efectos sobre un Image).
-#      No conoce personajes: eso vive en optimus_art.gd, vehicon_art.gd, etc.
+#      No conoce personajes: eso vive en vehicon_art.gd, etc.
 #
 # Flujo de dibujo por partes:
 #   begin()  -> m_rect / m_ellipse / m_poly / m_line  (construyen la máscara de la parte)
@@ -33,6 +33,10 @@ var seed_val: int = 0
 ## sobre un lienzo más grande, con margen para armas y efectos.
 var tx: int = 0
 var ty: int = 0
+
+## Factor de escala del dibujo: todo lo que se dibuja en "coordenadas de diseño"
+## se amplía por este factor (los jefes se dibujan con el mismo código a mayor tamaño).
+var sc: float = 1.0
 
 
 func _init(w: int, h: int, p_tx: int = 0, p_ty: int = 0) -> void:
@@ -72,13 +76,25 @@ func _mk(x: int, y: int) -> bool:
 	return _mask[y * W + x] == 1
 
 
+func _s(v: float) -> int:
+	return int(round(v * sc))
+
+
 func m_rect(x: int, y: int, w: int, h: int) -> void:
-	for yy in range(y, y + h):
-		for xx in range(x, x + w):
+	var x0: int = _s(x)
+	var y0: int = _s(y)
+	var x1: int = _s(x + w)
+	var y1: int = _s(y + h)
+	for yy in range(y0, maxi(y1, y0 + 1)):
+		for xx in range(x0, maxi(x1, x0 + 1)):
 			_put(xx, yy)
 
 
 func m_ellipse(cx: float, cy: float, rx: float, ry: float) -> void:
+	cx *= sc
+	cy *= sc
+	rx *= sc
+	ry *= sc
 	for yy in range(int(cy - ry) - 1, int(cy + ry) + 2):
 		for xx in range(int(cx - rx) - 1, int(cx + rx) + 2):
 			var dx := (xx + 0.5 - cx) / rx
@@ -88,7 +104,10 @@ func m_ellipse(cx: float, cy: float, rx: float, ry: float) -> void:
 
 
 ## Polígono relleno (regla par-impar). [param pts] = Array de Vector2.
-func m_poly(pts: Array) -> void:
+func m_poly(pts_in: Array) -> void:
+	var pts: Array = []
+	for q in pts_in:
+		pts.append(Vector2(q.x * sc, q.y * sc))
 	var minx := 9999.0
 	var maxx := -9999.0
 	var miny := 9999.0
@@ -115,6 +134,9 @@ func m_poly(pts: Array) -> void:
 
 ## Línea gruesa con pincel cuadrado de [param t] píxeles.
 func m_line(a: Vector2, b: Vector2, t: int = 1) -> void:
+	a *= sc
+	b *= sc
+	t = maxi(1, int(round(t * sc)))
 	var steps := int(maxf(absf(b.x - a.x), absf(b.y - a.y))) + 1
 	for i in steps + 1:
 		var f := float(i) / float(maxi(steps, 1))
@@ -195,6 +217,16 @@ func end(base: Color, shade: bool = true) -> void:
 # ── Dibujo directo sobre el lienzo ────────────────────────────────────────────
 
 func px(x: int, y: int, c: Color) -> void:
+	if sc == 1.0:
+		_px_raw(x, y, c)
+		return
+	# Con escala, un píxel de diseño ocupa un bloque de sc x sc píxeles.
+	for yy in range(_s(y), maxi(_s(y + 1), _s(y) + 1)):
+		for xx in range(_s(x), maxi(_s(x + 1), _s(x) + 1)):
+			_px_raw(xx, yy, c)
+
+
+func _px_raw(x: int, y: int, c: Color) -> void:
 	x += tx
 	y += ty
 	if x < 0 or y < 0 or x >= W or y >= H:
@@ -209,38 +241,60 @@ func px(x: int, y: int, c: Color) -> void:
 
 
 func rect(x: int, y: int, w: int, h: int, c: Color) -> void:
-	for yy in range(y, y + h):
-		for xx in range(x, x + w):
-			px(xx, yy, c)
+	var x0: int = _s(x)
+	var y0: int = _s(y)
+	var x1: int = maxi(_s(x + w), x0 + 1)
+	var y1: int = maxi(_s(y + h), y0 + 1)
+	for yy in range(y0, y1):
+		for xx in range(x0, x1):
+			_px_raw(xx, yy, c)
 
 
 func line_px(a: Vector2, b: Vector2, c: Color) -> void:
+	a *= sc
+	b *= sc
+	var t: int = maxi(1, int(round(sc)))
 	var steps := int(maxf(absf(b.x - a.x), absf(b.y - a.y)))
 	for i in steps + 1:
 		var f := float(i) / float(maxi(steps, 1))
-		px(int(round(lerpf(a.x, b.x, f))), int(round(lerpf(a.y, b.y, f))), c)
+		var x := int(round(lerpf(a.x, b.x, f)))
+		var y := int(round(lerpf(a.y, b.y, f)))
+		for yy in t:
+			for xx in t:
+				_px_raw(x + xx, y + yy, c)
 
 
 func ellipse_px(cx: float, cy: float, rx: float, ry: float, c: Color) -> void:
+	cx *= sc
+	cy *= sc
+	rx *= sc
+	ry *= sc
 	for yy in range(int(cy - ry) - 1, int(cy + ry) + 2):
 		for xx in range(int(cx - rx) - 1, int(cx + rx) + 2):
 			var dx := (xx + 0.5 - cx) / rx
 			var dy := (yy + 0.5 - cy) / ry
 			if dx * dx + dy * dy <= 1.0:
-				px(xx, yy, c)
+				_px_raw(xx, yy, c)
 
 
 func ring_px(cx: float, cy: float, rx: float, ry: float, c: Color, thick: float = 0.18) -> void:
+	cx *= sc
+	cy *= sc
+	rx *= sc
+	ry *= sc
 	for yy in range(int(cy - ry) - 2, int(cy + ry) + 3):
 		for xx in range(int(cx - rx) - 2, int(cx + rx) + 3):
 			var dx := (xx + 0.5 - cx) / rx
 			var dy := (yy + 0.5 - cy) / ry
 			var d := dx * dx + dy * dy
 			if d <= 1.0 and d >= (1.0 - thick) * (1.0 - thick):
-				px(xx, yy, c)
+				_px_raw(xx, yy, c)
 
 
-func poly_px(pts: Array, c: Color) -> void:
+func poly_px(pts_in: Array, c: Color) -> void:
+	var pts: Array = []
+	for q in pts_in:
+		pts.append(Vector2(q.x * sc, q.y * sc))
 	var minx := 9999.0
 	var maxx := -9999.0
 	var miny := 9999.0
@@ -262,7 +316,7 @@ func poly_px(pts: Array, c: Color) -> void:
 		xs.sort()
 		for k in range(0, xs.size() - 1, 2):
 			for xx in range(int(round(xs[k])), int(round(xs[k + 1]))):
-				px(xx, yy, c)
+				_px_raw(xx, yy, c)
 
 # ── Pasadas finales ───────────────────────────────────────────────────────────
 

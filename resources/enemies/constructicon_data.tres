@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "Constructicon"
+enemy_id = "constructicon"
+max_hp = 320.0
+move_speed = 38.0
+detection_range = 1000.0
+attack_range = 66.0
+attack_damage = 22.0
+attack_cooldown = 1.8
+knockback_resistance = 0.6
+energon_reward = 20
+xp_reward = 3
+ai_type = "tank_charger"
+can_fly = false

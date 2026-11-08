@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" path="res://scripts/characters/bumblebee.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/bumblebee_data.tres" id="2"]
-[ext_resource type="SpriteFrames" path="res://resources/frames/bumblebee_g1.tres" id="3"]
-[ext_resource type="SpriteFrames" path="res://resources/frames/bumblebee_prime.tres" id="4"]
-[ext_resource type="SpriteFrames" path="res://resources/frames/bumblebee_bay.tres" id="5"]
 [ext_resource type="Script" path="res://scripts/characters/skin_manager.gd" id="6"]
 [ext_resource type="Script" path="res://scripts/weapons/stingers_bee.gd" id="7"]
 [ext_resource type="Resource" path="res://resources/weapons/stingers_bee_stats.tres" id="8"]
@@ -12,7 +9,7 @@
 [ext_resource type="Script" path="res://scripts/characters/transform_bumblebee.gd" id="10"]
 
 [sub_resource type="RectangleShape2D" id="body_shape"]
-size = Vector2(24, 50)
+size = Vector2(28, 56)
 
 [sub_resource type="CircleShape2D" id="hit_shape"]
 radius = 58.0
@@ -22,17 +19,18 @@ collision_mask = 4
 motion_mode = 1
 script = ExtResource("1")
 stats = ExtResource("2")
-skin_frames_g1 = ExtResource("3")
-skin_frames_prime = ExtResource("4")
-skin_frames_bay = ExtResource("5")
+skin_frames_g1 = "res://resources/frames/bumblebee_g1.tres"
+skin_frames_prime = "res://resources/frames/bumblebee_prime.tres"
+skin_frames_bay = "res://resources/frames/bumblebee_bay.tres"
+walk_speed_scale = 2.1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 10)
 shape = SubResource("body_shape")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("3")
-animation = &"idle"
+texture_filter = 2
+scale = Vector2(0.5, 0.5)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
@@ -45,6 +43,7 @@ script = ExtResource("6")
 [node name="StingersBee" type="Node2D" parent="."]
 script = ExtResource("7")
 stats = ExtResource("8")
+windup_seconds = 0.08
 
 [node name="FireTimer" type="Timer" parent="StingersBee"]
 one_shot = true

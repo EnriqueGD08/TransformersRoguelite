@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/constructicon.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/enemies/constructicon_data.tres" id="2"]
+[ext_resource type="SpriteFrames" path="res://resources/frames/constructicon_base.tres" id="3"]
+[ext_resource type="Script" path="res://scripts/enemies/enemy_ai.gd" id="4"]
+
+[sub_resource type="CircleShape2D" id="s"]
+radius = 26.0
+
+[node name="Constructicon" type="CharacterBody2D" groups=["enemies"]]
+collision_layer = 2
+collision_mask = 2
+motion_mode = 1
+script = ExtResource("1")
+stats = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 10)
+shape = SubResource("s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 2
+scale = Vector2(0.75, 0.75)
+sprite_frames = ExtResource("3")
+animation = &"idle"
+
+[node name="EnemyAI" type="Node" parent="."]
+script = ExtResource("4")
+
+[node name="StatusTimer" type="Timer" parent="."]

@@ -1,9 +1,9 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=40 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/game_controller.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/player_optimus.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/wave_end.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/skill_tree.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/game_over.tscn" id="5"]
 [ext_resource type="Script" path="res://scripts/enemies/enemy_spawner.gd" id="6"]
 [ext_resource type="Script" path="res://scripts/systems/wave_manager.gd" id="7"]
@@ -12,14 +12,36 @@
 [ext_resource type="Resource" path="res://resources/waves/wave_01.tres" id="10"]
 [ext_resource type="Resource" path="res://resources/waves/wave_02.tres" id="11"]
 [ext_resource type="Resource" path="res://resources/waves/wave_03.tres" id="12"]
+[ext_resource type="Resource" path="res://resources/waves/wave_04.tres" id="w04"]
+[ext_resource type="Resource" path="res://resources/waves/wave_05.tres" id="w05"]
+[ext_resource type="Resource" path="res://resources/waves/wave_06.tres" id="w06"]
+[ext_resource type="Resource" path="res://resources/waves/wave_07.tres" id="w07"]
+[ext_resource type="Resource" path="res://resources/waves/wave_08.tres" id="w08"]
+[ext_resource type="Resource" path="res://resources/waves/wave_09.tres" id="w09"]
+[ext_resource type="Resource" path="res://resources/waves/wave_10.tres" id="w10"]
+[ext_resource type="Resource" path="res://resources/waves/wave_11.tres" id="w11"]
+[ext_resource type="Resource" path="res://resources/waves/wave_12.tres" id="w12"]
+[ext_resource type="Resource" path="res://resources/waves/wave_13.tres" id="w13"]
+[ext_resource type="Resource" path="res://resources/waves/wave_14.tres" id="w14"]
+[ext_resource type="Resource" path="res://resources/waves/wave_15.tres" id="w15"]
+[ext_resource type="Resource" path="res://resources/waves/wave_16.tres" id="w16"]
+[ext_resource type="Resource" path="res://resources/waves/wave_17.tres" id="w17"]
+[ext_resource type="Resource" path="res://resources/waves/wave_18.tres" id="w18"]
+[ext_resource type="Resource" path="res://resources/waves/wave_19.tres" id="w19"]
+[ext_resource type="Resource" path="res://resources/waves/wave_20.tres" id="w20"]
+[ext_resource type="PackedScene" path="res://scenes/energon_pickup.tscn" id="16"]
+[ext_resource type="Script" path="res://scripts/systems/skill_tree_manager.gd" id="13"]
+[ext_resource type="Script" path="res://scripts/systems/passive_abilities.gd" id="14"]
+[ext_resource type="Resource" path="res://resources/skill_tree_optimus.tres" id="15"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1")
 default_player_scene = ExtResource("2")
+default_skill_tree = ExtResource("15")
 
 [node name="Hud" parent="." instance=ExtResource("3")]
 
-[node name="WaveEnd" parent="." instance=ExtResource("4")]
+[node name="SkillTree" parent="." instance=ExtResource("4")]
 
 [node name="RunEnd" parent="." instance=ExtResource("5")]
 
@@ -31,7 +53,9 @@ offset_left = -3000.0
 offset_top = -3000.0
 offset_right = 3000.0
 offset_bottom = 3000.0
-color = Color(0.13, 0.14, 0.18, 1)
+color = Color(0.3, 0.33, 0.38, 1)
+
+[node name="Pickups" type="Node2D" parent="World" groups=["pickups"]]
 
 [node name="Enemies" type="Node2D" parent="World"]
 
@@ -44,7 +68,14 @@ script = ExtResource("6")
 
 [node name="WaveManager" type="Node" parent="Systems"]
 script = ExtResource("7")
-waves = Array[ExtResource("9")]([ExtResource("10"), ExtResource("11"), ExtResource("12")])
+waves = Array[ExtResource("9")]([ExtResource("10"), ExtResource("11"), ExtResource("12"), ExtResource("w04"), ExtResource("w05"), ExtResource("w06"), ExtResource("w07"), ExtResource("w08"), ExtResource("w09"), ExtResource("w10"), ExtResource("w11"), ExtResource("w12"), ExtResource("w13"), ExtResource("w14"), ExtResource("w15"), ExtResource("w16"), ExtResource("w17"), ExtResource("w18"), ExtResource("w19"), ExtResource("w20")])
 
 [node name="EnergonManager" type="Node" parent="Systems"]
 script = ExtResource("8")
+energon_pickup_scene = ExtResource("16")
+
+[node name="SkillTreeManager" type="Node" parent="Systems"]
+script = ExtResource("13")
+
+[node name="PassiveAbilities" type="Node" parent="Systems"]
+script = ExtResource("14")

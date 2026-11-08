@@ -16,6 +16,19 @@ extends CharacterBody2D
 ## Se asigna desde el Inspector o desde la escena concreta del personaje.
 @export var stats: CharacterStats
 
+## Rutas de los SpriteFrames de cada skin. Son rutas (no recursos) para cargar solo la
+## skin que se usa: cada una ocupa decenas de MB de textura.
+@export_file("*.tres") var skin_frames_g1: String
+@export_file("*.tres") var skin_frames_prime: String
+@export_file("*.tres") var skin_frames_bay: String
+
+## Skin con la que empieza. Vacío = la de CharacterStats. Asignar antes de añadir al árbol.
+var initial_skin: String = ""
+
+## Multiplicador de velocidad de la animación de caminar, para que los pies no parezcan
+## resbalar con la velocidad a la que se desplaza el personaje.
+@export_range(0.5, 3.0, 0.05) var walk_speed_scale: float = 1.0
+
 # ── Señales ───────────────────────────────────────────────────────────────────
 
 ## Emitida cuando el personaje recibe daño.
@@ -48,6 +61,9 @@ var _is_transformed: bool = false
 ## Modificadores acumulados por el árbol de habilidades.
 ## Clave: nombre del stat (ej: "damage", "speed"). Valor: delta acumulado.
 var _stat_modifiers: Dictionary = {}
+
+## Veces que puede revivir al morir (la pasiva "last_stand" suma una).
+var _revive_charges: int = 0
 
 ## Referencia al componente de transformación (ITransformable).
 ## Se asigna en _ready() de cada subclase mediante _setup_transform_component().
@@ -126,12 +142,19 @@ func set_skin(skin_id: String) -> void:
 ## En modo transformado prefiere la variante "transform_<nombre>" (camión, moto...).
 ## [param backwards] reproduce la animación al revés (ej: volver a modo robot).
 func play_animation(anim_name: StringName, backwards: bool = false) -> void:
+	# Atacar no corta la transformación: si no, con el botón pulsado nunca se vería.
+	if String(anim_name).begins_with("attack") and _sprite.animation == &"transform_activate" and _sprite.is_playing():
+		return
 	var resolved: StringName = _resolve_animation(anim_name)
 	if resolved == &"":
 		return
+	_sprite.speed_scale = 1.0
 	if backwards:
 		_sprite.play_backwards(resolved)
 	else:
+		# Si ya sonaba (disparos más rápidos que la animación), vuelve a empezar.
+		if _sprite.animation == resolved:
+			_sprite.frame = 0
 		_sprite.play(resolved)
 
 
@@ -141,6 +164,10 @@ func _resolve_animation(base_name: StringName) -> StringName:
 	if _sprite.sprite_frames == null:
 		return &""
 	var frames: SpriteFrames = _sprite.sprite_frames
+	# Atacar en movimiento: si existe, usa la variante con las piernas caminando.
+	if String(base_name).begins_with("attack") and not _is_transformed and velocity.length() > 1.0 \
+			and frames.has_animation("walk_" + base_name):
+		return StringName("walk_" + base_name)
 	if _is_transformed:
 		if frames.has_animation("transform_" + base_name):
 			return StringName("transform_" + base_name)
@@ -165,6 +192,23 @@ func _update_move_animation(direction: Vector2) -> void:
 	var target: StringName = _resolve_animation(&"walk" if direction != Vector2.ZERO else &"idle")
 	if target != &"" and target != _sprite.animation:
 		_sprite.play(target)
+		_sprite.speed_scale = walk_speed_scale if String(target).ends_with("walk") else 1.0
+
+
+## Suma cargas de resurrección (pasiva "Última resistencia").
+func add_revive_charge(amount: int = 1) -> void:
+	_revive_charges += amount
+
+
+## Devuelve el componente de transformación (para mejoras específicas de cada una).
+func get_transform_component() -> Node:
+	return _transform_component
+
+
+## Reduce el cooldown de la transformación (pasiva: cada baja acorta la recarga).
+func reduce_transform_cooldown(seconds: float) -> void:
+	if _transform_component != null and _transform_component.has_method("reduce_cooldown"):
+		_transform_component.reduce_cooldown(seconds)
 
 
 ## Bloquea o libera el desplazamiento del personaje.
@@ -197,9 +241,14 @@ func _on_animation_finished() -> void:
 ## Cada subclase debe llamar a _setup_transform_component() y
 ## _setup_skin_manager() con sus implementaciones concretas.
 func _setup_components() -> void:
-	# La skin la aplica cada personaje en _on_ready() (SkinManager.setup + set_skin),
-	# porque necesita los SpriteFrames que solo conoce la subclase.
 	_skin_manager = $SkinManager
+	var paths: Dictionary = {}
+	for skin_id: String in ["g1", "prime", "bay"]:
+		var path: String = get("skin_frames_" + skin_id)
+		if not path.is_empty():
+			paths[skin_id] = path
+	_skin_manager.setup(_sprite, paths, stats.available_skins)
+	_skin_manager.set_skin(initial_skin if not initial_skin.is_empty() else stats.default_skin)
 	# Al terminar una animación puntual (ataque, transformación) vuelve a idle.
 	_sprite.animation_finished.connect(_on_animation_finished)
 
@@ -212,8 +261,8 @@ func _setup_transform_component(component: Node) -> void:
 
 
 func _setup_regen_timer() -> void:
-	if stats.hp_regen_per_second <= 0.0:
-		return
+	# El temporizador siempre corre: la regeneración puede activarla una habilidad
+	# del árbol aunque el personaje no regenere de base.
 	_regen_timer.wait_time = 1.0
 	_regen_timer.autostart = true
 	_regen_timer.timeout.connect(_on_regen_tick)
@@ -236,6 +285,13 @@ func take_damage(amount: float) -> void:
 	_emit_hp_changed()
 
 	if _current_hp <= 0.0:
+		# Pasiva "Última resistencia": revive una vez con la mitad de la vida.
+		if _revive_charges > 0:
+			_revive_charges -= 1
+			_current_hp = get_max_hp() * 0.5
+			_emit_hp_changed()
+			EventBus.play_sfx.emit("revive")
+			return
 		_die()
 
 
@@ -254,6 +310,16 @@ func get_max_hp() -> float:
 	return base + _get_modifier("max_hp")
 
 # ── IMovable (datos) ──────────────────────────────────────────────────────────
+
+## Radio de atracción del energon (base + mejoras del árbol).
+func get_pickup_radius() -> float:
+	return stats.pickup_radius + _get_modifier("pickup_radius")
+
+
+## Regeneración de vida por segundo (base + mejoras del árbol).
+func get_regen() -> float:
+	return stats.hp_regen_per_second + _get_modifier("hp_regen_per_second")
+
 
 ## Devuelve la velocidad de movimiento actual con modificadores aplicados.
 func get_speed() -> float:
@@ -336,6 +402,10 @@ func add_stat_modifier(stat_name: String, delta: float) -> void:
 		_stat_modifiers[stat_name] += delta
 	else:
 		_stat_modifiers[stat_name] = delta
+	# Subir la vida máxima también cura esa cantidad (si no, la barra quedaría "vacía").
+	if stat_name == "max_hp" and delta > 0.0 and _is_alive:
+		_current_hp += delta
+		_emit_hp_changed()
 
 
 ## Elimina un modificador previamente añadido.
@@ -367,7 +437,7 @@ func _emit_hp_changed() -> void:
 
 
 func _try_dodge() -> bool:
-	var chance: float = stats.dodge_chance + _get_modifier("dodge_chance")
+	var chance: float = minf(stats.dodge_chance + _get_modifier("dodge_chance"), 0.75)
 	return randf() < chance
 
 
@@ -399,4 +469,6 @@ func _on_regen_tick() -> void:
 		return
 	if _current_hp >= get_max_hp():
 		return
-	heal(stats.hp_regen_per_second)
+	var regen: float = get_regen()
+	if regen > 0.0:
+		heal(regen)

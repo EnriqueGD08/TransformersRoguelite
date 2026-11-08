@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/enemy_bolt.tscn" id="2"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "Seeker"
+enemy_id = "seeker"
+max_hp = 45.0
+move_speed = 105.0
+detection_range = 1000.0
+attack_range = 260.0
+attack_damage = 7.0
+attack_cooldown = 1.6
+knockback_resistance = 0.0
+energon_reward = 8
+xp_reward = 1
+ai_type = "flying_shooter"
+can_fly = true
+projectile_scene = ExtResource("2")

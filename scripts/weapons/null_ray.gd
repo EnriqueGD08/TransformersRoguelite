@@ -16,6 +16,9 @@ extends BaseWeapon
 ## Offset del cañón respecto al centro del personaje.
 @export var muzzle_offset: Vector2 = Vector2(28.0, -6.0)
 
+## Offset del morro en modo jet.
+@export var transformed_muzzle_offset: Vector2 = Vector2(28.0, -6.0)
+
 ## Separación angular entre los dos rayos de la ráfaga en grados.
 @export_range(0.0, 20.0, 1.0) var burst_spread_degrees: float = 6.0
 
@@ -27,6 +30,11 @@ func _perform_attack() -> void:
 		return
 
 	var damage: float = _calculate_damage()
+	_play_fire_animation()
+
+	if not await _wait_windup():
+		return
+
 	var origin: Vector2 = _get_muzzle_position()
 	var base_direction: Vector2 = _get_aim_direction(origin)
 
@@ -40,13 +48,11 @@ func _perform_attack() -> void:
 		var direction: Vector2 = base_direction.rotated(spread_angle)
 		_spawn_projectile(origin, direction, damage)
 
-	_play_fire_animation()
-
 
 func _get_muzzle_position() -> Vector2:
 	if _owner_character == null:
 		return global_position
-	var offset: Vector2 = muzzle_offset
+	var offset: Vector2 = transformed_muzzle_offset if _owner_character.is_transformed() else muzzle_offset
 	if _owner_character.is_facing_left():
 		offset.x *= -1.0
 	return _owner_character.global_position + offset

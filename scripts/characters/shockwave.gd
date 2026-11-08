@@ -14,25 +14,11 @@ extends BaseCharacter
 @onready var _weapon: Node = $ShockwaveCannon
 @onready var _transform_comp: Node = $TransformShockwave
 
-# ── Skins ─────────────────────────────────────────────────────────────────────
-
-@export var skin_frames_g1: SpriteFrames
-@export var skin_frames_prime: SpriteFrames
-@export var skin_frames_bay: SpriteFrames
-
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _on_ready() -> void:
 	_setup_transform_component(_transform_comp)
 	_transform_comp.character = self
-
-	var frames: Dictionary = {
-		"g1": skin_frames_g1,
-		"prime": skin_frames_prime,
-		"bay": skin_frames_bay,
-	}
-	_skin_manager.setup(_sprite, frames, stats.available_skins)
-	_skin_manager.set_skin(stats.default_skin)
 
 # ── Movimiento ────────────────────────────────────────────────────────────────
 
@@ -57,9 +43,17 @@ func _aim_towards_mouse() -> void:
 	_sprite.flip_h = to_mouse.x < 0.0
 	if _is_transformed and to_mouse.length() > 1.0:
 		# Con el sprite espejado el cañón apunta a la izquierda: se compensa con PI.
-		_sprite.rotation = to_mouse.angle() - (PI if _sprite.flip_h else 0.0)
+		var aim: float = wrapf(to_mouse.angle() - (PI if _sprite.flip_h else 0.0), -PI, PI)
+		_sprite.rotation = aim * _aim_weight()
 	else:
 		_sprite.rotation = 0.0
+
+## Cuánto gira el sprite (0 a 1): el robot no se tumba, va girando según se forma el cañón.
+func _aim_weight() -> float:
+	if _sprite.animation != &"transform_activate":
+		return 1.0
+	var last: int = _sprite.sprite_frames.get_frame_count(_sprite.animation) - 1
+	return float(_sprite.frame) / maxf(last, 1)
 
 # ── Ataque ────────────────────────────────────────────────────────────────────
 

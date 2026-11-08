@@ -1,0 +1,30 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/energon_spark/explode_0.png" id="1_gbxhb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/energon_spark/explode_1.png" id="2_5ucee"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/energon_spark/explode_2.png" id="3_q2u26"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/energon_spark/explode_3.png" id="4_rgujx"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fx/energon_spark/explode_4.png" id="5_mjm3h"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_gbxhb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_5ucee")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_q2u26")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_rgujx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_mjm3h")
+}],
+"loop": false,
+"name": &"explode",
+"speed": 16.0
+}]

@@ -1,0 +1,281 @@
+[gd_resource type="Resource" script_class="SkillTreeData" load_steps=37 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/skill_node_data.gd" id="node_script"]
+[ext_resource type="Script" path="res://scripts/systems/skill_tree_data.gd" id="tree_script"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/bolt.png" id="ic_bolt"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/boot.png" id="ic_boot"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/bullets.png" id="ic_bullets"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/burst.png" id="ic_burst"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/clock.png" id="ic_clock"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/cross.png" id="ic_cross"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/crosshair.png" id="ic_crosshair"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/drop.png" id="ic_drop"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/feather.png" id="ic_feather"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/heart.png" id="ic_heart"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/heart_plus.png" id="ic_heart_plus"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/hourglass.png" id="ic_hourglass"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/magnet.png" id="ic_magnet"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/shield.png" id="ic_shield"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/skull.png" id="ic_skull"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/star.png" id="ic_star"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/sword.png" id="ic_sword"]
+
+[sub_resource type="Resource" id="shockwave_atk1"]
+script = ExtResource("node_script")
+id = "shockwave_atk1"
+display_name = "Onda potente"
+description = "+6 de daño base."
+icon = ExtResource("ic_sword")
+branch = "ataque"
+tree_position = Vector2(70, 70)
+cost = 1
+required_ids = Array[String]([])
+effect_type = "stat_bonus"
+target_stat = "base_damage"
+effect_value = 6
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_atk2"]
+script = ExtResource("node_script")
+id = "shockwave_atk2"
+display_name = "Pulso veloz"
+description = "+12 % de cadencia de disparo."
+icon = ExtResource("ic_bullets")
+branch = "ataque"
+tree_position = Vector2(250, 38)
+cost = 1
+required_ids = Array[String](["shockwave_atk1"])
+effect_type = "weapon_upgrade"
+target_stat = "fire_rate"
+effect_value = -0.11
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_atk3"]
+script = ExtResource("node_script")
+id = "shockwave_atk3"
+display_name = "Golpe crítico"
+description = "+10 % de probabilidad de golpe crítico."
+icon = ExtResource("ic_star")
+branch = "ataque"
+tree_position = Vector2(250, 102)
+cost = 1
+required_ids = Array[String](["shockwave_atk1"])
+effect_type = "weapon_upgrade"
+target_stat = "crit_chance"
+effect_value = 0.1
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_atk4"]
+script = ExtResource("node_script")
+id = "shockwave_atk4"
+display_name = "Colapso de masa"
+description = "+8 de daño base."
+icon = ExtResource("ic_crosshair")
+branch = "ataque"
+tree_position = Vector2(430, 70)
+cost = 2
+required_ids = Array[String](["shockwave_atk2", "shockwave_atk3"])
+effect_type = "stat_bonus"
+target_stat = "base_damage"
+effect_value = 8
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_atk5"]
+script = ExtResource("node_script")
+id = "shockwave_atk5"
+display_name = "Vampirismo"
+description = "Curas un 8 % del daño que infliges con tus armas."
+icon = ExtResource("ic_drop")
+branch = "ataque"
+tree_position = Vector2(610, 70)
+cost = 3
+required_ids = Array[String](["shockwave_atk4"])
+effect_type = "passive_ability"
+target_stat = ""
+effect_value = 0.0
+passive_id = "lifesteal"
+
+[sub_resource type="Resource" id="shockwave_tf1"]
+script = ExtResource("node_script")
+id = "shockwave_tf1"
+display_name = "Transformación prolongada"
+description = "La transformación dura +1 s."
+icon = ExtResource("ic_clock")
+branch = "transformación"
+tree_position = Vector2(70, 215)
+cost = 1
+required_ids = Array[String]([])
+effect_type = "transform_upgrade"
+target_stat = "transform_duration"
+effect_value = 1.0
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_tf2"]
+script = ExtResource("node_script")
+id = "shockwave_tf2"
+display_name = "Recarga rápida"
+description = "El cooldown de la transformación baja 2,5 s."
+icon = ExtResource("ic_hourglass")
+branch = "transformación"
+tree_position = Vector2(250, 183)
+cost = 1
+required_ids = Array[String](["shockwave_tf1"])
+effect_type = "transform_upgrade"
+target_stat = "transform_cooldown"
+effect_value = -2.5
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_tf3"]
+script = ExtResource("node_script")
+id = "shockwave_tf3"
+display_name = "Rayo intenso"
+description = "El rayo láser hace +30 de daño por segundo."
+icon = ExtResource("ic_bolt")
+branch = "transformación"
+tree_position = Vector2(250, 247)
+cost = 1
+required_ids = Array[String](["shockwave_tf1"])
+effect_type = "transform_upgrade"
+target_stat = "beam_dps"
+effect_value = 30.0
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_tf4"]
+script = ExtResource("node_script")
+id = "shockwave_tf4"
+display_name = "Rayo ancho"
+description = "El rayo es +8 px más ancho."
+icon = ExtResource("ic_burst")
+branch = "transformación"
+tree_position = Vector2(430, 215)
+cost = 2
+required_ids = Array[String](["shockwave_tf2", "shockwave_tf3"])
+effect_type = "transform_upgrade"
+target_stat = "beam_width"
+effect_value = 8.0
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_tf5"]
+script = ExtResource("node_script")
+id = "shockwave_tf5"
+display_name = "Sed de batalla"
+description = "Cada baja acorta 1,5 s el cooldown de la transformación."
+icon = ExtResource("ic_skull")
+branch = "transformación"
+tree_position = Vector2(610, 215)
+cost = 3
+required_ids = Array[String](["shockwave_tf4"])
+effect_type = "passive_ability"
+target_stat = ""
+effect_value = 0.0
+passive_id = "kill_cdr"
+
+[sub_resource type="Resource" id="shockwave_def1"]
+script = ExtResource("node_script")
+id = "shockwave_def1"
+display_name = "Vitalidad"
+description = "+78 de vida máxima (y te curas esa cantidad)."
+icon = ExtResource("ic_heart")
+branch = "defensa"
+tree_position = Vector2(70, 350)
+cost = 1
+required_ids = Array[String]([])
+effect_type = "stat_bonus"
+target_stat = "max_hp"
+effect_value = 78
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_def2"]
+script = ExtResource("node_script")
+id = "shockwave_def2"
+display_name = "Blindaje"
+description = "Recibes un 6 % menos de daño."
+icon = ExtResource("ic_shield")
+branch = "defensa"
+tree_position = Vector2(250, 318)
+cost = 1
+required_ids = Array[String](["shockwave_def1"])
+effect_type = "stat_bonus"
+target_stat = "damage_reduction"
+effect_value = 0.06
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_def3"]
+script = ExtResource("node_script")
+id = "shockwave_def3"
+display_name = "Reflejos"
+description = "+6 % de probabilidad de esquivar."
+icon = ExtResource("ic_feather")
+branch = "defensa"
+tree_position = Vector2(250, 382)
+cost = 1
+required_ids = Array[String](["shockwave_def1"])
+effect_type = "stat_bonus"
+target_stat = "dodge_chance"
+effect_value = 0.06
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_def4"]
+script = ExtResource("node_script")
+id = "shockwave_def4"
+display_name = "Regeneración"
+description = "Recuperas 1,5 de vida por segundo."
+icon = ExtResource("ic_cross")
+branch = "defensa"
+tree_position = Vector2(430, 350)
+cost = 2
+required_ids = Array[String](["shockwave_def2", "shockwave_def3"])
+effect_type = "stat_bonus"
+target_stat = "hp_regen_per_second"
+effect_value = 1.5
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_def5"]
+script = ExtResource("node_script")
+id = "shockwave_def5"
+display_name = "Última resistencia"
+description = "Una vez por partida, al morir, revives con la mitad de la vida."
+icon = ExtResource("ic_heart_plus")
+branch = "defensa"
+tree_position = Vector2(610, 350)
+cost = 3
+required_ids = Array[String](["shockwave_def4"])
+effect_type = "passive_ability"
+target_stat = ""
+effect_value = 0.0
+passive_id = "last_stand"
+
+[sub_resource type="Resource" id="shockwave_def6"]
+script = ExtResource("node_script")
+id = "shockwave_def6"
+display_name = "Movilidad"
+description = "+10 de velocidad de movimiento."
+icon = ExtResource("ic_boot")
+branch = "defensa"
+tree_position = Vector2(430, 414)
+cost = 1
+required_ids = Array[String](["shockwave_def3"])
+effect_type = "stat_bonus"
+target_stat = "move_speed"
+effect_value = 10
+passive_id = ""
+
+[sub_resource type="Resource" id="shockwave_def7"]
+script = ExtResource("node_script")
+id = "shockwave_def7"
+display_name = "Imán de energon"
+description = "Atraes el energon desde 70 px más lejos."
+icon = ExtResource("ic_magnet")
+branch = "defensa"
+tree_position = Vector2(610, 414)
+cost = 1
+required_ids = Array[String](["shockwave_def6"])
+effect_type = "stat_bonus"
+target_stat = "pickup_radius"
+effect_value = 70.0
+passive_id = ""
+
+[resource]
+script = ExtResource("tree_script")
+character_id = "shockwave"
+nodes = Array[ExtResource("node_script")]([SubResource("shockwave_atk1"), SubResource("shockwave_atk2"), SubResource("shockwave_atk3"), SubResource("shockwave_atk4"), SubResource("shockwave_atk5"), SubResource("shockwave_tf1"), SubResource("shockwave_tf2"), SubResource("shockwave_tf3"), SubResource("shockwave_tf4"), SubResource("shockwave_tf5"), SubResource("shockwave_def1"), SubResource("shockwave_def2"), SubResource("shockwave_def3"), SubResource("shockwave_def4"), SubResource("shockwave_def5"), SubResource("shockwave_def6"), SubResource("shockwave_def7")])

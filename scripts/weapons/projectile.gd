@@ -153,7 +153,9 @@ func _apply_aoe_damage() -> void:
 	shape.radius = _aoe_radius
 	query.shape = shape
 	query.transform = Transform2D(0.0, global_position)
-	query.collision_mask = 2  # capa de enemigos
+	# Usa la máscara del propio proyectil: los del jugador buscan enemigos (2) y los
+	# enemigos buscan al jugador (1).
+	query.collision_mask = collision_mask
 
 	for result in space_state.intersect_shape(query):
 		var body: Node = result.collider
