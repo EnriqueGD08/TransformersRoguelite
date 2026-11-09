@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/player_optimus.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/skill_tree.tscn" id="4"]
-[ext_resource type="PackedScene" path="res://scenes/game_over.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/defeat_screen.tscn" id="5"]
 [ext_resource type="Script" path="res://scripts/enemies/enemy_spawner.gd" id="6"]
 [ext_resource type="Script" path="res://scripts/systems/wave_manager.gd" id="7"]
 [ext_resource type="Script" path="res://scripts/systems/energon_manager.gd" id="8"]
@@ -59,7 +59,7 @@ default_skill_tree = ExtResource("15")
 
 [node name="VictoryScreen" parent="." instance=ExtResource("victory")]
 
-[node name="RunEnd" parent="." instance=ExtResource("5")]
+[node name="DefeatScreen" parent="." instance=ExtResource("5")]
 
 [node name="World" type="Node2D" parent="."]
 
