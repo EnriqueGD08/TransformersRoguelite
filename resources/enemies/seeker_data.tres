@@ -13,6 +13,7 @@ detection_range = 1000.0
 attack_range = 260.0
 attack_damage = 7.0
 attack_cooldown = 1.6
+attack_windup = 0.25
 knockback_resistance = 0.0
 energon_reward = 8
 xp_reward = 1

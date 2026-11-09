@@ -36,6 +36,10 @@ extends Resource
 ## Tiempo en segundos entre ataques del enemigo.
 @export_range(0.2, 5.0, 0.1) var attack_cooldown: float = 1.2
 
+## Segundos entre que empieza la animación de ataque y que el golpe (o el disparo) cuenta:
+## coincide con el momento en que el arma baja o sale el fogonazo. 0 = inmediato.
+@export_range(0.0, 1.0, 0.01) var attack_windup: float = 0.0
+
 # ── Resistencia ───────────────────────────────────────────────────────────────
 
 ## Fracción del empuje (knockback) que el enemigo ignora (0 = lo sufre entero, 1 = inmune).

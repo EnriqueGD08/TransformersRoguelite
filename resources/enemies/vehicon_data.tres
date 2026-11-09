@@ -12,6 +12,7 @@ detection_range = 1000.0
 attack_range = 50.0
 attack_damage = 8.0
 attack_cooldown = 1.0
+attack_windup = 0.17
 energon_reward = 5
 xp_reward = 1
 ai_type = "melee_chaser"

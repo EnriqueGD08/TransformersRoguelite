@@ -101,10 +101,10 @@ func update_wave(wave_number: int, total_waves: int) -> void:
 func update_transform_indicator(is_active: bool) -> void:
 	if is_active:
 		_transform_icon.modulate = Color.CYAN
-		_transform_bar.modulate = Color.CYAN
+		_transform_bar.tint_progress = Color.CYAN
 	else:
 		_transform_icon.modulate = Color.WHITE
-		_transform_bar.modulate = Color.WHITE
+		_transform_bar.tint_progress = Color.WHITE
 
 # ── Callbacks del EventBus ────────────────────────────────────────────────────
 
@@ -122,10 +122,12 @@ func _on_transform_deactivated(_character: Node) -> void:
 
 func _on_transform_ready(_character: Node) -> void:
 	_transform_label.text = "LISTO"
-	_transform_bar.modulate = Color.GREEN
+	# Se tiñe solo el relleno (tint_progress), no la barra entera: modulate también
+	# tiñe al texto hijo y lo dejaba ilegible sobre el mismo color.
+	_transform_bar.tint_progress = Color.GREEN
 	# Efecto de pulso para avisar al jugador.
 	var tween: Tween = create_tween()
-	tween.tween_property(_transform_bar, "modulate", Color.WHITE, 0.5)
+	tween.tween_property(_transform_bar, "tint_progress", Color.WHITE, 0.5)
 
 
 func _on_boss_spawned(boss: Node) -> void:

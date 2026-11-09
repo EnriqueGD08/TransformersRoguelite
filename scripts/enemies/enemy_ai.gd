@@ -26,6 +26,10 @@ var _enemy: BaseEnemy = null
 var _current_state: State = State.IDLE
 var _attack_cooldown_remaining: float = 0.0
 
+## Margen extra de alcance al caer el golpe: si el jugador se ha apartado más allá de
+## attack_range × este valor durante la preparación, el golpe falla (se puede esquivar).
+@export_range(1.0, 2.0, 0.05) var strike_tolerance: float = 1.25
+
 # ── Patrulla ──────────────────────────────────────────────────────────────────
 
 ## Posición objetivo durante el estado IDLE (patrulla aleatoria).
@@ -127,18 +131,34 @@ func _execute_attack() -> void:
 			_ranged_attack()
 
 
+## Ataque cuerpo a cuerpo: la animación empieza ya, pero el daño cae cuando el arma baja.
 func _melee_attack() -> void:
 	if _enemy._player == null:
 		return
-	_enemy._player.take_damage(_enemy.get_damage())
 	_enemy.attacked_player.emit(_enemy.get_damage())
 	EventBus.play_sfx.emit(_enemy.stats.enemy_id + "_attack")
+	_after_windup(_land_melee_hit)
 
 
+func _land_melee_hit() -> void:
+	if not _can_still_strike():
+		return
+	if _player_in_range(_enemy.stats.attack_range * strike_tolerance):
+		_enemy._player.take_damage(_enemy.get_damage())
+
+
+## Ataque a distancia: el proyectil sale con el fogonazo, no al empezar la animación.
 func _ranged_attack() -> void:
 	if _enemy.stats.projectile_scene == null or _enemy._player == null:
 		return
+	_enemy.attacked_player.emit(_enemy.get_damage())
+	EventBus.play_sfx.emit(_enemy.stats.enemy_id + "_attack")
+	_after_windup(_release_projectile)
 
+
+func _release_projectile() -> void:
+	if not _can_still_strike():
+		return
 	var projectile: Projectile = _enemy.stats.projectile_scene.instantiate()
 	ProjectileContainer.add(_enemy, projectile)
 	projectile.global_position = _enemy.global_position
@@ -155,8 +175,23 @@ func _ranged_attack() -> void:
 	# Cambia la capa de colisión para que el proyectil golpee al jugador (capa 1)
 	# y no a otros enemigos (capa 2).
 	projectile.collision_mask = 1
-	_enemy.attacked_player.emit(_enemy.get_damage())
-	EventBus.play_sfx.emit(_enemy.stats.enemy_id + "_attack")
+
+
+## Ejecuta [param action] cuando acaba la preparación del ataque (attack_windup).
+## Se usa la señal del temporizador y no un await: si el enemigo desaparece entretanto,
+## la conexión se cancela sola y no queda código a medias.
+func _after_windup(action: Callable) -> void:
+	var seconds: float = _enemy.stats.attack_windup
+	if seconds <= 0.0:
+		action.call()
+		return
+	get_tree().create_timer(seconds, false).timeout.connect(action)
+
+
+## False si el enemigo ha muerto, está aturdido o ya no hay jugador cuando cae el golpe.
+func _can_still_strike() -> bool:
+	return is_instance_valid(_enemy) and _enemy.is_alive() and _current_state != State.DEAD \
+		and not _enemy._has_status("stun") and is_instance_valid(_enemy._player)
 
 # ── Utilidades ────────────────────────────────────────────────────────────────
 
