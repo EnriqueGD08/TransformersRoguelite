@@ -34,6 +34,7 @@
 [ext_resource type="Script" path="res://scripts/systems/passive_abilities.gd" id="14"]
 [ext_resource type="Resource" path="res://resources/skill_tree_optimus.tres" id="15"]
 [ext_resource type="PackedScene" path="res://scenes/shop.tscn" id="shop"]
+[ext_resource type="PackedScene" path="res://scenes/terrain.tscn" id="terrain"]
 [ext_resource type="Script" path="res://scripts/systems/shop_manager.gd" id="shopmgr"]
 [ext_resource type="Resource" path="res://resources/shop/shop_catalog.tres" id="shopcat"]
 
@@ -52,13 +53,7 @@ default_skill_tree = ExtResource("15")
 
 [node name="World" type="Node2D" parent="."]
 
-[node name="Floor" type="ColorRect" parent="World"]
-z_index = -10
-offset_left = -3000.0
-offset_top = -3000.0
-offset_right = 3000.0
-offset_bottom = 3000.0
-color = Color(0.3, 0.33, 0.38, 1)
+[node name="Terrain" parent="World" instance=ExtResource("terrain")]
 
 [node name="Pickups" type="Node2D" parent="World" groups=["pickups"]]
 

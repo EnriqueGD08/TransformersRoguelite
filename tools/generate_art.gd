@@ -40,6 +40,7 @@ const CEL_BIG_ENEMY_SCALE := 0.6
 ## Jefes: ataque de cada uno (el tamaño en el juego lo da la escala de su escena).
 const BOSS_ATTACKS := {"brawl": "punch", "devastator": "smash", "soundwave": "fire", "galvatron": "fire"}
 const FxCel := preload("res://tools/art2/fx_cel.gd")
+const TerrainCel := preload("res://tools/art2/terrain_cel.gd")
 
 const OUT_ROOT := "res://assets/sprites/"
 const FRAMES_DIR := "res://resources/frames/"
@@ -144,6 +145,7 @@ func _make_pngs() -> void:
 			_save_sheet(key.replace("/", "_"), anims)
 	_make_ui_pngs()
 	_make_skill_icons()
+	_make_terrain_pngs()
 	print("PNG generados: ", catalog.keys())
 
 
@@ -163,6 +165,14 @@ func _save_sheet(name: String, anims: Dictionary) -> void:
 		row += 1
 	sheet.resize(sheet.get_width() * 2, sheet.get_height() * 2, Image.INTERPOLATE_NEAREST)
 	sheet.save_png(ProjectSettings.globalize_path(PREVIEW_DIR + name + ".png"))
+
+
+## Texturas del terreno (se repiten en el juego) en assets/terrain/.
+func _make_terrain_pngs() -> void:
+	var dir := ProjectSettings.globalize_path("res://assets/terrain/")
+	DirAccess.make_dir_recursive_absolute(dir)
+	TerrainCel.floor_tile().save_png(dir + "floor.png")
+	TerrainCel.decals().save_png(dir + "decals.png")
 
 
 func _make_ui_pngs() -> void:

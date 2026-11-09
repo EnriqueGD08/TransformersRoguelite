@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/terrain/floor.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/terrain/decals.png" id="2"]
+[ext_resource type="Script" path="res://scripts/systems/terrain_layer.gd" id="3"]
+
+[node name="Terrain" type="Node2D"]
+z_index = -10
+
+[node name="Floor" type="Sprite2D" parent="."]
+texture_filter = 2
+texture_repeat = 2
+position = Vector2(-3200, -3200)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 12800, 12800)
+script = ExtResource("3")
+tile_world_size = 640.0
+
+[node name="Decals" type="Sprite2D" parent="."]
+z_index = 1
+texture_filter = 2
+texture_repeat = 2
+position = Vector2(-3072, -3072)
+scale = Vector2(0.6666667, 0.6666667)
+texture = ExtResource("2")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 9216, 9216)
+script = ExtResource("3")
+tile_world_size = 768.0
