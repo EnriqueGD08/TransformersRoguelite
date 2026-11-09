@@ -25,6 +25,9 @@ var _wave_active: bool = false
 var _wave_timer: float = 0.0
 var _between_waves: bool = false
 
+## Oleada (desde 0) con la que empieza la run: 0 salvo al continuar una partida guardada.
+var _resume_index: int = 0
+
 # ── Timers de spawn por grupo ─────────────────────────────────────────────────
 
 ## Para cada SpawnGroup activo: cuántos enemigos quedan por spawnear
@@ -66,8 +69,14 @@ func _process(delta: float) -> void:
 ## Inicia la run desde la primera oleada.
 ## Llamar desde game.tscn una vez el jugador esté listo.
 func start_run() -> void:
-	_current_wave_index = -1
+	_current_wave_index = _resume_index - 1
 	_advance_to_next_wave()
+
+
+## Indica en qué oleada (empezando en 0) debe empezar start_run(): se usa al continuar
+## una partida guardada. Llamar antes de start_run().
+func resume_at(next_wave_index: int) -> void:
+	_resume_index = clampi(next_wave_index, 0, maxi(waves.size() - 1, 0))
 
 
 ## Devuelve el número de oleada actual (1-based).
@@ -87,6 +96,9 @@ func _advance_to_next_wave() -> void:
 	if _current_wave_index >= waves.size():
 		_finish_run()
 		return
+
+	# Punto de guardado: la oleada que va a empezar, con lo comprado hasta ahora.
+	EventBus.checkpoint_reached.emit(_current_wave_index)
 
 	var wave: WaveData = _get_current_wave()
 	_wave_timer = wave.duration
@@ -111,7 +123,6 @@ func _complete_wave() -> void:
 
 	var wave: WaveData = _get_current_wave()
 	EventBus.wave_completed.emit(get_current_wave_number())
-	EventBus.save_requested.emit()
 
 	# Concede recompensas de fin de oleada.
 	if wave.bonus_skill_points > 0:

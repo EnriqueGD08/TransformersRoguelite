@@ -74,6 +74,15 @@ func get_icon_texture(skin_id: String = "g1") -> Texture2D:
 	return load("res://assets/sprites/%s/%s/idle_0.png" % [character, skin_id])
 
 
+## Deja este personaje y la skin elegidos en GameState, listos para empezar o continuar una run.
+func select_for_run(skin_id: String) -> void:
+	GameState.selected_character_id = id
+	GameState.selected_character_scene = scene
+	GameState.selected_character_stats = stats
+	GameState.selected_skill_tree = skill_tree.nodes if skill_tree != null else []
+	GameState.selected_skin_id = skin_id
+
+
 ## Altura en pantalla (antes de base_scale) del personaje en las vistas previas.
 const PREVIEW_HEIGHT := 78.0
 

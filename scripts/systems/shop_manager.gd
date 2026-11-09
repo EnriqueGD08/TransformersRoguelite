@@ -60,6 +60,22 @@ func can_afford(item: ShopItemData) -> bool:
 func can_buy(item: ShopItemData) -> bool:
 	return not is_sold_out(item) and can_afford(item)
 
+## Compras hechas en la run, para guardarlas: { id del objeto: veces comprado }.
+func get_purchases_snapshot() -> Dictionary:
+	return _purchases.duplicate()
+
+
+## Vuelve a dar al personaje lo comprado antes (al continuar una partida guardada).
+## No cobra nada ni emite señales de compra: el saldo y las estadísticas se restauran aparte.
+func restore_purchases(purchases: Dictionary) -> void:
+	for item in get_items():
+		var count: int = int(purchases.get(item.id, 0))
+		for i in count:
+			item.apply(_character)
+		if count > 0:
+			_purchases[item.id] = count
+
+
 # ── Compra ────────────────────────────────────────────────────────────────────
 
 ## Compra el objeto con [param item_id]. Devuelve false, sin cobrar nada, si no existe,

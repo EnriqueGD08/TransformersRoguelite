@@ -135,8 +135,6 @@ signal player_energon_changed(amount: int)
 
 # ── Guardado ──────────────────────────────────────────────────────────────────
 
-## Emitida cuando el juego debe guardarse (fin de oleada, menú, etc.).
-signal save_requested()
-
-## Emitida cuando el juego debe cargarse (inicio de sesión).
-signal load_requested()
+## Emitida por WaveManager justo antes de empezar cada oleada (con las compras ya hechas):
+## es el punto en el que se guarda la partida. [param next_wave_index] empieza en 0.
+signal checkpoint_reached(next_wave_index: int)

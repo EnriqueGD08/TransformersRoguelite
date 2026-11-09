@@ -29,6 +29,10 @@ var selected_character_stats: CharacterStats = null
 ## Resource del árbol de habilidades del personaje seleccionado.
 var selected_skill_tree: Array[SkillNodeData] = []
 
+## Partida guardada que debe reanudar la escena de juego al cargarse (la deja el menú
+## al pulsar "Continuar"). GameController la lee una vez y la vacía.
+var pending_run: Dictionary = {}
+
 # ── Estado de la run ──────────────────────────────────────────────────────────
 
 ## Número de la oleada actual (1-based). 0 = fuera de partida.
@@ -81,7 +85,6 @@ var _last_player_hp: float = -1.0
 
 func _ready() -> void:
 	EventBus.wave_started.connect(_on_wave_started)
-	EventBus.wave_completed.connect(_on_wave_completed)
 	EventBus.enemy_died.connect(_on_enemy_died)
 	EventBus.energon_collected.connect(_on_energon_collected)
 	EventBus.skill_unlocked.connect(_on_skill_unlocked)
@@ -130,6 +133,7 @@ func reset() -> void:
 	run_active = false
 	run_completed = false
 	current_wave = 0
+	pending_run = {}
 
 # ── Economía de la run (única fuente de verdad) ───────────────────────────────
 
@@ -163,6 +167,51 @@ func spend_skill_points(amount: int) -> bool:
 	return true
 
 
+## Devuelve el estado de la run como un Dictionary de tipos simples (para guardarlo).
+func to_snapshot() -> Dictionary:
+	return {
+		"character_id": selected_character_id,
+		"skin_id": selected_skin_id,
+		"current_wave": current_wave,
+		"total_waves": total_waves,
+		"energon": current_energon,
+		"skill_points": available_skill_points,
+		"unlocked_skill_ids": unlocked_skill_ids.duplicate(),
+		"stats": {
+			"enemies_killed": enemies_killed,
+			"damage_dealt": damage_dealt,
+			"damage_received": damage_received,
+			"times_transformed": times_transformed,
+			"run_time": run_time,
+			"energon_earned": energon_earned,
+			"shop_purchases": shop_purchases,
+			"bosses_defeated": bosses_defeated,
+			"last_boss_name": last_boss_name,
+		},
+	}
+
+
+## Pone el estado de la run desde un guardado (lo contrario de to_snapshot).
+func restore_snapshot(snapshot: Dictionary) -> void:
+	current_wave = int(snapshot.get("current_wave", 0))
+	total_waves = int(snapshot.get("total_waves", 0))
+	unlocked_skill_ids.assign(snapshot.get("unlocked_skill_ids", []))
+	var stats: Dictionary = snapshot.get("stats", {})
+	enemies_killed = int(stats.get("enemies_killed", 0))
+	damage_dealt = float(stats.get("damage_dealt", 0.0))
+	damage_received = float(stats.get("damage_received", 0.0))
+	times_transformed = int(stats.get("times_transformed", 0))
+	run_time = float(stats.get("run_time", 0.0))
+	energon_earned = int(stats.get("energon_earned", 0))
+	shop_purchases = int(stats.get("shop_purchases", 0))
+	bosses_defeated = int(stats.get("bosses_defeated", 0))
+	last_boss_name = str(stats.get("last_boss_name", ""))
+	# El próximo cambio de vida que se reciba no debe contarse como daño.
+	_last_player_hp = -1.0
+	run_active = true
+	restore_economy(int(snapshot.get("energon", 0)), int(snapshot.get("skill_points", 0)))
+
+
 ## Restaura la economía desde un guardado y avisa a la UI.
 func restore_economy(energon: int, skill_points: int) -> void:
 	current_energon = energon
@@ -183,10 +232,6 @@ func _notify_skill_points() -> void:
 func _on_wave_started(wave_number: int, total: int) -> void:
 	current_wave = wave_number
 	total_waves = total
-
-
-func _on_wave_completed(_wave_number: int) -> void:
-	EventBus.save_requested.emit()
 
 
 func _on_enemy_died(_enemy: Node) -> void:

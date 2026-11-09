@@ -200,6 +200,20 @@ func add_revive_charge(amount: int = 1) -> void:
 	_revive_charges += amount
 
 
+## Estado del personaje que se guarda entre partidas (lo demás se reconstruye al
+## reaplicar habilidades y compras).
+func get_save_state() -> Dictionary:
+	return {"hp": _current_hp, "revive_charges": _revive_charges}
+
+
+## Restaura la vida y las resurrecciones. Llamar DESPUÉS de reaplicar habilidades y compras,
+## porque estas suben la vida máxima.
+func restore_save_state(state: Dictionary) -> void:
+	_revive_charges = int(state.get("revive_charges", _revive_charges))
+	_current_hp = clampf(float(state.get("hp", _current_hp)), 1.0, get_max_hp())
+	_emit_hp_changed()
+
+
 ## Imágenes (SpriteFrames) de la skin actual, para pantallas que muestran al personaje.
 func get_skin_frames() -> SpriteFrames:
 	return _sprite.sprite_frames if _sprite != null else null

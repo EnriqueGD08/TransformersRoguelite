@@ -315,12 +315,7 @@ func _draw_stage() -> void:
 # ── Acciones ──────────────────────────────────────────────────────────────────
 
 func _start_game() -> void:
-	var info: CharacterInfo = roster.entries[_index]
-	GameState.selected_character_id = info.id
-	GameState.selected_character_scene = info.scene
-	GameState.selected_character_stats = info.stats
-	GameState.selected_skill_tree = info.skill_tree.nodes if info.skill_tree != null else []
-	GameState.selected_skin_id = _skin_id
+	roster.entries[_index].select_for_run(_skin_id)
 	get_tree().change_scene_to_file(GAME_SCENE)
 
 

@@ -26,6 +26,7 @@ extends Node2D
 @onready var _shop_ui: ShopUI = $Shop
 @onready var _touch_controls: TouchControls = $TouchControls
 @onready var _victory_screen: VictoryScreen = $VictoryScreen
+@onready var _persistence: RunPersistence = $Systems/RunPersistence
 
 
 func _ready() -> void:
@@ -54,4 +55,9 @@ func _ready() -> void:
 	_touch_controls.setup(player)
 	_victory_screen.setup(player)
 	_wave_manager.setup(_spawner)
+	_persistence.setup(player, _wave_manager, _skill_tree_manager, _shop_manager)
+	# Al continuar una partida guardada, se restaura antes de que empiece la oleada.
+	if not GameState.pending_run.is_empty():
+		_persistence.restore(GameState.pending_run)
+		GameState.pending_run = {}
 	_wave_manager.start_run()
