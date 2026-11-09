@@ -1,5 +1,5 @@
 # settings.gd
-# Autoload: preferencias del jugador que se conservan entre sesiones (volumen de música y efectos).
+# Autoload: preferencias del jugador que se conservan entre sesiones (volumen de música y efectos, pantalla completa).
 # SRP: solo guarda y aplica las preferencias. No reproduce audio (eso es AudioManager) ni
 #      dibuja los controles (eso es el menú de pausa).
 # Los volúmenes (0 a 1) se aplican a los canales "Music" y "SFX" del AudioServer, por encima
@@ -15,10 +15,16 @@ var music_volume: float = 1.0
 ## Volumen de los efectos de sonido.
 var sfx_volume: float = 1.0
 
+## Pantalla completa. En web el navegador solo la permite tras un gesto del jugador, así que
+## allí no se aplica al arrancar: solo al pulsar el interruptor del menú de pausa.
+var fullscreen: bool = false
+
 
 func _ready() -> void:
 	_load()
 	_apply()
+	if fullscreen and not OS.has_feature("web"):
+		_apply_fullscreen()
 
 
 func set_music_volume(value: float) -> void:
@@ -31,11 +37,17 @@ func set_sfx_volume(value: float) -> void:
 	_apply()
 
 
+func set_fullscreen(value: bool) -> void:
+	fullscreen = value
+	_apply_fullscreen()
+
+
 ## Guarda las preferencias en disco. Se llama al soltar un control, no en cada cambio.
 func save() -> void:
 	var config := ConfigFile.new()
 	config.set_value("audio", "music_volume", music_volume)
 	config.set_value("audio", "sfx_volume", sfx_volume)
+	config.set_value("video", "fullscreen", fullscreen)
 	var err: int = config.save(SETTINGS_PATH)
 	if err != OK:
 		push_error("Settings: no se pudieron guardar las preferencias (código %d)" % err)
@@ -47,6 +59,11 @@ func _load() -> void:
 		return
 	music_volume = clampf(float(config.get_value("audio", "music_volume", 1.0)), 0.0, 1.0)
 	sfx_volume = clampf(float(config.get_value("audio", "sfx_volume", 1.0)), 0.0, 1.0)
+	fullscreen = bool(config.get_value("video", "fullscreen", false))
+
+
+func _apply_fullscreen() -> void:
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
 
 
 func _apply() -> void:

@@ -1,6 +1,6 @@
 # pause_menu.gd
 # Menú de pausa: se abre con Esc (o P) o con el botón de la esquina.
-# SRP: pausa y reanuda el juego, ajusta el volumen y sale al menú principal. No guarda la
+# SRP: pausa y reanuda el juego, ajusta volumen y pantalla completa, y sale al menú principal. No guarda la
 #      partida (eso ocurre al empezar cada oleada) ni conoce las armas, enemigos o tienda.
 # DIP: usa GameState (¿hay partida en curso?) y Settings (volúmenes); no toca otros sistemas.
 # No se abre si el juego ya está en pausa por otra pantalla (tienda, árbol, victoria) ni si la
@@ -21,6 +21,7 @@ const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 @onready var _sfx_slider: HSlider = %SfxSlider
 @onready var _music_value: Label = %MusicValue
 @onready var _sfx_value: Label = %SfxValue
+@onready var _fullscreen_check: CheckButton = %FullscreenCheck
 @onready var _continue_button: Button = %ContinueButton
 @onready var _exit_button: Button = %ExitButton
 
@@ -35,6 +36,7 @@ func _ready() -> void:
 		# Un dedo necesita deslizadores y botones más grandes.
 		_music_slider.custom_minimum_size.y = 56.0
 		_sfx_slider.custom_minimum_size.y = 56.0
+		_fullscreen_check.custom_minimum_size.y = 56.0
 		_continue_button.custom_minimum_size.y = 68.0
 		_exit_button.custom_minimum_size.y = 62.0
 	_pause_button.pressed.connect(_open)
@@ -49,6 +51,8 @@ func _ready() -> void:
 	_sfx_slider.drag_ended.connect(func(_changed: bool) -> void:
 		Settings.save()
 		EventBus.play_sfx.emit("energon_pickup"))
+	_fullscreen_check.button_pressed = Settings.fullscreen
+	_fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 	_update_value_labels()
 
 
@@ -93,6 +97,11 @@ func _describe_run() -> String:
 	var who: String = stats.character_name if stats != null else ""
 	var wave: String = "Oleada %d / %d" % [GameState.current_wave, GameState.total_waves]
 	return "%s  ·  %s" % [who, wave] if who != "" else wave
+
+
+func _on_fullscreen_toggled(on: bool) -> void:
+	Settings.set_fullscreen(on)
+	Settings.save()
 
 
 func _on_music_changed(value: float) -> void:
