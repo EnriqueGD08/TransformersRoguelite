@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/ranged_walk_4.png-0b6612233774781517d79d09804
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

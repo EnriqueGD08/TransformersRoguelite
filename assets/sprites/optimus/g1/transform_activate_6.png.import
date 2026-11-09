@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/transform_activate_6.png-c6b8584dc77d5ef88bd7
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

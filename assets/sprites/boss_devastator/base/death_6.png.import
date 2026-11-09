@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/death_6.png-24e63142d7dcab240afc4b25f677501e.
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/attack_cross_4.png-e4213ddc7371ad1d9b76757857
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

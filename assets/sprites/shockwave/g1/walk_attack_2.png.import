@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/walk_attack_2.png-236e8645919d3670f75b9e6c217
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/walk_8.png-7886ea9680bc8abc321d39a21482c21b.c
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

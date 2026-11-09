@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/transform_idle_6.png-c076c1ed0df5173bb90a1cc7
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
