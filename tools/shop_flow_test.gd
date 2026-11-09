@@ -3,6 +3,9 @@
 # árbol de habilidades y la tienda, compra (con y sin saldo, hasta agotar un objeto) y comprueba
 # que empieza la oleada 2. Imprime los resultados: no hay "OK" automático, se leen en la salida.
 # Uso: godot --headless --path . -s tools/shop_flow_test.gd
+extends SceneTree
+
+
 func _init():
 	await process_frame
 	var bus = root.get_node("EventBus")
