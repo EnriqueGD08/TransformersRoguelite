@@ -1,7 +1,7 @@
 # generate_art.gd
 # Herramienta de desarrollo (no forma parte del juego).
-# Genera TODOS los fotogramas pixel art de los personajes/enemigos con el pintor
-# procedural (tools/art/*) y construye los SpriteFrames de cada skin.
+# Genera TODO el arte (personajes, enemigos, efectos e iconos) con el dibujo vectorial
+# estilo cel (tools/art2/*) y construye los SpriteFrames de cada skin.
 #
 # Uso (desde la raíz del proyecto):
 #   godot --headless -s tools/generate_art.gd -- png      # dibuja PNG + hojas de previsualización
@@ -39,9 +39,7 @@ const CEL_BIG_ENEMY_SCALE := 0.6
 
 ## Jefes: ataque de cada uno (el tamaño en el juego lo da la escala de su escena).
 const BOSS_ATTACKS := {"brawl": "punch", "devastator": "smash", "soundwave": "fire", "galvatron": "fire"}
-const FxArt := preload("res://tools/art/fx_art.gd")
-const IconArt := preload("res://tools/art/icon_art.gd")
-const EnergonArt := preload("res://tools/art/energon_art.gd")
+const FxCel := preload("res://tools/art2/fx_cel.gd")
 
 const OUT_ROOT := "res://assets/sprites/"
 const FRAMES_DIR := "res://resources/frames/"
@@ -97,20 +95,20 @@ func _catalog() -> Dictionary:
 		out["arcee/" + skin] = CelAnim.all_hybrid(ArceeCel, ArceePistols, skin, CEL_RENDER_SCALE)
 	for skin in ShockCel.SKINS:
 		out["shockwave/" + skin] = CelAnim.all_turret(ShockCel, skin, CEL_RENDER_SCALE)
-	out["fx/shock_wave"] = {"fly": [FxArt.wave(0), FxArt.wave(1), FxArt.wave(2), FxArt.wave(3)]}
-	out["fx/photon"] = {"fly": [FxArt.photon(0), FxArt.photon(1), FxArt.photon(2), FxArt.photon(3)]}
+	out["fx/shock_wave"] = {"fly": [FxCel.shock_wave(0), FxCel.shock_wave(1), FxCel.shock_wave(2), FxCel.shock_wave(3)]}
+	out["fx/photon"] = {"fly": [FxCel.photon(0), FxCel.photon(1), FxCel.photon(2), FxCel.photon(3)]}
 	for skin in StarCel.SKINS:
 		out["starscream/" + skin] = CelAnim.all(StarCel, skin, CEL_RENDER_SCALE)
-	out["fx/null_ray"] = {"fly": [FxArt.ray(0), FxArt.ray(1), FxArt.ray(2), FxArt.ray(3)]}
+	out["fx/null_ray"] = {"fly": [FxCel.null_ray(0), FxCel.null_ray(1), FxCel.null_ray(2), FxCel.null_ray(3)]}
 	var rh: Array = []
 	for i in 6:
-		rh.append(FxArt.ray_hit(i))
+		rh.append(FxCel.ray_hit(i))
 	out["fx/ray_hit"] = {"explode": rh}
-	out["fx/fusion_bolt"] = {"fly": [FxArt.bolt(0), FxArt.bolt(1), FxArt.bolt(2), FxArt.bolt(3)]}
-	out["fx/charged_shell"] = {"fly": [FxArt.shell(0), FxArt.shell(1), FxArt.shell(2), FxArt.shell(3)]}
+	out["fx/fusion_bolt"] = {"fly": [FxCel.fusion_bolt(0), FxCel.fusion_bolt(1), FxCel.fusion_bolt(2), FxCel.fusion_bolt(3)]}
+	out["fx/charged_shell"] = {"fly": [FxCel.charged_shell(0), FxCel.charged_shell(1), FxCel.charged_shell(2), FxCel.charged_shell(3)]}
 	var ex: Array = []
 	for i in 8:
-		ex.append(FxArt.explosion(i))
+		ex.append(FxCel.explosion(i))
 	out["fx/explosion"] = {"explode": ex}
 	out["seeker/base"] = CelAnim.enemy_flyer(SeekerCel, "base", CEL_ENEMY_SCALE)
 	out["constructicon/base"] = CelAnim.enemy_melee(ConstructiconCel, "base", CEL_BIG_ENEMY_SCALE, true)
@@ -118,14 +116,14 @@ func _catalog() -> Dictionary:
 		out["boss_" + boss_name + "/base"] = CelAnim.boss_set(BossCel, boss_name, CEL_ENEMY_SCALE, BOSS_ATTACKS[boss_name])
 	var cube: Array = []
 	for i in 6:
-		cube.append(EnergonArt.cube(i))
+		cube.append(FxCel.energon_cube(i))
 	out["fx/energon_cube"] = {"idle": cube}
 	var spark: Array = []
 	for i in 5:
-		spark.append(EnergonArt.spark(i))
+		spark.append(FxCel.energon_spark(i))
 	out["fx/energon_spark"] = {"explode": spark}
-	out["fx/enemy_bolt"] = {"fly": [FxArt.enemy_bolt(0), FxArt.enemy_bolt(1), FxArt.enemy_bolt(2), FxArt.enemy_bolt(3)]}
-	out["fx/boss_orb"] = {"fly": [FxArt.boss_orb(0), FxArt.boss_orb(1), FxArt.boss_orb(2), FxArt.boss_orb(3)]}
+	out["fx/enemy_bolt"] = {"fly": [FxCel.enemy_bolt(0), FxCel.enemy_bolt(1), FxCel.enemy_bolt(2), FxCel.enemy_bolt(3)]}
+	out["fx/boss_orb"] = {"fly": [FxCel.boss_orb(0), FxCel.boss_orb(1), FxCel.boss_orb(2), FxCel.boss_orb(3)]}
 	out["vehicon/base"] = CelAnim.enemy_melee(VehiconCel, "base", CEL_ENEMY_SCALE)
 	return out
 
@@ -173,23 +171,22 @@ func _make_ui_pngs() -> void:
 	var under := Image.create(200, 16, false, Image.FORMAT_RGBA8)
 	under.fill(Color(0.1, 0.1, 0.1, 0.8))
 	under.save_png(dir + "bar_under.png")
-	EnergonArt.cube(0).save_png(dir + "energon_icon.png")
+	FxCel.energon_cube(0).save_png(dir + "energon_icon.png")
 	var fill := Image.create(200, 16, false, Image.FORMAT_RGBA8)
 	fill.fill(Color.WHITE)
 	fill.save_png(dir + "bar_fill.png")
 
-## Iconos del árbol de habilidades (32x32) en assets/ui/skills/.
+## Iconos del árbol de habilidades en assets/ui/skills/ (tonos neutros: la interfaz los tiñe).
 func _make_skill_icons() -> void:
 	var dir := ProjectSettings.globalize_path("res://assets/ui/skills/")
 	DirAccess.make_dir_recursive_absolute(dir)
-	var sheet := Image.create(IconArt.ICONS.size() * 34 * 2, 34 * 2, false, Image.FORMAT_RGBA8)
+	var cell: int = int(32 * FxCel.FX_K) + 4
+	var sheet := Image.create(FxCel.ICONS.size() * cell, cell, false, Image.FORMAT_RGBA8)
 	sheet.fill(Color("3a3f4d"))
-	for i in IconArt.ICONS.size():
-		var img: Image = IconArt.make(IconArt.ICONS[i])
-		img.save_png(dir + IconArt.ICONS[i] + ".png")
-		var big: Image = img.duplicate()
-		big.resize(64, 64, Image.INTERPOLATE_NEAREST)
-		sheet.blend_rect(big, Rect2i(0, 0, 64, 64), Vector2i(i * 68 + 2, 2))
+	for i in FxCel.ICONS.size():
+		var img: Image = FxCel.icon(FxCel.ICONS[i])
+		img.save_png(dir + FxCel.ICONS[i] + ".png")
+		sheet.blend_rect(img, Rect2i(0, 0, img.get_width(), img.get_height()), Vector2i(i * cell + 2, 2))
 	sheet.save_png(ProjectSettings.globalize_path(PREVIEW_DIR + "skill_icons.png"))
 
 

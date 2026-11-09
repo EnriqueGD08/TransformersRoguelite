@@ -17,6 +17,8 @@ impact_effect_scene = ExtResource("3")
 shape = SubResource("s")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 2
+scale = Vector2(0.5, 0.5)
 sprite_frames = ExtResource("2")
 animation = &"fly"
 autoplay = "fly"

@@ -4,8 +4,10 @@
 [ext_resource type="SpriteFrames" path="res://resources/frames/fx_ray_hit.tres" id="2"]
 
 [node name="RayHit" type="AnimatedSprite2D"]
+texture_filter = 2
+scale = Vector2(0.5, 0.5)
 z_index = 5
 sprite_frames = ExtResource("2")
 animation = &"explode"
 script = ExtResource("1")
-base_diameter = 48.0
+base_diameter = 96.0
