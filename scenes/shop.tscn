@@ -1,0 +1,171 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/shop_ui.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/ui/energon_icon.png" id="2"]
+
+[node name="Shop" type="CanvasLayer"]
+process_mode = 3
+layer = 12
+script = ExtResource("1")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78)
+
+[node name="Margin" type="MarginContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 28
+
+[node name="Panel" type="PanelContainer" parent="Root/Margin"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Root/Margin/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="HBoxContainer" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Root/Margin/Panel/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.78, 0.3, 1)
+theme_override_font_sizes/font_size = 28
+text = "Tienda"
+
+[node name="EnergonIcon" type="TextureRect" parent="Root/Margin/Panel/VBox/Header"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EnergonLabel" type="Label" parent="Root/Margin/Panel/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.91, 0.63, 1)
+theme_override_font_sizes/font_size = 28
+text = "0"
+
+[node name="Sep1" type="HSeparator" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="ItemGrid" type="GridContainer" parent="Root/Margin/Panel/VBox/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 4
+
+[node name="DetailPanel" type="PanelContainer" parent="Root/Margin/Panel/VBox/Body"]
+custom_minimum_size = Vector2(330, 0)
+layout_mode = 2
+
+[node name="DetailVBox" type="VBoxContainer" parent="Root/Margin/Panel/VBox/Body/DetailPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DetailKind" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "MEJORA"
+
+[node name="DetailName" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Nombre"
+autowrap_mode = 3
+
+[node name="DetailPrice" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.91, 0.63, 1)
+text = "Precio"
+
+[node name="Sep" type="HSeparator" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+layout_mode = 2
+
+[node name="DetailDesc" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+text = "Descripción"
+autowrap_mode = 3
+
+[node name="DetailCount" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.77, 0.86, 1)
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="DetailState" type="Label" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Estado"
+
+[node name="Spacer" type="Control" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BuyButton" type="Button" parent="Root/Margin/Panel/VBox/Body/DetailPanel/DetailVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "COMPRAR"
+
+[node name="Sep2" type="HSeparator" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Root/Margin/Panel/VBox"]
+layout_mode = 2
+
+[node name="HintLabel" type="Label" parent="Root/Margin/Panel/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.5, 0.56, 0.68, 1)
+theme_override_font_sizes/font_size = 15
+text = "Haz clic en un objeto para verlo. El energon que no gastes se conserva para la próxima oleada."
+
+[node name="ContinueButton" type="Button" parent="Root/Margin/Panel/VBox/Footer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "CONTINUAR  ▶"

@@ -42,6 +42,7 @@ func setup(p_spawner: EnemySpawner) -> void:
 
 	EventBus.all_enemies_dead.connect(_on_all_enemies_dead)
 	EventBus.skill_tree_closed.connect(_on_skill_tree_closed)
+	EventBus.shop_closed.connect(_on_shop_closed)
 	EventBus.character_died.connect(_on_player_died)
 
 
@@ -117,7 +118,7 @@ func _complete_wave() -> void:
 	if wave.bonus_energon > 0:
 		EventBus.energon_collected.emit(wave.bonus_energon, 0)
 
-	# Abre el árbol de habilidades entre oleadas.
+	# Entre oleadas se abre primero el árbol de habilidades y después la tienda.
 	EventBus.skill_tree_opened.emit()
 
 
@@ -204,7 +205,16 @@ func _on_all_enemies_dead() -> void:
 		_complete_wave()
 
 
+## Tras el árbol de habilidades se abre la tienda (salvo después de la última oleada,
+## donde ya no hay nada que comprar: la run termina).
 func _on_skill_tree_closed() -> void:
+	if _current_wave_index + 1 >= waves.size():
+		_on_shop_closed()
+		return
+	EventBus.shop_opened.emit()
+
+
+func _on_shop_closed() -> void:
 	_between_waves = false
 	_advance_to_next_wave()
 

@@ -22,6 +22,8 @@ extends Node2D
 @onready var _skill_tree_manager: SkillTreeManager = $Systems/SkillTreeManager
 @onready var _passives: PassiveAbilities = $Systems/PassiveAbilities
 @onready var _skill_tree_ui: SkillTreeUI = $SkillTree
+@onready var _shop_manager: ShopManager = $Systems/ShopManager
+@onready var _shop_ui: ShopUI = $Shop
 
 
 func _ready() -> void:
@@ -45,5 +47,7 @@ func _ready() -> void:
 	_skill_tree_manager.setup(tree_nodes, player)
 	_skill_tree_ui.setup(_skill_tree_manager)
 	_passives.setup(player)
+	_shop_manager.setup(player, _passives)
+	_shop_ui.setup(_shop_manager)
 	_wave_manager.setup(_spawner)
 	_wave_manager.start_run()

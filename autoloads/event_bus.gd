@@ -96,6 +96,17 @@ signal skill_tree_opened()
 ## Emitida por la UI del árbol al cerrarse para continuar la siguiente oleada.
 signal skill_tree_closed()
 
+# ── Tienda ────────────────────────────────────────────────────────────────────
+
+## Emitida por WaveManager al cerrarse el árbol para abrir la tienda entre oleadas.
+signal shop_opened()
+
+## Emitida por la pantalla de la tienda al cerrarse para continuar la siguiente oleada.
+signal shop_closed()
+
+## Emitida por ShopManager tras cada compra con éxito. [param item_id] es el objeto.
+signal shop_item_bought(item_id: String)
+
 # ── Audio ─────────────────────────────────────────────────────────────────────
 
 ## Emitida por cualquier sistema para solicitar un efecto de sonido.

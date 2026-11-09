@@ -1,0 +1,159 @@
+[gd_resource type="Resource" script_class="ShopCatalog" load_steps=25 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/shop_catalog.gd" id="cat"]
+[ext_resource type="Script" path="res://scripts/systems/shop_item_data.gd" id="itm"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/boot.png" id="ic_boot"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/clock.png" id="ic_clock"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/cross.png" id="ic_cross"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/crosshair.png" id="ic_crosshair"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/drop.png" id="ic_drop"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/feather.png" id="ic_feather"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/heart.png" id="ic_heart"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/magnet.png" id="ic_magnet"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/shield.png" id="ic_shield"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/skull.png" id="ic_skull"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/sword.png" id="ic_sword"]
+
+[sub_resource type="Resource" id="item_hp"]
+script = ExtResource("itm")
+id = "hp"
+display_name = "Blindaje de energon"
+description = "+30 de vida máxima (y te cura esa cantidad)."
+icon = ExtResource("ic_heart")
+kind = "stat"
+target_stat = "max_hp"
+effect_value = 30
+base_price = 40
+price_step = 20
+max_purchases = 8
+
+[sub_resource type="Resource" id="item_damage"]
+script = ExtResource("itm")
+id = "damage"
+display_name = "Munición de energon"
+description = "+3 de daño base en todos tus ataques."
+icon = ExtResource("ic_sword")
+kind = "stat"
+target_stat = "base_damage"
+effect_value = 3
+base_price = 45
+price_step = 25
+max_purchases = 8
+
+[sub_resource type="Resource" id="item_speed"]
+script = ExtResource("itm")
+id = "speed"
+display_name = "Servos veloces"
+description = "+10 de velocidad de movimiento."
+icon = ExtResource("ic_boot")
+kind = "stat"
+target_stat = "move_speed"
+effect_value = 10
+base_price = 30
+price_step = 15
+max_purchases = 6
+
+[sub_resource type="Resource" id="item_dodge"]
+script = ExtResource("itm")
+id = "dodge"
+display_name = "Reflejos"
+description = "+4 % de probabilidad de esquivar un golpe (máximo 75 %)."
+icon = ExtResource("ic_feather")
+kind = "stat"
+target_stat = "dodge_chance"
+effect_value = 0.04
+base_price = 50
+price_step = 25
+max_purchases = 5
+
+[sub_resource type="Resource" id="item_armor"]
+script = ExtResource("itm")
+id = "armor"
+display_name = "Placas de armadura"
+description = "Recibes un 4 % menos de daño."
+icon = ExtResource("ic_shield")
+kind = "stat"
+target_stat = "damage_reduction"
+effect_value = 0.04
+base_price = 55
+price_step = 25
+max_purchases = 5
+
+[sub_resource type="Resource" id="item_regen"]
+script = ExtResource("itm")
+id = "regen"
+display_name = "Nanorreparación"
+description = "+1 de vida regenerada por segundo."
+icon = ExtResource("ic_cross")
+kind = "stat"
+target_stat = "hp_regen_per_second"
+effect_value = 1.0
+base_price = 40
+price_step = 20
+max_purchases = 6
+
+[sub_resource type="Resource" id="item_range"]
+script = ExtResource("itm")
+id = "range"
+display_name = "Sensores de alcance"
+description = "+10 de alcance de ataque."
+icon = ExtResource("ic_crosshair")
+kind = "stat"
+target_stat = "attack_range"
+effect_value = 10
+base_price = 30
+price_step = 15
+max_purchases = 5
+
+[sub_resource type="Resource" id="item_magnet"]
+script = ExtResource("itm")
+id = "magnet"
+display_name = "Imán de energon"
+description = "+40 de radio para atraer el energon."
+icon = ExtResource("ic_magnet")
+kind = "stat"
+target_stat = "pickup_radius"
+effect_value = 40
+base_price = 25
+price_step = 15
+max_purchases = 5
+
+[sub_resource type="Resource" id="item_lifesteal"]
+script = ExtResource("itm")
+id = "lifesteal"
+display_name = "Robo de energía"
+description = "Curas parte del daño que haces con tus armas."
+icon = ExtResource("ic_drop")
+kind = "passive"
+passive_id = "lifesteal"
+base_price = 120
+price_step = 0
+max_purchases = 1
+
+[sub_resource type="Resource" id="item_last_stand"]
+script = ExtResource("itm")
+id = "last_stand"
+display_name = "Última resistencia"
+description = "Si caes, revives una vez con la mitad de la vida."
+icon = ExtResource("ic_skull")
+kind = "passive"
+passive_id = "last_stand"
+base_price = 150
+price_step = 0
+max_purchases = 1
+
+[sub_resource type="Resource" id="item_kill_cdr"]
+script = ExtResource("itm")
+id = "kill_cdr"
+display_name = "Eficiencia de combate"
+description = "Cada baja acorta la recarga de tu transformación."
+icon = ExtResource("ic_clock")
+kind = "passive"
+passive_id = "kill_cdr"
+base_price = 100
+price_step = 0
+max_purchases = 1
+
+[resource]
+script = ExtResource("cat")
+items = Array[ExtResource("itm")]([SubResource("item_hp"), SubResource("item_damage"), SubResource("item_speed"), SubResource("item_dodge"), SubResource("item_armor"), SubResource("item_regen"), SubResource("item_range"), SubResource("item_magnet"), SubResource("item_lifesteal"), SubResource("item_last_stand"), SubResource("item_kill_cdr")])
