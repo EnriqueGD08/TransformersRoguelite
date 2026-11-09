@@ -20,5 +20,5 @@ mkdir -p build/web
 du -sh build/web
 
 if [ "$1" = "serve" ]; then
-	python3 tools/serve_web.py
+	python3 tools/serve_web.py ${HTTPS:+https}
 fi
