@@ -210,7 +210,9 @@ func take_damage(amount: float) -> void:
 	if not _is_alive:
 		return
 
+	var applied: float = minf(amount, _current_hp)
 	_current_hp = maxf(_current_hp - amount, 0.0)
+	EventBus.enemy_damaged.emit(applied)
 	damaged.emit(amount, _current_hp)
 	hp_changed.emit(_current_hp, stats.max_hp)
 

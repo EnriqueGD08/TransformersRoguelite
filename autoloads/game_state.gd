@@ -58,6 +58,25 @@ var damage_dealt: float = 0.0
 var damage_received: float = 0.0
 var times_transformed: int = 0
 
+## Total de oleadas de la run (lo informa WaveManager al empezar cada oleada).
+var total_waves: int = 0
+
+## Segundos jugados en la run (no cuentan los menús: el juego está en pausa).
+var run_time: float = 0.0
+
+## Energon recogido en total (el saldo actual baja al comprar).
+var energon_earned: int = 0
+
+## Objetos comprados en la tienda.
+var shop_purchases: int = 0
+
+## Jefes derrotados y nombre del último.
+var bosses_defeated: int = 0
+var last_boss_name: String = ""
+
+## Vida del jugador en la última señal, para contar el daño recibido.
+var _last_player_hp: float = -1.0
+
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _ready() -> void:
@@ -69,6 +88,15 @@ func _ready() -> void:
 	EventBus.transform_activated.connect(_on_transform_activated)
 	EventBus.game_over.connect(_on_game_over)
 	EventBus.all_waves_completed.connect(_on_all_waves_completed)
+	EventBus.enemy_damaged.connect(func(amount: float) -> void: damage_dealt += amount)
+	EventBus.player_hp_changed.connect(_on_player_hp_changed)
+	EventBus.boss_defeated.connect(_on_boss_defeated)
+	EventBus.shop_item_bought.connect(func(_id: String) -> void: shop_purchases += 1)
+
+func _process(delta: float) -> void:
+	if run_active:
+		run_time += delta
+
 
 # ── API pública ───────────────────────────────────────────────────────────────
 
@@ -89,6 +117,12 @@ func begin_run() -> void:
 	damage_dealt = 0.0
 	damage_received = 0.0
 	times_transformed = 0
+	run_time = 0.0
+	energon_earned = 0
+	shop_purchases = 0
+	bosses_defeated = 0
+	last_boss_name = ""
+	_last_player_hp = -1.0
 
 
 ## Limpia el estado al volver al menú principal.
@@ -146,8 +180,9 @@ func _notify_skill_points() -> void:
 
 # ── Callbacks ─────────────────────────────────────────────────────────────────
 
-func _on_wave_started(wave_number: int, _total: int) -> void:
+func _on_wave_started(wave_number: int, total: int) -> void:
 	current_wave = wave_number
+	total_waves = total
 
 
 func _on_wave_completed(_wave_number: int) -> void:
@@ -159,7 +194,20 @@ func _on_enemy_died(_enemy: Node) -> void:
 
 
 func _on_energon_collected(amount: int, _total: int) -> void:
+	energon_earned += amount
 	add_energon(amount)
+
+
+func _on_player_hp_changed(current: float, _maximum: float) -> void:
+	if _last_player_hp >= 0.0 and current < _last_player_hp:
+		damage_received += _last_player_hp - current
+	_last_player_hp = current
+
+
+func _on_boss_defeated(boss: Node) -> void:
+	bosses_defeated += 1
+	if boss.get("stats") != null:
+		last_boss_name = boss.stats.enemy_name
 
 
 func _on_skill_unlocked(skill_id: String) -> void:

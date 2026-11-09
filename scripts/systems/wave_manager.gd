@@ -119,6 +119,11 @@ func _complete_wave() -> void:
 	if wave.bonus_energon > 0:
 		EventBus.energon_collected.emit(wave.bonus_energon, 0)
 
+	# Tras la última oleada se gana directamente: no hay más oleadas para las que mejorar.
+	if _current_wave_index + 1 >= waves.size():
+		_finish_run()
+		return
+
 	# Entre oleadas se abre primero el árbol de habilidades y después la tienda.
 	EventBus.skill_tree_opened.emit()
 

@@ -200,6 +200,11 @@ func add_revive_charge(amount: int = 1) -> void:
 	_revive_charges += amount
 
 
+## Imágenes (SpriteFrames) de la skin actual, para pantallas que muestran al personaje.
+func get_skin_frames() -> SpriteFrames:
+	return _sprite.sprite_frames if _sprite != null else null
+
+
 ## True si el personaje tiene dos armas entre las que cambiar (la interfaz táctil muestra
 ## el botón de cambio solo entonces). Por defecto no; Arcee lo sobrescribe.
 func supports_weapon_swap() -> bool:

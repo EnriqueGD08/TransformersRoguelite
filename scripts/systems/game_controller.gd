@@ -25,6 +25,7 @@ extends Node2D
 @onready var _shop_manager: ShopManager = $Systems/ShopManager
 @onready var _shop_ui: ShopUI = $Shop
 @onready var _touch_controls: TouchControls = $TouchControls
+@onready var _victory_screen: VictoryScreen = $VictoryScreen
 
 
 func _ready() -> void:
@@ -51,5 +52,6 @@ func _ready() -> void:
 	_shop_manager.setup(player, _passives)
 	_shop_ui.setup(_shop_manager)
 	_touch_controls.setup(player)
+	_victory_screen.setup(player)
 	_wave_manager.setup(_spawner)
 	_wave_manager.start_run()

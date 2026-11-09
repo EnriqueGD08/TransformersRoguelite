@@ -36,6 +36,9 @@ signal weapon_swapped(weapon_type: String)
 ## Emitida por BaseEnemy al morir.
 signal enemy_died(enemy: Node)
 
+## Emitida por BaseEnemy cada vez que recibe daño, con la cantidad realmente aplicada.
+signal enemy_damaged(amount: float)
+
 ## Emitida por EnemySpawner cuando no quedan enemigos vivos.
 signal all_enemies_dead()
 

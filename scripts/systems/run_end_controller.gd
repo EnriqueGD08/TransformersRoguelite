@@ -1,7 +1,7 @@
 # run_end_controller.gd
-# Pantalla provisional de final de run (derrota o victoria).
+# Pantalla provisional de derrota. (La victoria tiene su propia pantalla: VictoryScreen.)
 # SRP: mostrar el resultado y permitir reintentar.
-# DIP: escucha EventBus.game_over y EventBus.all_waves_completed.
+# DIP: escucha EventBus.game_over.
 
 class_name RunEndController
 extends CanvasLayer
@@ -16,7 +16,6 @@ extends CanvasLayer
 func _ready() -> void:
 	_panel.hide()
 	EventBus.game_over.connect(_show_result.bind("GAME OVER"))
-	EventBus.all_waves_completed.connect(_show_result.bind("¡VICTORIA!"))
 	_button.pressed.connect(_on_retry_pressed)
 	_menu_button.pressed.connect(_on_menu_pressed)
 
