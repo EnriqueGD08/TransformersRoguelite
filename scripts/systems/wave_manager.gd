@@ -94,6 +94,7 @@ func _advance_to_next_wave() -> void:
 	_between_waves = false
 
 	_setup_spawn_groups(wave)
+	_prefetch_boss(_current_wave_index + 1)
 
 	EventBus.wave_started.emit(get_current_wave_number(), get_total_waves())
 	EventBus.play_music.emit("battle_wave_%d" % get_current_wave_number())
@@ -160,7 +161,7 @@ func _process_spawn_groups(delta: float) -> void:
 		if state.remaining <= 0:
 			state.done = true
 			# Si era el grupo del jefe, lo spawnea ahora.
-			if wave.has_boss and wave.boss_scene and _all_groups_done():
+			if wave.has_boss and not wave.boss_scene_path.is_empty() and _all_groups_done():
 				_spawn_boss(wave)
 
 
@@ -187,7 +188,24 @@ func _spawn_enemy_from_group(state: Dictionary, wave: WaveData) -> void:
 
 func _spawn_boss(wave: WaveData) -> void:
 	var position: Vector2 = spawner.get_random_spawn_position(400.0, 500.0)
-	spawner.spawn(wave.boss_scene, position)
+	spawner.spawn(_take_boss_scene(wave.boss_scene_path), position)
+
+
+## Empieza a cargar en segundo plano el jefe de la oleada [param wave_index] (si lo tiene),
+## para que esté listo cuando aparezca y no haya tirón. Se llama al empezar la oleada anterior.
+func _prefetch_boss(wave_index: int) -> void:
+	if wave_index < 0 or wave_index >= waves.size():
+		return
+	var wave: WaveData = waves[wave_index]
+	if wave.has_boss and not wave.boss_scene_path.is_empty():
+		ResourceLoader.load_threaded_request(wave.boss_scene_path)
+
+
+## Devuelve la escena del jefe: la que se cargó de antemano o, si no, se carga ahora.
+func _take_boss_scene(path: String) -> PackedScene:
+	if ResourceLoader.load_threaded_get_status(path) != ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+		return ResourceLoader.load_threaded_get(path) as PackedScene
+	return load(path) as PackedScene
 
 
 func _all_groups_done() -> bool:

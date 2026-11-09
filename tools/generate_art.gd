@@ -43,6 +43,9 @@ const FxCel := preload("res://tools/art2/fx_cel.gd")
 const TerrainCel := preload("res://tools/art2/terrain_cel.gd")
 
 const OUT_ROOT := "res://assets/sprites/"
+
+## Archivo (junto a los PNG) con el recorte de cada fotograma.
+const CROP_FILE := "crop.cropdata"
 const FRAMES_DIR := "res://resources/frames/"
 const PREVIEW_DIR := "res://tools/preview/"
 
@@ -138,15 +141,44 @@ func _make_pngs() -> void:
 		var dir: String = OUT_ROOT + key.get_slice("/", 0) + "/" + key.get_slice("/", 1) + "/"
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
 		var anims: Dictionary = catalog[key]
+		# Los efectos (fx/) se guardan enteros; el resto se recorta (ver _crop_rect).
+		var crop_it: bool = key.get_slice("/", 0) != "fx"
+		var crop := {}
 		for anim in anims:
 			for i in anims[anim].size():
-				anims[anim][i].save_png(ProjectSettings.globalize_path(dir + "%s_%d.png" % [anim, i]))
+				var img: Image = anims[anim][i]
+				if crop_it:
+					var r: Rect2i = _crop_rect(img)
+					crop["%s_%d" % [anim, i]] = [r.position.x, r.position.y, r.size.x, r.size.y, img.get_width(), img.get_height()]
+					img = img.get_region(r)
+				img.save_png(ProjectSettings.globalize_path(dir + "%s_%d.png" % [anim, i]))
+		if crop_it:
+			var file := FileAccess.open(ProjectSettings.globalize_path(dir + CROP_FILE), FileAccess.WRITE)
+			file.store_string(JSON.stringify(crop))
 		if not key.get_slice("/", 0) in CEL_CHARACTERS:
 			_save_sheet(key.replace("/", "_"), anims)
 	_make_ui_pngs()
 	_make_skill_icons()
 	_make_terrain_pngs()
 	print("PNG generados: ", catalog.keys())
+
+
+## Rectángulo que contiene lo dibujado (con 1 px de margen para que el filtro lineal no corte
+## el borde). Un fotograma vacío se queda en 1×1.
+func _crop_rect(img: Image) -> Rect2i:
+	var r: Rect2i = img.get_used_rect()
+	if r.size == Vector2i.ZERO:
+		return Rect2i(0, 0, 1, 1)
+	return r.grow(1).intersection(Rect2i(Vector2i.ZERO, img.get_size()))
+
+
+## Lee los recortes guardados al generar los PNG: { "anim_i": [x, y, w, h, ancho, alto] }.
+func _read_crop(dir: String) -> Dictionary:
+	var path: String = dir + CROP_FILE
+	if not FileAccess.file_exists(path):
+		return {}
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return parsed if parsed is Dictionary else {}
 
 
 ## Hoja con una fila por animación (x2) para revisar el arte a simple vista.
@@ -208,6 +240,7 @@ func _make_frames() -> void:
 		var character: String = key.get_slice("/", 0)
 		var skin: String = key.get_slice("/", 1)
 		var dir: String = OUT_ROOT + character + "/" + skin + "/"
+		var crop: Dictionary = _read_crop(dir)
 		var sf := SpriteFrames.new()
 		sf.remove_animation("default")
 		var anims: Dictionary = catalog[key]
@@ -217,6 +250,16 @@ func _make_frames() -> void:
 			sf.set_animation_loop(anim, ANIM_META[anim][1])
 			for i in anims[anim].size():
 				var tex: Texture2D = load(dir + "%s_%d.png" % [anim, i])
+				var info = crop.get("%s_%d" % [anim, i])
+				if info != null:
+					# El PNG está recortado: AtlasTexture le devuelve su tamaño y posición
+					# originales con un margen virtual (no ocupa memoria), así que el juego
+					# lo ve igual que antes.
+					var atlas := AtlasTexture.new()
+					atlas.atlas = tex
+					atlas.region = Rect2(0, 0, info[2], info[3])
+					atlas.margin = Rect2(info[0], info[1], info[4] - info[2], info[5] - info[3])
+					tex = atlas
 				sf.add_frame(anim, tex)
 		var err := ResourceSaver.save(sf, FRAMES_DIR + "%s_%s.tres" % [character, skin])
 		print("Guardado ", character, "_", skin, " -> ", error_string(err))

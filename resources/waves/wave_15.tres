@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" path="res://scenes/constructicon.tscn" id="e_constructicon"]
 [ext_resource type="PackedScene" path="res://scenes/seeker.tscn" id="e_seeker"]
 [ext_resource type="PackedScene" path="res://scenes/vehicon.tscn" id="e_vehicon"]
-[ext_resource type="PackedScene" path="res://scenes/boss_soundwave.tscn" id="boss"]
 
 [sub_resource type="Resource" id="g0"]
 script = ExtResource("sg")
@@ -35,7 +34,7 @@ duration = 120.0
 must_kill_all = true
 spawn_groups = Array[ExtResource("sg")]([SubResource("g0"), SubResource("g1"), SubResource("g2")])
 has_boss = true
-boss_scene = ExtResource("boss")
+boss_scene_path = "res://scenes/boss_soundwave.tscn"
 enemy_hp_multiplier = 2.0
 enemy_damage_multiplier = 1.5
 enemy_speed_multiplier = 1.1

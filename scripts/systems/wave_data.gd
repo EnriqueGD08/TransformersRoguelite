@@ -30,8 +30,9 @@ extends Resource
 ## Si es true, esta oleada incluye un jefe al final.
 @export var has_boss: bool = false
 
-## Escena del jefe de esta oleada (ignorado si has_boss es false).
-@export var boss_scene: PackedScene
+## Ruta de la escena del jefe de esta oleada (ignorado si has_boss es false).
+## Es una ruta y no una escena a propósito: así el jefe no ocupa memoria hasta que le toca.
+@export_file("*.tscn") var boss_scene_path: String = ""
 
 # ── Modificadores de dificultad ───────────────────────────────────────────────
 
