@@ -25,7 +25,7 @@ var _aiming: bool = false
 
 
 func _ready() -> void:
-	visible = DisplayServer.is_touchscreen_available() or OS.get_cmdline_user_args().has("--touch-controls")
+	visible = TouchUI.is_touch_device()
 	_move_stick.vector_changed.connect(_on_move_changed)
 	_aim_stick.vector_changed.connect(_on_aim_changed)
 	EventBus.transform_cooldown_updated.connect(_transform_button.set_cooldown)

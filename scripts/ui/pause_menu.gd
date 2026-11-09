@@ -11,6 +11,9 @@ extends Node
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 
+## Si es true, el juego se pausa solo cuando la ventana o la pestaña pierde el foco.
+@export var pause_on_focus_loss: bool = true
+
 @onready var _pause_button: PauseButton = %PauseButton
 @onready var _root: Control = %MenuRoot
 @onready var _info: Label = %InfoLabel
@@ -28,6 +31,12 @@ func _ready() -> void:
 	# Este nodo debe recibir la tecla de pausa también con el juego pausado (para cerrarla).
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_root.hide()
+	if TouchUI.is_touch_device():
+		# Un dedo necesita deslizadores y botones más grandes.
+		_music_slider.custom_minimum_size.y = 56.0
+		_sfx_slider.custom_minimum_size.y = 56.0
+		_continue_button.custom_minimum_size.y = 68.0
+		_exit_button.custom_minimum_size.y = 62.0
 	_pause_button.pressed.connect(_open)
 	_continue_button.pressed.connect(_close)
 	_exit_button.pressed.connect(_confirm_exit)
@@ -55,7 +64,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Si la ventana o la pestaña pierde el foco (cambias de aplicación), se pausa sola.
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and pause_on_focus_loss:
 		_open()
 
 

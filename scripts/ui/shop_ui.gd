@@ -14,11 +14,17 @@ const SOLD_COLOR := Color("7be38a")
 const GOLD := Color("ffe9a0")
 const CARD_SIZE := Vector2(150, 116)
 
+## En pantalla táctil todo crece este factor (tarjetas, textos, botones): un dedo necesita
+## más superficie que un puntero. Si las tarjetas no caben, la lista se arrastra.
+const TOUCH_SCALE: float = 1.3
+const TOUCH_BUTTON_HEIGHT: float = 68.0
+
 # ── Nodos ─────────────────────────────────────────────────────────────────────
 
 @onready var _root: Control = $Root
 @onready var _title: Label = %TitleLabel
 @onready var _energon_label: Label = %EnergonLabel
+@onready var _scroll: TouchScrollContainer = %ItemScroll
 @onready var _grid: GridContainer = %ItemGrid
 @onready var _detail_kind: Label = %DetailKind
 @onready var _detail_name: Label = %DetailName
@@ -36,12 +42,19 @@ var _items: Array[ShopItemData] = []
 var _cards: Dictionary = {}
 var _selected_id: String = ""
 var _last_wave: int = 0
+var _scale: float = 1.0
 
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_root.hide()
+	if TouchUI.is_touch_device():
+		_scale = TOUCH_SCALE
+		_buy_button.custom_minimum_size.y = TOUCH_BUTTON_HEIGHT
+		_continue_button.custom_minimum_size.y = TOUCH_BUTTON_HEIGHT
+		_buy_button.add_theme_font_size_override("font_size", 26)
+		_continue_button.add_theme_font_size_override("font_size", 26)
 	EventBus.shop_opened.connect(_open)
 	EventBus.wave_completed.connect(func(n: int) -> void: _last_wave = n)
 	EventBus.player_energon_changed.connect(func(_amount: int) -> void: _refresh())
@@ -61,9 +74,11 @@ func setup(manager: ShopManager) -> void:
 ## Tarjeta de un objeto: icono, nombre, precio y cuántas veces se lleva comprado.
 func _make_card(item: ShopItemData) -> Button:
 	var card := Button.new()
-	card.custom_minimum_size = CARD_SIZE
+	card.custom_minimum_size = CARD_SIZE * _scale
 	card.focus_mode = Control.FOCUS_NONE
-	card.pressed.connect(_select.bind(item.id))
+	# PASS: la tarjeta recibe el toque, pero un arrastre también llega al contenedor y desplaza.
+	card.mouse_filter = Control.MOUSE_FILTER_PASS
+	card.pressed.connect(_on_card_pressed.bind(item.id))
 
 	var box := VBoxContainer.new()
 	box.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -75,7 +90,7 @@ func _make_card(item: ShopItemData) -> Button:
 	var icon := TextureRect.new()
 	icon.name = "Icon"
 	icon.texture = item.icon
-	icon.custom_minimum_size = Vector2(0, 46)
+	icon.custom_minimum_size = Vector2(0, 46.0 * _scale)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -86,21 +101,21 @@ func _make_card(item: ShopItemData) -> Button:
 	name_label.text = item.display_name
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name_label.clip_text = true
-	name_label.add_theme_font_size_override("font_size", 13)
+	name_label.add_theme_font_size_override("font_size", int(13.0 * _scale))
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(name_label)
 
 	var price_label := Label.new()
 	price_label.name = "Price"
 	price_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	price_label.add_theme_font_size_override("font_size", 16)
+	price_label.add_theme_font_size_override("font_size", int(16.0 * _scale))
 	price_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(price_label)
 
 	var count_label := Label.new()
 	count_label.name = "Count"
-	count_label.position = Vector2(8, 4)
-	count_label.add_theme_font_size_override("font_size", 13)
+	count_label.position = Vector2(8, 4) * _scale
+	count_label.add_theme_font_size_override("font_size", int(13.0 * _scale))
 	count_label.add_theme_color_override("font_color", Color(0.72, 0.77, 0.86))
 	count_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(count_label)
@@ -120,6 +135,7 @@ func _open() -> void:
 	get_tree().paused = true
 	_select(_first_buyable_id())
 	_continue_button.grab_focus()
+	_scroll.scroll_vertical = 0
 
 
 func _close() -> void:
@@ -136,6 +152,13 @@ func _first_buyable_id() -> String:
 	return _items[0].id
 
 # ── Selección y compra ────────────────────────────────────────────────────────
+
+## Un arrastre que empieza sobre una tarjeta desplaza la lista; no la selecciona.
+func _on_card_pressed(item_id: String) -> void:
+	if _scroll.just_dragged():
+		return
+	_select(item_id)
+
 
 func _select(item_id: String) -> void:
 	_selected_id = item_id

@@ -17,6 +17,9 @@ func _init() -> void:
 	change_scene_to_file("res://scenes/game.tscn")
 	await create_timer(0.4).timeout
 	var game: Node = current_scene
+	# Las pruebas con ventana arrancan sin foco: sin esto la pausa automática se abriría sola.
+	game.get_node("PauseMenu").pause_on_focus_loss = false
+	game.get_node("PauseMenu")._close()
 	var player: Node = null
 	for c in game.get_node("World").get_children():
 		if c.has_method("request_transform"):

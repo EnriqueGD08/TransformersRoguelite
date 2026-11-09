@@ -1,6 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/shop_ui.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/touch_scroll_container.gd" id="scroll"]
 [ext_resource type="Texture2D" path="res://assets/ui/energon_icon.png" id="2"]
 
 [node name="Shop" type="CanvasLayer"]
@@ -78,7 +79,16 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 16
 
-[node name="ItemGrid" type="GridContainer" parent="Root/Margin/Panel/VBox/Body"]
+[node name="ItemScroll" type="ScrollContainer" parent="Root/Margin/Panel/VBox/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+scroll_deadzone = 12
+script = ExtResource("scroll")
+
+[node name="ItemGrid" type="GridContainer" parent="Root/Margin/Panel/VBox/Body/ItemScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

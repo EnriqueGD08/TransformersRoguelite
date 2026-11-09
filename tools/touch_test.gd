@@ -44,6 +44,9 @@ func _init() -> void:
 	for e in get_nodes_in_group("enemies"):
 		e.queue_free()
 	var aim = root.get_node("AimInput")
+	# Las pruebas con ventana arrancan sin foco: sin esto la pausa automática se abriría sola.
+	current_scene.get_node("PauseMenu").pause_on_focus_loss = false
+	current_scene.get_node("PauseMenu")._close()
 	var controls: Node = current_scene.get_node("TouchControls")
 	print("controles visibles: %s (esperado true con --touch-controls); botón de cambio de arma visible: %s (esperado false)" % [controls.visible, controls.get_node("%SwapButton").visible])
 

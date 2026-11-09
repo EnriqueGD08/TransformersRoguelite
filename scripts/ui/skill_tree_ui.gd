@@ -15,6 +15,15 @@ const BRANCH_COLORS := {
 }
 const NODE_SIZE: float = 56.0
 
+## En pantalla táctil los nodos son más grandes (un dedo necesita más que un puntero) y el
+## árbol se amplía lo justo para que no se solapen; como ya no cabe entero, se arrastra
+## con el dedo para recorrerlo.
+const TOUCH_NODE_SIZE: float = 86.0
+const TOUCH_ZOOM: float = 1.5
+
+## Altura de los botones de la ficha (Desbloquear, Continuar) en pantalla táctil.
+const TOUCH_BUTTON_HEIGHT: float = 68.0
+
 ## El árbol puede ampliarse hasta este factor para aprovechar el espacio disponible.
 const MAX_ZOOM: float = 1.3
 
@@ -23,6 +32,7 @@ const MAX_ZOOM: float = 1.3
 @onready var _root: Control = $Root
 @onready var _title: Label = %TitleLabel
 @onready var _points_label: Label = %PointsLabel
+@onready var _scroll: TouchScrollContainer = %TreeScroll
 @onready var _tree_area: Control = %TreeArea
 @onready var _detail_name: Label = %DetailName
 @onready var _detail_branch: Label = %DetailBranch
@@ -41,12 +51,19 @@ var _by_id: Dictionary = {}
 var _buttons: Dictionary = {}
 var _selected_id: String = ""
 var _last_wave: int = 0
+var _touch: bool = false
 
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_touch = TouchUI.is_touch_device()
 	_root.hide()
+	if _touch:
+		_unlock_button.custom_minimum_size.y = TOUCH_BUTTON_HEIGHT
+		_continue_button.custom_minimum_size.y = TOUCH_BUTTON_HEIGHT
+		_unlock_button.add_theme_font_size_override("font_size", 26)
+		_continue_button.add_theme_font_size_override("font_size", 26)
 	EventBus.skill_tree_opened.connect(_open)
 	EventBus.wave_completed.connect(func(n: int) -> void: _last_wave = n)
 	_unlock_button.pressed.connect(_on_unlock_pressed)
@@ -64,6 +81,9 @@ func setup(manager: SkillTreeManager) -> void:
 		_buttons[node.id] = _make_node_button(node)
 	manager.node_unlocked.connect(func(_id: String) -> void: _refresh())
 	manager.points_changed.connect(func(_a: int, _s: int) -> void: _refresh())
+	if _touch:
+		# El área del árbol mide lo que mide el árbol ampliado; el contenedor la recorre.
+		_tree_area.custom_minimum_size = _touch_content_size()
 	_layout_nodes()
 
 
@@ -75,9 +95,11 @@ func _make_node_button(node: SkillNodeData) -> Button:
 	button.expand_icon = true
 	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	button.focus_mode = Control.FOCUS_NONE
+	# PASS: el botón recibe el toque, pero un arrastre también llega al contenedor y desplaza.
+	button.mouse_filter = Control.MOUSE_FILTER_PASS
 	button.tooltip_text = node.display_name
 	button.add_theme_constant_override("icon_max_width", 36)
-	button.pressed.connect(_select.bind(node.id))
+	button.pressed.connect(_on_node_pressed.bind(node.id))
 	# Insignia con el coste si cuesta más de 1 punto.
 	if node.cost > 1:
 		var badge := Label.new()
@@ -106,6 +128,10 @@ func _open() -> void:
 	_select(_first_available_id())
 	_refresh()
 	_continue_button.grab_focus()
+	if _touch and _buttons.has(_selected_id):
+		# Se enseña el primer nodo disponible: el árbol es más grande que la pantalla.
+		await get_tree().process_frame
+		_scroll.ensure_control_visible(_buttons[_selected_id])
 
 
 func _close() -> void:
@@ -121,6 +147,13 @@ func _first_available_id() -> String:
 	return _nodes[0].id if not _nodes.is_empty() else ""
 
 # ── Selección y acciones ──────────────────────────────────────────────────────
+
+## Un arrastre que empieza sobre un nodo desplaza el árbol; no lo selecciona.
+func _on_node_pressed(node_id: String) -> void:
+	if _scroll.just_dragged():
+		return
+	_select(node_id)
+
 
 func _select(node_id: String) -> void:
 	_selected_id = node_id
@@ -243,12 +276,32 @@ func _fit() -> Dictionary:
 	for node in _nodes:
 		min_p = min_p.min(node.tree_position)
 		max_p = max_p.max(node.tree_position)
-	var margin: float = NODE_SIZE * 0.5 + 16.0
-	var size: Vector2 = (max_p - min_p) + Vector2(margin, margin) * 2.0
 	var area: Vector2 = _tree_area.size
-	var scale_f: float = minf(minf(area.x / size.x, area.y / size.y), MAX_ZOOM)
+	var scale_f: float
+	if _touch:
+		scale_f = TOUCH_ZOOM
+	else:
+		var margin: float = NODE_SIZE * 0.5 + 16.0
+		var size: Vector2 = (max_p - min_p) + Vector2(margin, margin) * 2.0
+		scale_f = minf(minf(area.x / size.x, area.y / size.y), MAX_ZOOM)
 	var offset: Vector2 = (area - (max_p - min_p) * scale_f) * 0.5 - min_p * scale_f
 	return {"scale": scale_f, "offset": offset}
+
+
+## Tamaño que ocupa el árbol ampliado para pantalla táctil (con margen alrededor).
+func _touch_content_size() -> Vector2:
+	var min_p := Vector2(INF, INF)
+	var max_p := Vector2(-INF, -INF)
+	for node in _nodes:
+		min_p = min_p.min(node.tree_position)
+		max_p = max_p.max(node.tree_position)
+	var margin: float = TOUCH_NODE_SIZE * 0.5 + 24.0
+	return (max_p - min_p) * TOUCH_ZOOM + Vector2(margin, margin) * 2.0
+
+
+## Lado de un nodo en pantalla, según el modo y el zoom del árbol.
+func _node_px(fit: Dictionary) -> float:
+	return TOUCH_NODE_SIZE if _touch else NODE_SIZE * clampf(fit.scale, 0.8, 1.2)
 
 
 func _center_of(node: SkillNodeData, fit: Dictionary) -> Vector2:
@@ -260,9 +313,15 @@ func _layout_nodes() -> void:
 		return
 	var fit: Dictionary = _fit()
 	# Los botones crecen un poco con el zoom (sin pasarse) para que el árbol no se vea vacío.
-	var node_px: float = NODE_SIZE * clampf(fit.scale, 0.8, 1.2)
+	var node_px: float = _node_px(fit)
+	var k: float = node_px / NODE_SIZE
 	for node in _nodes:
 		var button: Button = _buttons[node.id]
+		# Insignia con el coste: sigue al tamaño del botón.
+		if button.get_child_count() > 0:
+			var badge: Label = button.get_child(0)
+			badge.position = Vector2(node_px - 17.0 * k, node_px - 25.0 * k)
+			badge.add_theme_font_size_override("font_size", int(15.0 * k))
 		button.custom_minimum_size = Vector2(node_px, node_px)
 		button.size = Vector2(node_px, node_px)
 		button.add_theme_constant_override("icon_max_width", int(node_px * 0.64))
@@ -296,6 +355,6 @@ func _draw_tree() -> void:
 			if node.branch == branch and (first == null or node.tree_position.x < first.tree_position.x):
 				first = node
 		if first != null:
-			var half: float = NODE_SIZE * clampf(fit.scale, 0.8, 1.2) * 0.5
+			var half: float = _node_px(fit) * 0.5
 			var pos: Vector2 = _center_of(first, fit) + Vector2(-half, -half - 8.0)
-			_tree_area.draw_string(font, pos, branch.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, BRANCH_COLORS[branch])
+			_tree_area.draw_string(font, pos, branch.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, 20 if _touch else 15, BRANCH_COLORS[branch])
