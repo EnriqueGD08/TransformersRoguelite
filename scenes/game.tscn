@@ -37,6 +37,7 @@
 [ext_resource type="PackedScene" path="res://scenes/terrain.tscn" id="terrain"]
 [ext_resource type="PackedScene" path="res://scenes/touch_controls.tscn" id="touch"]
 [ext_resource type="PackedScene" path="res://scenes/victory_screen.tscn" id="victory"]
+[ext_resource type="PackedScene" path="res://scenes/pause_menu.tscn" id="pause"]
 [ext_resource type="Script" path="res://scripts/systems/run_persistence.gd" id="persist"]
 [ext_resource type="Script" path="res://scripts/systems/shop_manager.gd" id="shopmgr"]
 [ext_resource type="Resource" path="res://resources/shop/shop_catalog.tres" id="shopcat"]
@@ -53,6 +54,8 @@ default_skill_tree = ExtResource("15")
 [node name="Shop" parent="." instance=ExtResource("shop")]
 
 [node name="TouchControls" parent="." instance=ExtResource("touch")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("pause")]
 
 [node name="VictoryScreen" parent="." instance=ExtResource("victory")]
 
