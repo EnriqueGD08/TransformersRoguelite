@@ -162,6 +162,7 @@ func _release_projectile() -> void:
 	var projectile: Projectile = _enemy.stats.projectile_scene.instantiate()
 	ProjectileContainer.add(_enemy, projectile)
 	projectile.global_position = _enemy.global_position
+	projectile.reset_physics_interpolation()
 
 	var direction: Vector2 = _enemy.global_position.direction_to(
 		_enemy._player.global_position

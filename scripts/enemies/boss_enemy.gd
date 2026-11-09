@@ -89,6 +89,7 @@ func _process_shots(delta: float) -> void:
 	var projectile: Projectile = projectile_scene_phase1.instantiate()
 	ProjectileContainer.add(self, projectile)
 	projectile.global_position = global_position
+	projectile.reset_physics_interpolation()
 	projectile.setup(
 		global_position.direction_to(_player.global_position),
 		260.0,
@@ -115,6 +116,7 @@ func _fire_aoe_attack() -> void:
 	var projectile: Projectile = projectile_scene_phase2.instantiate()
 	ProjectileContainer.add(self, projectile)
 	projectile.global_position = global_position
+	projectile.reset_physics_interpolation()
 
 	var direction: Vector2 = global_position.direction_to(_player.global_position)
 	projectile.setup(

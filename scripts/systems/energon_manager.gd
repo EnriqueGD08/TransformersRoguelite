@@ -77,6 +77,7 @@ func _spawn_pickup(position: Vector2, amount: int) -> void:
 		parent = get_parent()
 	parent.add_child(pickup)
 	pickup.global_position = position
+	pickup.reset_physics_interpolation()
 	pickup.setup(amount, _player)
 	pickup.collected.connect(add_energon)
 

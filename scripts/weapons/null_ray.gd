@@ -68,6 +68,7 @@ func _spawn_projectile(origin: Vector2, direction: Vector2, damage: float) -> vo
 	var projectile: Projectile = projectile_scene.instantiate()
 	ProjectileContainer.add(self, projectile)
 	projectile.global_position = origin
+	projectile.reset_physics_interpolation()
 	projectile.setup(
 		direction,
 		stats.projectile_speed,

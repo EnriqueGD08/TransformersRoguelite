@@ -113,6 +113,7 @@ func _fire_charged_shot() -> void:
 	if character.is_facing_left():
 		offset.x *= -1.0
 	projectile.global_position = character.global_position + offset
+	projectile.reset_physics_interpolation()
 
 	var direction: Vector2 = AimInput.get_aim_direction(character, projectile.global_position)
 

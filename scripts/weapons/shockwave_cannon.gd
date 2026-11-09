@@ -40,6 +40,7 @@ func _perform_attack() -> void:
 	var projectile: Projectile = projectile_scene.instantiate()
 	ProjectileContainer.add(self, projectile)
 	projectile.global_position = origin
+	projectile.reset_physics_interpolation()
 
 	# Shockwave usa piercing y slow como efecto de estado desde WeaponStats.
 	projectile.setup(

@@ -49,6 +49,7 @@ func spawn(scene: PackedScene, spawn_position: Vector2) -> BaseEnemy:
 	var enemy: BaseEnemy = scene.instantiate()
 	_spawn_parent.add_child(enemy)
 	enemy.global_position = spawn_position
+	enemy.reset_physics_interpolation()
 	enemy.setup(_player)
 	enemy.died.connect(_on_enemy_died)
 
