@@ -8,3 +8,6 @@ tools/preview/*.png
 * 2.png
 * 2.png.import
 *.png 2.import
+
+# Salida de la exportación (se regenera)
+build/
