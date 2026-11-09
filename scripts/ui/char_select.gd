@@ -23,6 +23,12 @@ const FACTION_COLORS := {
 	"Decepticon": Color("b681ff"),
 }
 
+## Tamaños para dedos (solo en dispositivos táctiles; en escritorio no cambia nada).
+const TOUCH_BUTTON_HEIGHT := 60.0
+const TOUCH_ROSTER_HEIGHT := 118.0
+const TOUCH_FONT_SIZE := 20
+const TOUCH_START_FONT_SIZE := 26
+
 @export var roster: CharacterRoster
 
 # ── Nodos ─────────────────────────────────────────────────────────────────────
@@ -72,6 +78,8 @@ func _ready() -> void:
 	_build_stat_rows()
 	_build_roster_buttons()
 	_build_skin_buttons()
+	if TouchUI.is_touch_device():
+		_apply_touch_sizes()
 
 	_back_button.pressed.connect(_go_back)
 	_start_button.pressed.connect(_start_game)
@@ -189,6 +197,24 @@ func _build_skin_buttons() -> void:
 		button.pressed.connect(_select_skin.bind(skin_id))
 		_skin_box.add_child(button)
 		_skin_buttons[skin_id] = button
+
+## Agranda los botones pequeños para poder pulsarlos con un dedo.
+## Misma disposición que en escritorio; solo cambian alturas y fuentes.
+func _apply_touch_sizes() -> void:
+	for button in _skin_buttons.values():
+		_enlarge(button, TOUCH_FONT_SIZE)
+	_enlarge(_transform_button, TOUCH_FONT_SIZE)
+	_enlarge(_back_button, TOUCH_FONT_SIZE)
+	_enlarge(_start_button, TOUCH_START_FONT_SIZE)
+	for button in _roster_buttons:
+		button.custom_minimum_size.y = TOUCH_ROSTER_HEIGHT
+	# Las teclas de la pista no existen en un móvil.
+	%HintLabel.visible = false
+
+
+func _enlarge(button: Button, font_size: int) -> void:
+	button.custom_minimum_size.y = TOUCH_BUTTON_HEIGHT
+	button.add_theme_font_size_override("font_size", font_size)
 
 # ── Selección ─────────────────────────────────────────────────────────────────
 
