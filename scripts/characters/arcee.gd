@@ -45,7 +45,7 @@ func _process_movement(_delta: float) -> void:
 			_sprite.flip_h = direction.x < 0.0
 	else:
 		# Con las pistolas apunta al ratón.
-		_sprite.flip_h = get_global_mouse_position().x < global_position.x
+		_sprite.flip_h = AimInput.get_aim_point(self).x < global_position.x
 	_update_move_animation(direction)
 
 # ── Ataque ────────────────────────────────────────────────────────────────────
@@ -65,6 +65,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		request_transform()
 	elif event.is_action_pressed("swap_weapon"):
 		_swap_weapon()
+
+
+func supports_weapon_swap() -> bool:
+	return true
 
 
 ## Alterna entre arma melee y a distancia.

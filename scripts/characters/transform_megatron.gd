@@ -114,8 +114,7 @@ func _fire_charged_shot() -> void:
 		offset.x *= -1.0
 	projectile.global_position = character.global_position + offset
 
-	var direction: Vector2 = (character.get_global_mouse_position() \
-		- projectile.global_position).normalized()
+	var direction: Vector2 = AimInput.get_aim_direction(character, projectile.global_position)
 
 	var damage: float = character.get_damage() * charged_shot_multiplier
 

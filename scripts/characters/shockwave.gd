@@ -39,7 +39,7 @@ func _process_movement(_delta: float) -> void:
 ## Mira hacia el ratón. Como cañón láser, además gira el sprite entero para que
 ## el cañón apunte exactamente donde se dispara el rayo.
 func _aim_towards_mouse() -> void:
-	var to_mouse: Vector2 = get_global_mouse_position() - global_position
+	var to_mouse: Vector2 = AimInput.get_aim_point(self) - global_position
 	_sprite.flip_h = to_mouse.x < 0.0
 	if _is_transformed and to_mouse.length() > 1.0:
 		# Con el sprite espejado el cañón apunta a la izquierda: se compensa con PI.

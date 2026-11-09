@@ -72,7 +72,7 @@ func _get_muzzle_position() -> Vector2:
 func _get_aim_direction(from: Vector2) -> Vector2:
 	if _owner_character == null:
 		return Vector2.RIGHT
-	return (get_global_mouse_position() - from).normalized()
+	return AimInput.get_aim_direction(self, from)
 
 
 func _play_fire_animation() -> void:

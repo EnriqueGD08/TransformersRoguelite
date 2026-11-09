@@ -123,7 +123,7 @@ func get_cooldown_duration() -> float:
 
 ## Origen (boca del cañón) y dirección (hacia el ratón) del rayo.
 func _beam_line() -> Dictionary:
-	var to_mouse: Vector2 = character.get_global_mouse_position() - character.global_position
+	var to_mouse: Vector2 = AimInput.get_aim_point(character) - character.global_position
 	var direction: Vector2 = to_mouse.normalized() if to_mouse.length() > 1.0 else Vector2.RIGHT
 	var offset: Vector2 = muzzle_offset
 	if character.is_facing_left():

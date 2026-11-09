@@ -200,6 +200,12 @@ func add_revive_charge(amount: int = 1) -> void:
 	_revive_charges += amount
 
 
+## True si el personaje tiene dos armas entre las que cambiar (la interfaz táctil muestra
+## el botón de cambio solo entonces). Por defecto no; Arcee lo sobrescribe.
+func supports_weapon_swap() -> bool:
+	return false
+
+
 ## Devuelve el componente de transformación (para mejoras específicas de cada una).
 func get_transform_component() -> Node:
 	return _transform_component

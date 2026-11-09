@@ -33,7 +33,7 @@ func _process_movement(_delta: float) -> void:
 
 
 func _aim_towards_mouse() -> void:
-	var mouse_pos: Vector2 = get_global_mouse_position()
+	var mouse_pos: Vector2 = AimInput.get_aim_point(self)
 	_sprite.flip_h = mouse_pos.x < global_position.x
 
 # ── Ataque ────────────────────────────────────────────────────────────────────

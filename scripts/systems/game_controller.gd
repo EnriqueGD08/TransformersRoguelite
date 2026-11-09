@@ -24,6 +24,7 @@ extends Node2D
 @onready var _skill_tree_ui: SkillTreeUI = $SkillTree
 @onready var _shop_manager: ShopManager = $Systems/ShopManager
 @onready var _shop_ui: ShopUI = $Shop
+@onready var _touch_controls: TouchControls = $TouchControls
 
 
 func _ready() -> void:
@@ -49,5 +50,6 @@ func _ready() -> void:
 	_passives.setup(player)
 	_shop_manager.setup(player, _passives)
 	_shop_ui.setup(_shop_manager)
+	_touch_controls.setup(player)
 	_wave_manager.setup(_spawner)
 	_wave_manager.start_run()
