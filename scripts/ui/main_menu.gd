@@ -21,6 +21,7 @@ func _ready() -> void:
 	_play_button.pressed.connect(_on_play_pressed)
 	_quit_button.pressed.connect(get_tree().quit)
 	_play_button.grab_focus()
+	EventBus.play_music.emit("menu")
 
 	# Dos rivales frente a frente: el primero (Optimus) y el de la mitad de la lista (Megatron).
 	_setup_sprite(_left, 0, false)

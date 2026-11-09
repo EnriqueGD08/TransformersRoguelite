@@ -34,6 +34,7 @@ duration = 70.0
 must_kill_all = false
 spawn_groups = Array[ExtResource("sg")]([SubResource("g0"), SubResource("g1"), SubResource("g2")])
 has_boss = false
+music_track = "battle_3"
 enemy_hp_multiplier = 1.9
 enemy_damage_multiplier = 1.5
 enemy_speed_multiplier = 1.1

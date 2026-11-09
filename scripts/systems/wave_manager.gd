@@ -97,7 +97,7 @@ func _advance_to_next_wave() -> void:
 	_prefetch_boss(_current_wave_index + 1)
 
 	EventBus.wave_started.emit(get_current_wave_number(), get_total_waves())
-	EventBus.play_music.emit("battle_wave_%d" % get_current_wave_number())
+	EventBus.play_music.emit(wave.music_track)
 
 
 func _complete_wave() -> void:

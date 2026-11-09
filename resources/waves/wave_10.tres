@@ -26,6 +26,7 @@ duration = 120.0
 must_kill_all = true
 spawn_groups = Array[ExtResource("sg")]([SubResource("g0"), SubResource("g1")])
 has_boss = true
+music_track = "battle_boss"
 boss_scene_path = "res://scenes/boss_devastator.tscn"
 enemy_hp_multiplier = 1.6
 enemy_damage_multiplier = 1.3

@@ -20,7 +20,5 @@ mkdir -p build/web
 du -sh build/web
 
 if [ "$1" = "serve" ]; then
-	echo "Sirviendo en http://localhost:8765  (Ctrl+C para parar)"
-	cd build/web
-	python3 -m http.server 8765 --bind 127.0.0.1
+	python3 tools/serve_web.py
 fi

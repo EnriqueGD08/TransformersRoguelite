@@ -27,6 +27,9 @@ extends Resource
 ## Cada entrada define qué enemigo, cuántos y con qué cadencia aparecen.
 @export var spawn_groups: Array[SpawnGroup] = []
 
+## Pista de música que suena durante la oleada (nombre del archivo en assets/audio/music/).
+@export var music_track: String = "battle_1"
+
 ## Si es true, esta oleada incluye un jefe al final.
 @export var has_boss: bool = false
 

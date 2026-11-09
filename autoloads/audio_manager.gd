@@ -16,17 +16,34 @@ const SFX_BASE_PATH: String = "res://assets/audio/sfx/"
 ## Ruta base donde residen los archivos de música.
 const MUSIC_BASE_PATH: String = "res://assets/audio/music/"
 
-## Extensión de los archivos de audio.
-const AUDIO_EXT: String = ".ogg"
+## Extensiones que se buscan, por orden: si algún día añades audio grabado en .ogg, tiene
+## prioridad sobre el sintetizado (.wav) sin tocar nada más.
+const AUDIO_EXTENSIONS: PackedStringArray = [".ogg", ".wav"]
+
+## Pistas que suenan una sola vez (el resto va en bucle).
+const ONE_SHOT_TRACKS: PackedStringArray = ["victory", "game_over"]
+
+## Segundos mínimos entre dos reproducciones del mismo sonido: evita que los muy
+## frecuentes (golpes, clics) se amontonen en una ametralladora de ruido.
+const MIN_REPEAT_SECONDS: float = 0.06
+
+## Sonidos que el audio dispara por su cuenta al oír una señal del EventBus
+## (nadie pide estos sonidos explícitamente).
+const SIGNAL_SOUNDS: Dictionary = {
+	"skill_unlocked": "skill_unlock",
+	"wave_started": "wave_start",
+	"wave_completed": "wave_complete",
+	"boss_spawned": "boss_phase2",
+}
 
 ## Número de reproductores de SFX en el pool (para sonidos simultáneos).
 const SFX_POOL_SIZE: int = 8
 
 ## Volumen maestro de SFX en dB (0.0 = sin atenuación).
-@export_range(-40.0, 0.0, 1.0) var sfx_volume_db: float = 0.0
+@export_range(-40.0, 0.0, 1.0) var sfx_volume_db: float = -4.0
 
 ## Volumen maestro de música en dB.
-@export_range(-40.0, 0.0, 1.0) var music_volume_db: float = -6.0
+@export_range(-40.0, 0.0, 1.0) var music_volume_db: float = -11.0
 
 # ── Nodos de audio ────────────────────────────────────────────────────────────
 
@@ -45,9 +62,17 @@ var _stream_cache: Dictionary = {}
 ## ID de la pista de música actual.
 var _current_track_id: String = ""
 
+## Instante (ms) de la última reproducción de cada sonido, para limitar la frecuencia.
+var _last_played_ms: Dictionary = {}
+
+## Vida del jugador en la última señal, para detectar cuándo recibe daño.
+var _last_player_hp: float = -1.0
+
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _ready() -> void:
+	# El audio debe seguir sonando con el juego pausado (tienda, árbol de habilidades).
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_sfx_pool()
 	_build_music_players()
 	_connect_signals()
@@ -75,6 +100,25 @@ func _connect_signals() -> void:
 	EventBus.play_sfx.connect(play_sfx)
 	EventBus.play_music.connect(play_music)
 	EventBus.stop_music.connect(stop_music)
+	for signal_name in SIGNAL_SOUNDS:
+		var sound: String = SIGNAL_SOUNDS[signal_name]
+		# Cada señal tiene una firma distinta: la función acepta y descarta sus argumentos.
+		var emitter: Signal = EventBus.get(signal_name)
+		emitter.connect(func(_a = null, _b = null, _c = null) -> void: play_sfx(sound))
+	EventBus.player_hp_changed.connect(_on_player_hp_changed)
+	# Todos los botones del juego hacen "clic" sin que cada uno lo pida.
+	get_tree().node_added.connect(_on_node_added)
+
+
+func _on_player_hp_changed(current: float, _maximum: float) -> void:
+	if _last_player_hp >= 0.0 and current < _last_player_hp:
+		play_sfx("player_hit")
+	_last_player_hp = current
+
+
+func _on_node_added(node: Node) -> void:
+	if node is BaseButton:
+		node.pressed.connect(play_sfx.bind("ui_click"))
 
 # ── IAudioEmitter ─────────────────────────────────────────────────────────────
 
@@ -82,9 +126,13 @@ func _connect_signals() -> void:
 ## [param sfx_id] Identificador del sonido (ej: "optimus_transform").
 ## [param volume_db] Ajuste de volumen relativo al maestro.
 func play_sfx(sfx_id: String, volume_db: float = 0.0) -> void:
-	var stream: AudioStream = _load_stream(SFX_BASE_PATH + sfx_id + AUDIO_EXT)
+	var now: int = Time.get_ticks_msec()
+	if now - _last_played_ms.get(sfx_id, -1000000) < MIN_REPEAT_SECONDS * 1000.0:
+		return
+	var stream: AudioStream = _load_stream(SFX_BASE_PATH + sfx_id)
 	if stream == null:
 		return
+	_last_played_ms[sfx_id] = now
 
 	var player: AudioStreamPlayer = _sfx_pool[_sfx_pool_index]
 	_sfx_pool_index = (_sfx_pool_index + 1) % SFX_POOL_SIZE
@@ -109,9 +157,11 @@ func play_music(track_id: String, loop: bool = true) -> void:
 	if track_id == _current_track_id:
 		return
 
-	var stream: AudioStream = _load_stream(MUSIC_BASE_PATH + track_id + AUDIO_EXT)
+	var stream: AudioStream = _load_stream(MUSIC_BASE_PATH + track_id)
 	if stream == null:
 		return
+	if track_id in ONE_SHOT_TRACKS:
+		loop = false
 
 	_current_track_id = track_id
 
@@ -121,6 +171,12 @@ func play_music(track_id: String, loop: bool = true) -> void:
 
 	if stream is AudioStreamOggVorbis:
 		stream.loop = loop
+	elif stream is AudioStreamWAV:
+		stream.loop_mode = AudioStreamWAV.LOOP_FORWARD if loop else AudioStreamWAV.LOOP_DISABLED
+		stream.loop_begin = 0
+		# Godot comprime los WAV al importarlos, así que el tamaño de los datos no sirve:
+		# el fin del bucle se calcula con la duración real.
+		stream.loop_end = int(round(stream.get_length() * stream.mix_rate))
 
 	next_player.stream = stream
 	next_player.volume_db = -80.0
@@ -145,20 +201,21 @@ func stop_music(fade_duration: float = 0.0) -> void:
 # ── Privados ──────────────────────────────────────────────────────────────────
 
 ## Carga un AudioStream desde disco con caché para no releer el mismo archivo.
-func _load_stream(path: String) -> AudioStream:
-	if _stream_cache.has(path):
-		return _stream_cache[path]
+## [param base_path] es la ruta SIN extensión: se prueba cada una de AUDIO_EXTENSIONS.
+func _load_stream(base_path: String) -> AudioStream:
+	if _stream_cache.has(base_path):
+		return _stream_cache[base_path]
 
-	if not ResourceLoader.exists(path):
-		# Se avisa una sola vez por archivo y se cachea null para no repetir
-		# la comprobación (aún no hay audio real: es lo esperado en desarrollo).
-		push_warning("AudioManager: archivo no encontrado — %s" % path)
-		_stream_cache[path] = null
-		return null
+	for extension in AUDIO_EXTENSIONS:
+		if ResourceLoader.exists(base_path + extension):
+			var stream: AudioStream = load(base_path + extension)
+			_stream_cache[base_path] = stream
+			return stream
 
-	var stream: AudioStream = load(path)
-	_stream_cache[path] = stream
-	return stream
+	# Se avisa una sola vez por archivo y se cachea null para no repetir la comprobación.
+	push_warning("AudioManager: archivo no encontrado — %s" % base_path)
+	_stream_cache[base_path] = null
+	return null
 
 
 ## Realiza el crossfade entre dos reproductores de música.

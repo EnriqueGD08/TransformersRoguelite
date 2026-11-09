@@ -214,6 +214,7 @@ func take_damage(amount: float) -> void:
 	damaged.emit(amount, _current_hp)
 	hp_changed.emit(_current_hp, stats.max_hp)
 
+	EventBus.play_sfx.emit("enemy_hit")
 	_on_damaged(amount)
 
 	if _current_hp <= 0.0:
