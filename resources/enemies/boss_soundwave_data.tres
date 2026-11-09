@@ -8,6 +8,7 @@ enemy_name = "Soundwave"
 enemy_id = "boss_soundwave"
 max_hp = 2200.0
 move_speed = 70.0
+walk_cycle_speed = 62.0
 detection_range = 1000.0
 attack_range = 90.0
 attack_damage = 24.0

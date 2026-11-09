@@ -71,6 +71,7 @@ func _enter_phase2() -> void:
 	EventBus.play_sfx.emit("boss_phase2")
 	# Rugido: durante la animación no se alterna idle/walk; después queda teñido de rojo.
 	_anim_locked = true
+	_sprite.speed_scale = 1.0
 	_sprite.play("phase2_intro")
 	_base_modulate = Color(1.2, 0.8, 0.8)
 	_sprite.modulate = _base_modulate

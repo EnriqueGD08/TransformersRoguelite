@@ -8,6 +8,7 @@ enemy_name = "Galvatron"
 enemy_id = "boss_galvatron"
 max_hp = 4200.0
 move_speed = 62.0
+walk_cycle_speed = 78.0
 detection_range = 1000.0
 attack_range = 95.0
 attack_damage = 40.0

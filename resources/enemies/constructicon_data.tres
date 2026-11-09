@@ -8,6 +8,7 @@ enemy_name = "Constructicon"
 enemy_id = "constructicon"
 max_hp = 320.0
 move_speed = 38.0
+walk_cycle_speed = 60.0
 detection_range = 1000.0
 attack_range = 66.0
 attack_damage = 22.0

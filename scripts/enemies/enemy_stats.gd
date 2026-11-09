@@ -23,6 +23,11 @@ extends Resource
 
 @export_range(20.0, 400.0, 5.0) var move_speed: float = 80.0
 
+## Velocidad (px/s) a la que los pies de la animación de caminar quedan clavados al suelo
+## sin resbalar. El juego acelera o frena la animación según lo que avanza el enemigo
+## realmente. 0 = no se ajusta (enemigos voladores).
+@export_range(0.0, 300.0, 1.0) var walk_cycle_speed: float = 0.0
+
 ## Radio en píxeles dentro del cual el enemigo detecta al jugador.
 @export_range(100.0, 1000.0, 20.0) var detection_range: float = 300.0
 

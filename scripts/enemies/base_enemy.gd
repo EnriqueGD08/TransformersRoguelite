@@ -52,6 +52,24 @@ var _anim_locked: bool = false
 ## Posición del fotograma anterior, para saber si el enemigo se está moviendo.
 var _last_position: Vector2 = Vector2.ZERO
 
+## Velocidad real (px/s) medida una vez por tick de física, y el tick de esa medida.
+## El movimiento ocurre en física (60 por segundo) pero _process corre al ritmo de la pantalla
+## (120 o 144 Hz en algunos monitores): comparar posiciones en cada imagen daría "no se mueve"
+## en la mitad de ellas y la animación parpadearía entre caminar y reposo.
+var _measured_speed: float = 0.0
+var _last_physics_tick: int = 0
+
+## Velocidad (px/s) por encima de la cual se considera que el enemigo camina.
+const WALK_THRESHOLD: float = 15.0
+
+## Punto del ciclo (0 a 1) en el que arranca cada animación de reposo o caminar. Distinto en
+## cada enemigo, para que un grupo no camine al unísono como un desfile.
+var _anim_phase: float = 0.0
+
+## Diferencia mínima en X (px) para girar al enemigo hacia el jugador: evita que parpadee
+## de un lado a otro cuando está justo encima.
+const FACING_MARGIN: float = 4.0
+
 @onready var _ai: Node = $EnemyAI
 @onready var _sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var _status_timer: Timer = $StatusTimer
@@ -70,6 +88,8 @@ func _ready() -> void:
 		_ai.setup(self)
 
 	_last_position = global_position
+	_last_physics_tick = Engine.get_physics_frames()
+	_anim_phase = randf()
 	attacked_player.connect(_on_attacked_player_animation)
 	_sprite.animation_finished.connect(_on_sprite_animation_finished)
 	_on_enemy_ready()
@@ -80,16 +100,55 @@ func _on_enemy_ready() -> void:
 
 
 ## Animación automática: camina si se está moviendo y reposa si no.
+## Al caminar, el ritmo de la animación sigue a la velocidad real (ver walk_cycle_speed).
 func _process(_delta: float) -> void:
 	if not _is_alive:
 		return
-	var moved: bool = global_position.distance_to(_last_position) > 0.25
-	_last_position = global_position
+	_measure_speed()
+	var moved: bool = _measured_speed > WALK_THRESHOLD
+	_face_player()
 	if _anim_locked:
 		return
 	var target: StringName = &"walk" if moved and _sprite.sprite_frames.has_animation("walk") else &"idle"
 	if _sprite.animation != target:
-		_sprite.play(target)
+		_play_looped(target)
+	_sprite.speed_scale = _walk_speed_scale(_measured_speed) if target == &"walk" else 1.0
+
+
+## Actualiza la velocidad medida, solo cuando ha pasado algún tick de física.
+func _measure_speed() -> void:
+	var tick: int = Engine.get_physics_frames()
+	if tick == _last_physics_tick:
+		return
+	var elapsed: float = (tick - _last_physics_tick) * get_physics_process_delta_time()
+	_measured_speed = global_position.distance_to(_last_position) / elapsed
+	_last_position = global_position
+	_last_physics_tick = tick
+
+
+## Mira siempre hacia el jugador, también cuando ya está a su lado y no lo persigue.
+func _face_player() -> void:
+	if not is_instance_valid(_player):
+		return
+	var dx: float = _player.global_position.x - global_position.x
+	if absf(dx) > FACING_MARGIN:
+		_sprite.flip_h = dx < 0.0
+
+
+## Reproduce una animación en bucle empezando en el punto de ciclo propio de este enemigo.
+func _play_looped(anim: StringName) -> void:
+	_sprite.play(anim)
+	var count: int = _sprite.sprite_frames.get_frame_count(anim)
+	_sprite.set_frame_and_progress(int(_anim_phase * count) % count, 0.0)
+
+
+## Factor de velocidad de la animación de caminar para una velocidad real [param speed] (px/s).
+## Se suaviza y se limita para que un empujón o un frenazo no la descontrolen.
+func _walk_speed_scale(speed: float) -> float:
+	if stats.walk_cycle_speed <= 0.0:
+		return 1.0
+	var wanted: float = clampf(speed / stats.walk_cycle_speed, 0.3, 2.0)
+	return lerpf(_sprite.speed_scale, wanted, 0.25)
 
 
 func _on_attacked_player_animation(_damage: float) -> void:
@@ -98,6 +157,7 @@ func _on_attacked_player_animation(_damage: float) -> void:
 		return
 	if _is_alive and _sprite.sprite_frames.has_animation("attack"):
 		_anim_locked = true
+		_sprite.speed_scale = 1.0
 		_sprite.play(&"attack")
 
 
@@ -106,7 +166,7 @@ func _on_sprite_animation_finished() -> void:
 		return
 	# Tras una animación puntual (ataque, rugido) se vuelve al ciclo normal.
 	_anim_locked = false
-	_sprite.play(&"idle")
+	_play_looped(&"idle")
 
 
 ## Destello rojo breve al recibir daño; luego vuelve al color base del enemigo.
@@ -263,6 +323,7 @@ func _on_damaged(_amount: float) -> void:
 	_flash_hit()
 
 func _on_died() -> void:
+	_sprite.speed_scale = 1.0
 	_sprite.play("death")
 	await _sprite.animation_finished
 	queue_free()

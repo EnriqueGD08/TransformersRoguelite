@@ -8,6 +8,7 @@ enemy_name = "Vehicon"
 enemy_id = "vehicon"
 max_hp = 60.0
 move_speed = 70.0
+walk_cycle_speed = 50.0
 detection_range = 1000.0
 attack_range = 50.0
 attack_damage = 8.0
